@@ -1,0 +1,33 @@
+#-- Lattice Semiconductor Corporation Ltd.
+#-- Synplify OEM project file c:/users/tobib/byggern\GAL_addrSelect.prj
+#-- Written on Wed Sep 06 16:05:18 2017
+
+
+#device options
+set_option -technology ispGAL
+
+#compilation/mapping options
+
+#map options
+
+#simulation options
+set_option -write_verilog false
+set_option -write_vhdl false
+
+#timing analysis options
+set_option -synthesis_onoff_pragma false
+
+#-- add_file options
+add_file -vhdl -lib work "gal.vhd"
+
+#-- top module name
+set_option -top_module GAL_addrSelect
+
+#-- set result format/file last
+project -result_file "GAL_addrSelect.edi"
+
+#-- error message log file
+project -log_file gal_addrselect.srf
+
+#-- run Synplify with 'arrange VHDL file'
+project -run

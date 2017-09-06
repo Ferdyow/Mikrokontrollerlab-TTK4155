@@ -1,0 +1,5 @@
+@E: CD242 :"C:\users\tobib\byggern\gal.vhd":36:4:36:9|Expecting ;
+@E: CD242 :"C:\users\tobib\byggern\gal.vhd":37:4:37:10|Expecting ;
+@E: CD242 :"C:\users\tobib\byggern\gal.vhd":39:0:39:2|Expecting ;
+@E|Parse errors encountered - exiting
+

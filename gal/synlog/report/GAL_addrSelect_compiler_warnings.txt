@@ -1,0 +1,4 @@
+@W: CL240 :"C:\users\tobib\byggern\gal.vhd":16:8:16:14|oled_dc is not assigned a value (floating) -- simulation mismatch possible. 
+@W: CL159 :"C:\users\tobib\byggern\gal.vhd":10:8:10:9|Input a9 is unused
+@W: CL159 :"C:\users\tobib\byggern\gal.vhd":11:8:11:9|Input a8 is unused
+

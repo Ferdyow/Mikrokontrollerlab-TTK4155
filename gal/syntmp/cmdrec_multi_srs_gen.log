@@ -1,0 +1,7 @@
+C:\ispLEVER_Classic2_0\synpbase\bin64\syn_nfilter.exe  -link  -top  GAL_addrSelect  -multisrs  C:\users\tobib\byggern\synwork\GAL_addrSelect_comp.srs  -osyn  C:\users\tobib\byggern\synwork\GAL_addrSelect_mult.srs  -log  C:\users\tobib\byggern\synlog\GAL_addrSelect_multi_srs_gen.srr 
+rc:0 success:1
+C:\users\tobib\byggern\synwork\GAL_addrSelect_comp.srs|i|1504706727|1923
+C:\users\tobib\byggern\synwork\GAL_addrSelect_mult.srs|o|1504706728|1812
+C:\users\tobib\byggern\synlog\GAL_addrSelect_multi_srs_gen.srr|o|1504706728|376
+C:\ispLEVER_Classic2_0\synpbase\bin\syn_nfilter.exe|i|1401223936|2741760
+C:\ispLEVER_Classic2_0\synpbase\bin64\syn_nfilter.exe|i|1401224132|6337536

@@ -38,6 +38,7 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../microcontroller.c \
+../sram.c \
 ../usart.c
 
 
@@ -49,18 +50,22 @@ ASM_SRCS +=
 
 OBJS +=  \
 microcontroller.o \
+sram.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
 microcontroller.o \
+sram.o \
 usart.o
 
 C_DEPS +=  \
 microcontroller.d \
+sram.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
 microcontroller.d \
+sram.d \
 usart.d
 
 OUTPUT_FILE_PATH +=microcontroller.elf
@@ -77,6 +82,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

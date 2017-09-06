@@ -20,12 +20,13 @@
 
 void initialize(void) {
 	usart_init(MYUBRR);
+	SRAM_init();
 }
 
 
 int main(void) {
 	initialize();
-	
+	SRAM_test();
 	while(1) {
 		printf("b");
 		usart_transmit_to_computer('k');
