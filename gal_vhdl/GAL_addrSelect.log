@@ -8,8 +8,8 @@ Inspect circuit GAL_addrSelect
     Number of input ports   : 4
     Number of output ports  : 4
     Number of bidir ports   : 0
-    Number of instances     : 11
-    Number of nets          : 13
+    Number of instances     : 13
+    Number of nets          : 15
 
 No design errors found in circuit GAL_addrSelect
 

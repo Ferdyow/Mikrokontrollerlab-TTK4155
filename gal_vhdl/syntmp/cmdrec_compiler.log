@@ -1,7 +1,7 @@
-C:\ispLEVER_Classic2_0\synpbase\bin64\c_vhdl.exe  -osyn  C:\users\tobib\byggern\synwork\GAL_addrSelect_comp.srs  -top  GAL_addrSelect  -prodtype  synplify_pro  -nostructver -dfltencoding sequential -encrypt  -pro  -dmgen  C:\users\tobib\byggern\dm  -lite -ui -fid2 -ram -sharing on -ll 2000 -autosm -ignore_undefined_lib  -lib work C:\users\tobib\byggern\gal.vhd -loga  C:\users\tobib\byggern\GAL_addrSelect.srr 
+C:\ispLEVER_Classic2_0\synpbase\bin64\c_vhdl.exe  -osyn  C:\users\tobib\byggern\gal_vhdl\synwork\GAL_addrSelect_comp.srs  -top  GAL_addrSelect  -prodtype  synplify_pro  -nostructver -dfltencoding sequential -encrypt  -pro  -dmgen  C:\users\tobib\byggern\gal_vhdl\dm  -lite -ui -fid2 -ram -sharing on -ll 2000 -autosm -ignore_undefined_lib  -lib work C:\users\tobib\byggern\gal_vhdl\gal.vhd -loga  C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.srr 
 rc:0 success:1
-C:\users\tobib\byggern\synwork\GAL_addrSelect_comp.srs|o|1504706727|1923
-C:\users\tobib\byggern\gal.vhd|i|1504706709|1082
-C:\users\tobib\byggern\GAL_addrSelect.srr|o|1504706727|1587
+C:\users\tobib\byggern\gal_vhdl\synwork\GAL_addrSelect_comp.srs|o|1504711897|1967
+C:\users\tobib\byggern\gal_vhdl\gal.vhd|i|1504711881|1101
+C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.srr|o|1504711897|1769
 C:\ispLEVER_Classic2_0\synpbase\bin\c_vhdl.exe|i|1401223898|2046976
 C:\ispLEVER_Classic2_0\synpbase\bin64\c_vhdl.exe|i|1401224104|5533184

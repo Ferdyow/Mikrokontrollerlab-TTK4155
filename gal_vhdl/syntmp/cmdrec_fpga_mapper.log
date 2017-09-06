@@ -1,10 +1,10 @@
-C:\ispLEVER_Classic2_0\synpbase\bin64\m_cpld.exe  -prodtype  synplify_pro  -encrypt  -pro  -rundir  C:\users\tobib\byggern  -part ispGAL22LV10  -package LJ  -grade -4   -areadelay 0 -minc -RWCheckOnRam 1 -summaryfile C:\users\tobib\byggern\synlog\report\GAL_addrSelect_fpga_mapper.xml -top_level_module  GAL_addrSelect  -multisrs  -oedif  C:\users\tobib\byggern\GAL_addrSelect.edi  -freq 1.000  C:\users\tobib\byggern\synwork\GAL_addrSelect_mult.srs  -devicelib  C:\ispLEVER_Classic2_0\synpbase\lib\cpld\lattice.v  -ologparam  C:\users\tobib\byggern\syntmp\GAL_addrSelect.plg  -osyn  C:\users\tobib\byggern\GAL_addrSelect.srm  -prjdir  c:\users\tobib\byggern\  -prjname  GAL_addrSelect  -log  C:\users\tobib\byggern\synlog\GAL_addrSelect_fpga_mapper.srr 
+C:\ispLEVER_Classic2_0\synpbase\bin64\m_cpld.exe  -prodtype  synplify_pro  -encrypt  -pro  -rundir  C:\users\tobib\byggern\gal_vhdl  -part ispGAL22LV10  -package LJ  -grade -4   -areadelay 0 -minc -RWCheckOnRam 1 -summaryfile C:\users\tobib\byggern\gal_vhdl\synlog\report\GAL_addrSelect_fpga_mapper.xml -top_level_module  GAL_addrSelect  -multisrs  -oedif  C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.edi  -freq 1.000  C:\users\tobib\byggern\gal_vhdl\synwork\GAL_addrSelect_mult.srs  -devicelib  C:\ispLEVER_Classic2_0\synpbase\lib\cpld\lattice.v  -ologparam  C:\users\tobib\byggern\gal_vhdl\syntmp\GAL_addrSelect.plg  -osyn  C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.srm  -prjdir  c:\users\tobib\byggern\gal_vhdl\  -prjname  GAL_addrSelect  -log  C:\users\tobib\byggern\gal_vhdl\synlog\GAL_addrSelect_fpga_mapper.srr 
 rc:0 success:1
-C:\users\tobib\byggern\GAL_addrSelect.edi|o|1504706729|5485
-C:\users\tobib\byggern\synwork\GAL_addrSelect_mult.srs|i|1504706728|1812
+C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.edi|o|1504711899|5970
+C:\users\tobib\byggern\gal_vhdl\synwork\GAL_addrSelect_mult.srs|i|1504711898|1892
 C:\ispLEVER_Classic2_0\synpbase\lib\cpld\lattice.v|i|1401260784|210986
-C:\users\tobib\byggern\syntmp\GAL_addrSelect.plg|o|1504706728|0
-C:\users\tobib\byggern\GAL_addrSelect.srm|o|1504706729|3989
-C:\users\tobib\byggern\synlog\GAL_addrSelect_fpga_mapper.srr|o|1504706729|1066
+C:\users\tobib\byggern\gal_vhdl\syntmp\GAL_addrSelect.plg|o|1504711899|0
+C:\users\tobib\byggern\gal_vhdl\GAL_addrSelect.srm|o|1504711899|4187
+C:\users\tobib\byggern\gal_vhdl\synlog\GAL_addrSelect_fpga_mapper.srr|o|1504711899|1066
 C:\ispLEVER_Classic2_0\synpbase\bin\m_cpld.exe|i|1399365684|7067648
 C:\ispLEVER_Classic2_0\synpbase\bin64\m_cpld.exe|i|1399368522|8049664

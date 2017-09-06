@@ -1,7 +1,7 @@
 #--  Synopsys, Inc.
 #--  Version I-2014.03LC 
-#--  Project file C:\users\tobib\byggern\run_options.txt
-#--  Written on Wed Sep 06 16:05:27 2017
+#--  Project file C:\users\tobib\byggern\gal_vhdl\run_options.txt
+#--  Written on Wed Sep 06 17:31:37 2017
 
 
 #project files
@@ -9,8 +9,8 @@ add_file -vhdl -lib work "./gal.vhd"
 
 
 
-#implementation: "byggern"
-impl -add byggern -type fpga
+#implementation: "gal_vhdl"
+impl -add gal_vhdl -type fpga
 
 #device options
 set_option -technology ispGAL
@@ -52,5 +52,5 @@ set_option -write_apr_constraint 1
 project -result_file "./GAL_addrSelect.edi"
 
 #set log file 
-set_option log_file "C:/users/tobib/byggern/gal_addrselect.srf" 
-impl -active "byggern"
+set_option log_file "C:/users/tobib/byggern/gal_vhdl/gal_addrselect.srf" 
+impl -active "gal_vhdl"

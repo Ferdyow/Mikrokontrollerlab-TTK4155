@@ -32,8 +32,8 @@ end;
 architecture behavioral of GAL_addrSelect is
 begin
 
-    ram_cs <= a11;
-    adc_cs <= NOT a11 AND a10;
-    oled_cs <= NOT (a11 OR a10);
+    ram_cs <=  not(a11);
+    adc_cs <= not(not a11 and a10);
+    oled_cs <= not(not a11 and not a10);
 
 end behavioral;

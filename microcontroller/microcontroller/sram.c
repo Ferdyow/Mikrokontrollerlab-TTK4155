@@ -18,12 +18,13 @@
 
 void SRAM_init(void){
 	set_bit(MCUCR, SRE);
+	SFIOR |= 0b00100000;
 }
 
 void SRAM_test(void)
 {
 	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;
+	uint16_t ext_ram_size = 0x1800;
 	uint16_t write_errors = 0;
 	uint16_t retrieval_errors = 0;
 	printf("Starting SRAM test...\n");
