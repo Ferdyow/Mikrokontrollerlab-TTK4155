@@ -109,6 +109,21 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="adc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="adc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="defines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="joy.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="joy.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="microcontroller.c">
       <SubType>compile</SubType>
     </Compile>

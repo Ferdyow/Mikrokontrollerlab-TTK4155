@@ -37,6 +37,8 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../adc.c \
+../joy.c \
 ../microcontroller.c \
 ../sram.c \
 ../usart.c
@@ -49,21 +51,29 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+adc.o \
+joy.o \
 microcontroller.o \
 sram.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
+adc.o \
+joy.o \
 microcontroller.o \
 sram.o \
 usart.o
 
 C_DEPS +=  \
+adc.d \
+joy.d \
 microcontroller.d \
 sram.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
+adc.d \
+joy.d \
 microcontroller.d \
 sram.d \
 usart.d
@@ -82,6 +92,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

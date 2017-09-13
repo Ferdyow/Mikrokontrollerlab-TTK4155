@@ -5,31 +5,33 @@
  *  Author: tobib
  */ 
 
-#include "usart.h"
-
-#define set_bit( reg, bit ) (reg |= (1 << bit))
-#define clear_bit( reg, bit ) (reg &= ~(1 << bit))
-#define test_bit( reg, bit ) (reg & (1 << bit))
-#define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
-#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
-
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdint.h>
+#include "usart.h"
+#include "adc.h"
+#include "defines.h"
+#include "joy.h"
 
-
-void initialize(void) {
+void initialize(void){
 	usart_init(MYUBRR);
 	SRAM_init();
+	adc_init();
+	joy_calibrate();
 }
 
 
 int main(void) {
 	initialize(); 	
-	SRAM_test();
+	//SRAM_test();
+	//adc_test();
 	
-	
+	int count=0;
 	while(1) {
-		 //printf("YOLO\n");
+		 //printf("X-axis: %4d\t\tY-axis: %4d\n",adc_read(0),adc_read(1));
+		 //printf("left slider: %4d\t\tright slider: %4d\n",adc_read(2),adc_read(3));
+		 if(!test_bit(PINB,PINB2)){
+			 printf("knapp er trykt inn\n");
+		 }
 	} return 1;
 }
