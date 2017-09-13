@@ -23,13 +23,7 @@ typedef struct{
 	int8_t y;
 } joy_position_t;
 
-typedef enum{
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN,
-	NEUTRAL
-	}joy_direction_t;
+typedef enum { LEFT, RIGHT, UP, DOWN, NEUTRAL } joy_direction_t;
 
 
 void joy_init();
