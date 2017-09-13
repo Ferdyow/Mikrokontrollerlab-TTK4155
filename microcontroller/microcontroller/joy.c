@@ -15,7 +15,12 @@ struct Coordinate {
 	uint8_t y;
 } max, min;
 
-
+void joy_init(){
+	set_bit(PORTB,PB2);
+	clear_bit(DDRB,PB2);
+	clear_bit(SFIOR, PUD);
+	joy_calibrate();
+}
 void joy_calibrate(){
 	max.x = 0;
 	max.y = 0;
@@ -40,6 +45,18 @@ void joy_calibrate(){
 	}
 }
 
-bool joy_button_pressed(){
-	
+bool joy_button_pressed(button b){
+	switch (b){
+		case 0:
+		if(test_bit(PINB,PINB0)) return true;
+		case 1:
+		if(test_bit(PINB,PINB1)) return true;
+		case 2:
+		if(!test_bit(PINB,PINB2)) return true;
+	}
+	return false;
 }
+
+//joy_direction_t joy_getDirection(){
+	//
+//}

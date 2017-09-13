@@ -17,7 +17,7 @@ void initialize(void){
 	usart_init(MYUBRR);
 	SRAM_init();
 	adc_init();
-	joy_calibrate();
+	joy_init();
 }
 
 
