@@ -25,14 +25,11 @@ void initialize(void) {
 
 
 int main(void) {
-	initialize();
+	initialize(); 	
 	SRAM_test();
+	
+	
 	while(1) {
-		printf("b");
-		usart_transmit_to_computer('k');
-		usart_transmit_to_computer('a');
-		
-		char recved = usart_receive_from_computer();
-		printf(recved);
-	}
+		 //printf("YOLO\n");
+	} return 1;
 }
