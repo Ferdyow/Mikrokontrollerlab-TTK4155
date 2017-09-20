@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "microcontroller", "microcontroller.cproj", "{BE37DEA4-D242-4C57-A0B2-307426746963}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE37DEA4-D242-4C57-A0B2-307426746963}.Debug|AVR.ActiveCfg = Debug|AVR
+		{BE37DEA4-D242-4C57-A0B2-307426746963}.Debug|AVR.Build.0 = Debug|AVR
+		{BE37DEA4-D242-4C57-A0B2-307426746963}.Release|AVR.ActiveCfg = Release|AVR
+		{BE37DEA4-D242-4C57-A0B2-307426746963}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

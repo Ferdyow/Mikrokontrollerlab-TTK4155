@@ -118,6 +118,9 @@
     <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="fonts.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="joy.c">
       <SubType>compile</SubType>
     </Compile>
@@ -125,6 +128,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="microcontroller.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="OLED_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="OLED_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sram.c">

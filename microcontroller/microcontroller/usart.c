@@ -5,8 +5,10 @@
  *  Author: tobib
  */ 
 
-#include <avr/io.h>
 #include "usart.h"
+
+#include <avr/io.h>
+
 
 void usart_init(unsigned int ubbr) {
 	/* Set baud rate */

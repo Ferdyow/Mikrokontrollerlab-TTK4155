@@ -40,6 +40,7 @@ C_SRCS +=  \
 ../adc.c \
 ../joy.c \
 ../microcontroller.c \
+../OLED_driver.c \
 ../sram.c \
 ../usart.c
 
@@ -54,6 +55,7 @@ OBJS +=  \
 adc.o \
 joy.o \
 microcontroller.o \
+OLED_driver.o \
 sram.o \
 usart.o
 
@@ -61,6 +63,7 @@ OBJS_AS_ARGS +=  \
 adc.o \
 joy.o \
 microcontroller.o \
+OLED_driver.o \
 sram.o \
 usart.o
 
@@ -68,6 +71,7 @@ C_DEPS +=  \
 adc.d \
 joy.d \
 microcontroller.d \
+OLED_driver.d \
 sram.d \
 usart.d
 
@@ -75,6 +79,7 @@ C_DEPS_AS_ARGS +=  \
 adc.d \
 joy.d \
 microcontroller.d \
+OLED_driver.d \
 sram.d \
 usart.d
 
@@ -92,6 +97,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

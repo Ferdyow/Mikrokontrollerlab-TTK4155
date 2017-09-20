@@ -5,14 +5,17 @@
  *  Author: tobib
  */ 
 
+#include "defines.h"
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <avr/io.h>
-#include "defines.h"
+
 
 
 
 void SRAM_init(void){
+	//Enable external memory interface
 	set_bit(MCUCR, SRE);
 	
 	//disable JTAG ports

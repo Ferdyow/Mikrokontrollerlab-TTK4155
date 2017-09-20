@@ -4,27 +4,29 @@
  * Created: 13.09.2017 11:58:01
  *  Author: tobib
  */ 
+#include "defines.h"
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <avr/io.h>
 
-#include "defines.h"
 
+ //UNUSED
+/*
 volatile int inter;
-//SPØR OM INTERRUPT
 ISR(INT2_vect){
 	inter++;
 	printf("hei bæsj!\n");
-}
+}*/
 
-void adc_init(){
+void ADC_init(){
 	//set interrupt pin to input
 	clear_bit(DDRE,DDE0);
 	
 }
 
 
-void adc_test(void){
+void ADC_test(void){
 	volatile char *adc = (char *) 0x1400; // Start address for the SRAM
 	uint16_t adc_size = 0x400;
 	uint16_t write_errors = 0;
@@ -61,25 +63,27 @@ void adc_test(void){
 	printf("ADC test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase \n(of %4d and %4d)\n", write_errors, retrieval_errors,total1,total2);
 }
 
-char adc_read(char channel){
+char ADC_read(char channel){
 	//start adress for the adc
 	volatile char *adc = (char *) 0x1400;
 
-	
 	//invalid input
 	if(channel > 3) return 0;
 	
 	//choose channel (1-4) - single ended
 	*adc = 0x4 + channel; 
 	
-	
 	//wait 'til /INTR is low
 	 while(test_bit(PINE, PINE0));
-	//while(!inter)
-	//printf("hade bæsj! %4d\n",inter);
+	
+	 /*
+	 interrupt functionality (currently not working)
+	 //while(!inter)
 	 
 	//reset interrupt
 	inter = 0;
+	*/
+
 	//return current value
 	return *adc; 
 }

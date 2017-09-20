@@ -9,9 +9,16 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-void adc_init();
-char adc_read(char channel);
-void adc_test(void);
+
+//sets our "interrupt" pin on the ATmega162 to input
+void ADC_init();
+
+
+//Reads the value from the chosen channel and returns it
+char ADC_read(char channel);
+
+//tests the memory locations of the ADC
+void ADC_test(void);
 
 
 #endif /* ADC_H_ */
