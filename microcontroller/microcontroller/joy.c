@@ -4,10 +4,13 @@
  * Created: 13.09.2017 15:10:13
  *  Author: tobib
  */ 
+
+#define F_CPU 4915200  // Clock frequency in Hz
 #include "JOY.h"
 #include "adc.h"
 #include "defines.h"
 
+#include <stdio.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdint.h>
@@ -44,10 +47,9 @@ void JOY_calibrate(){
 	//check channels 
 	while(test_bit(PINB,PINB2)){
 		// Read sensor values
-		printf("hei");
 		x = ADC_read(0);
 		y = ADC_read(1);
-		printf("%d, %d",x,y);
+		
 		// Calibrate x
 		if (min.x > x) min.x = x; 
 		else if (max.x < x) max.x = x;
@@ -117,7 +119,7 @@ SLI_position_t SLI_getPosition() {
 	return pos;
 }
 
-JOY_test() {
+void JOY_test() {
 	while (1) {
 		JOY_position_t posJ = JOY_getPosition();
 		SLI_position_t posS = SLI_getPosition();

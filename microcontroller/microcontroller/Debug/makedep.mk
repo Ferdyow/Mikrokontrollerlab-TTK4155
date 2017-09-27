@@ -10,6 +10,8 @@ microcontroller.c
 
 OLED_driver.c
 
+OLED_menu.c
+
 sram.c
 
 usart.c

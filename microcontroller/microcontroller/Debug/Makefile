@@ -41,6 +41,7 @@ C_SRCS +=  \
 ../joy.c \
 ../microcontroller.c \
 ../OLED_driver.c \
+../OLED_menu.c \
 ../sram.c \
 ../usart.c
 
@@ -56,6 +57,7 @@ adc.o \
 joy.o \
 microcontroller.o \
 OLED_driver.o \
+OLED_menu.o \
 sram.o \
 usart.o
 
@@ -64,6 +66,7 @@ adc.o \
 joy.o \
 microcontroller.o \
 OLED_driver.o \
+OLED_menu.o \
 sram.o \
 usart.o
 
@@ -72,6 +75,7 @@ adc.d \
 joy.d \
 microcontroller.d \
 OLED_driver.d \
+OLED_menu.d \
 sram.d \
 usart.d
 
@@ -80,6 +84,7 @@ adc.d \
 joy.d \
 microcontroller.d \
 OLED_driver.d \
+OLED_menu.d \
 sram.d \
 usart.d
 
@@ -97,6 +102,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

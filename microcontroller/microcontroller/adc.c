@@ -8,16 +8,9 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <avr/io.h>
 
-
- //UNUSED
-/*
-volatile int inter;
-ISR(INT2_vect){
-	inter++;
-	printf("hei bæsj!\n");
-}*/
 
 void ADC_init(){
 	//set interrupt pin to input
@@ -45,7 +38,7 @@ void ADC_test(void){
 		uint8_t retreived_value = adc[i];
 		total1++;
 		if (retreived_value != some_value) {
-			//printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
+			//fprintf(PC, "Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
 			write_errors++;
 		}
 	}
@@ -56,7 +49,7 @@ void ADC_test(void){
 		uint8_t retreived_value = adc[i];
 		total2++;
 		if (retreived_value != some_value) {
-			//printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n",i, retreived_value, some_value);
+			//fprintf(PC, "Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n",i, retreived_value, some_value);
 			retrieval_errors++;
 		}
 	}
