@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef OLED_MENU_H_
-#define OLED_MENU_H_
+#ifndef MENU_H_
+#define MENU_H_
 
 /************************************************************************************
 *The menu system is implemented as a linked list
@@ -18,21 +18,19 @@
 
 #include <string.h>
 
-typedef struct menu_node menu_node;
+typedef struct menu_entry menu_entry;
 
-struct menu_node{
+struct menu_entry{
 	char* name;
-	menu_node* parent_node;
-	menu_node* child_node;
-	menu_node* next_sibling_node;
-	menu_node* prev_sibling_node;
+	menu_entry* parent_node;
+	menu_entry* child_node;
+	menu_entry* next_sibling_node;
+	menu_entry* prev_sibling_node;
+	void(*function_ptr)();
 };
-
-menu_node* add_node(menu_node* parent, char* name);
 
 
 void MENU_init();
-
 
 void MENU_test();
 
@@ -46,4 +44,6 @@ void MENU_enter_selection();
 
 void MENU_go_back();
 
-#endif /* OLED_MENU_H_ */
+menu_entry* add_entry(menu_entry* parent, char* name, void* function_ptr);
+
+#endif /* MENU_H_ */

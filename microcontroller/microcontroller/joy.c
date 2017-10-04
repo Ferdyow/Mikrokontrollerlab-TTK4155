@@ -43,7 +43,9 @@ void JOY_calibrate(){
 	min.y = 255;
 	uint8_t x;
 	uint8_t y;
-	printf("Move the joystick to all extreme points\nPress the joystick when you're done.\n");
+	OLED_reset();
+	printf("\nMove the joystick to all extreme points.\n");
+	printf("Press the joystick when you're done.\n");
 	//check channels 
 	while(test_bit(PINB,PINB2)){
 		// Read sensor values

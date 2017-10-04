@@ -67,11 +67,11 @@ char ADC_read(char channel){
 	*adc = 0x4 + channel; 
 	
 	//wait 'til /INTR is low
-	 while(test_bit(PINE, PINE0));
+	while(test_bit(PINE, PINE0));
 	
-	 /*
-	 interrupt functionality (currently not working)
-	 //while(!inter)
+	/*
+	interrupt functionality (currently not working)
+	//while(!inter)
 	 
 	//reset interrupt
 	inter = 0;

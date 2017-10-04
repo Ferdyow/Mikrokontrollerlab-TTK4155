@@ -115,6 +115,12 @@
     <Compile Include="adc.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="CAN.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CAN.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
@@ -127,6 +133,12 @@
     <Compile Include="joy.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MCP2515.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCP2515.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="microcontroller.c">
       <SubType>compile</SubType>
     </Compile>
@@ -136,10 +148,16 @@
     <Compile Include="OLED_driver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="OLED_menu.c">
+    <Compile Include="MENU.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="OLED_menu.h">
+    <Compile Include="MENU.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SPI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SPI.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sram.c">

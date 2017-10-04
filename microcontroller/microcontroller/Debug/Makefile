@@ -38,10 +38,13 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../adc.c \
+../CAN.c \
 ../joy.c \
+../MCP2515.c \
 ../microcontroller.c \
 ../OLED_driver.c \
-../OLED_menu.c \
+../MENU.c \
+../SPI.c \
 ../sram.c \
 ../usart.c
 
@@ -54,37 +57,49 @@ ASM_SRCS +=
 
 OBJS +=  \
 adc.o \
+CAN.o \
 joy.o \
+MCP2515.o \
 microcontroller.o \
 OLED_driver.o \
-OLED_menu.o \
+MENU.o \
+SPI.o \
 sram.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
 adc.o \
+CAN.o \
 joy.o \
+MCP2515.o \
 microcontroller.o \
 OLED_driver.o \
-OLED_menu.o \
+MENU.o \
+SPI.o \
 sram.o \
 usart.o
 
 C_DEPS +=  \
 adc.d \
+CAN.d \
 joy.d \
+MCP2515.d \
 microcontroller.d \
 OLED_driver.d \
-OLED_menu.d \
+MENU.d \
+SPI.d \
 sram.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
 adc.d \
+CAN.d \
 joy.d \
+MCP2515.d \
 microcontroller.d \
 OLED_driver.d \
-OLED_menu.d \
+MENU.d \
+SPI.d \
 sram.d \
 usart.d
 
@@ -102,6 +117,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

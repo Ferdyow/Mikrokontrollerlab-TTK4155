@@ -12,22 +12,27 @@
 #include "defines.h"
 #include "joy.h"
 #include "OLED_driver.h"
-#include "OLED_menu.h"
+#include "MENU.h"
 #include "sram.h"
+#include "MCP2515.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 
 void initialize(void){
+	cli();
+	OLED_reset();
 	usart_init(MYUBRR);
 	SRAM_init();
 	ADC_init();
 	JOY_init();
 	OLED_init();
 	MENU_init();
+	sei();
 }
 
 
@@ -37,35 +42,18 @@ void test(void) {
 	// JOY_test();
 	// OLED_test();
 	//MENU_test();
+	SPI_test();
 	
 }
 
-void main_menu() {
-	if (JOY_getDirection() == DOWN) {
-		MENU_select_next();
-	} else if (JOY_getDirection() == UP) { 
-		MENU_select_prev();
-	} 
-	
-	if (JOY_button_pressed(JOY_BUTTON)) {
-		MENU_enter_selection();
-	}
-	
-	/* FIXME: LEFT_BUTTON always pressed? */
-	else if (JOY_button_pressed(LEFT_BUTTON)) {
-		MENU_go_back();
-	}
-	// Make sure the selection doesn't move multiple places at once.
-	_delay_ms(300);
-}
+
 
 int main(void) {
 	initialize(); 	
-	
 	test();
 	
 	while(1) {
-		main_menu();
+		MENU_run();
 	}
 	
 	return 0;

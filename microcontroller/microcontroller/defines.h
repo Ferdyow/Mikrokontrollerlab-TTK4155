@@ -22,7 +22,7 @@ static FILE oled_out = FDEV_SETUP_STREAM(OLED_print_char, NULL, _FDEV_SETUP_WRIT
 #define OLED &oled_out
 //#define PC &pc_out
 
-//#define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
+#define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
 //#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
 
 #endif /* DEFINES_H_ */

@@ -76,7 +76,8 @@ void OLED_init(){
 		0xaf //display on
 	};
 	
-	for (int i = 0; i < sizeof(addresses)/sizeof(addresses[0]); i++) {
+	const addresses_length = sizeof(addresses)/sizeof(addresses[0]);
+	for (int i = 0; i < addresses_length; i++) {
 		write_cmd(addresses[i]);
 	}
 	
