@@ -51,14 +51,20 @@ void SPI_init(){
 }
 
 
-void SPI_send(char data){
-	//Start transmission
-	SPDR = data;
-	
-	//wait for transmission complete SPSR: register with SPIF flag, SPIF: bit set to 1 when data is read
-	loop_until_bit_is_set(SPSR, SPIF);
-
-	
+void SPI_send(uint8_t data){
+	if (data == 0x81) {
+		//Start transmission
+		printf("Before SPDR (in SPI_send)\n\n");
+		SPDR = 0x81;
+		printf("After SPDR (in SPI_send)\n\n");
+		
+	} else {
+		//Start transmission
+		SPDR = data;
+			
+		//wait for transmission complete SPSR: register with SPIF flag, SPIF: bit set to 1 when data is read
+		loop_until_bit_is_set(SPSR, SPIF);
+	}
 }
 
 

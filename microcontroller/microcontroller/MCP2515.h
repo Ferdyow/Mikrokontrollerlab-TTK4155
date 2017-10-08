@@ -4,9 +4,9 @@
 
 uint8_t MCP2515_init();
 char MCP2515_read(char address);
-void MCP2515_write(char address, char masked_bits, char data);
+void MCP2515_write(char address, char data);
 void MCP2515_request_to_send(uint8_t buffer_states);
-void MCP2515_bit_modify(char reg_address, char new_data);
+void MCP2515_bit_modify(char reg_address, char masked_bits, char new_data);
 void MCP2515_reset();
 char MCP2515_read_status();
 
@@ -67,11 +67,27 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_CANINTE		0x2B
 #define MCP_CANINTF		0x2C
 #define MCP_EFLG		0x2D
+
+
 #define MCP_TXB0CTRL	0x30
+#define MCP_TXB0SIDH	0x31
+#define MCP_TXB0SIDL	0x32
+#define MCP_TXB0EID8	0x33
+#define MCP_TXB0EID0	0x34
+#define MCP_TXB0DLC		0x35
+#define MCP_TXB0D0		0x36
+
 #define MCP_TXB1CTRL	0x40
 #define MCP_TXB2CTRL	0x50
+
 #define MCP_RXB0CTRL	0x60
 #define MCP_RXB0SIDH	0x61
+#define MCP_RXB0SIDL	0x62
+#define MCP_RXB0EID8	0x63
+#define MCP_RXB0EID0	0X64
+#define MCP_RXB0DLC		0X65
+#define MCP_RXB0D0		0x66	
+
 #define MCP_RXB1CTRL	0x70
 #define MCP_RXB1SIDH	0x71
 
