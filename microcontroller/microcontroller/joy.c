@@ -14,6 +14,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdint.h>
+#include <math.h>
 
  /*"on the go"-calibration is done manually (not needed in the .h file)*/
 void JOY_calibrate();

@@ -46,8 +46,8 @@ void test(void) {
 	// OLED_test();
 	//MENU_test();
 	//SPI_test();
-	
 	CAN_test();
+	
 	
 }
 
@@ -57,8 +57,8 @@ int main(void) {
 	initialize(); 	
 	test();
 	while(1) {
-		
-		//MENU_run();
+		//test();
+		MENU_run();
 	}
 	
 	return 0;

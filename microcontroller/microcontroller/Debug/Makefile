@@ -41,9 +41,9 @@ C_SRCS +=  \
 ../CAN.c \
 ../joy.c \
 ../MCP2515.c \
+../MENU.c \
 ../microcontroller.c \
 ../OLED_driver.c \
-../MENU.c \
 ../SPI.c \
 ../sram.c \
 ../usart.c
@@ -60,9 +60,9 @@ adc.o \
 CAN.o \
 joy.o \
 MCP2515.o \
+MENU.o \
 microcontroller.o \
 OLED_driver.o \
-MENU.o \
 SPI.o \
 sram.o \
 usart.o
@@ -72,9 +72,9 @@ adc.o \
 CAN.o \
 joy.o \
 MCP2515.o \
+MENU.o \
 microcontroller.o \
 OLED_driver.o \
-MENU.o \
 SPI.o \
 sram.o \
 usart.o
@@ -84,9 +84,9 @@ adc.d \
 CAN.d \
 joy.d \
 MCP2515.d \
+MENU.d \
 microcontroller.d \
 OLED_driver.d \
-MENU.d \
 SPI.d \
 sram.d \
 usart.d
@@ -96,9 +96,9 @@ adc.d \
 CAN.d \
 joy.d \
 MCP2515.d \
+MENU.d \
 microcontroller.d \
 OLED_driver.d \
-MENU.d \
 SPI.d \
 sram.d \
 usart.d

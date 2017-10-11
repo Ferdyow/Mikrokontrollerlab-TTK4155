@@ -139,6 +139,12 @@
     <Compile Include="MCP2515.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MENU.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MENU.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="microcontroller.c">
       <SubType>compile</SubType>
     </Compile>
@@ -146,12 +152,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="OLED_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MENU.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MENU.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="SPI.c">

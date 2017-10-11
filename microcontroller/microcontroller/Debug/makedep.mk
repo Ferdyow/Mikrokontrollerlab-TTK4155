@@ -10,11 +10,11 @@ joy.c
 
 MCP2515.c
 
+MENU.c
+
 microcontroller.c
 
 OLED_driver.c
-
-MENU.c
 
 SPI.c
 
