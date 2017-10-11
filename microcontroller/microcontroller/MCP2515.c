@@ -8,10 +8,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <avr/io.h>
-#include <util/delay.h>
 #include <avr/pgmspace.h>
 
 #include "MCP2515.h"
+#include "SPI.h"
 
 #define RESET 0xC0
 #define READ 0x03
@@ -27,7 +27,7 @@ uint8_t MCP2515_init() {
 	MCP2515_reset();
 	//check bit 7-5 of MCP_CANSTAT which signify the operation mode
 	const uint8_t device_mode = MCP2515_read(MCP_CANSTAT) & MODE_MASK;
-	
+	//printf("%d\n", device_mode);
 	if (device_mode != MODE_CONFIG) {
 		printf("MCP2515 is NOT in configuration mode after reset!\n");
 		return 1;
@@ -58,7 +58,7 @@ void MCP2515_write(char address, char data) {
 //Buffer states: three bit, setting a 1 on the buffer initiates transmitting from it 
 void MCP2515_request_to_send(uint8_t buffer_states) {
 	SPI_select();
-	
+
 	SPI_send(RTS_BASE+buffer_states);
 	
 	SPI_deselect();

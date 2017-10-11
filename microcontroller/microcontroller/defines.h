@@ -9,8 +9,8 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
-#include "OLED_driver.h";
-#include "usart.h";
+#include "OLED_driver.h"
+#include "usart.h"
 
 #define set_bit( reg, bit ) (reg |= (1 << bit))
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))

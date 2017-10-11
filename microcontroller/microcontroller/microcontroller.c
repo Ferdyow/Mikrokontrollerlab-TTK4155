@@ -15,6 +15,8 @@
 #include "MENU.h"
 #include "sram.h"
 #include "MCP2515.h"
+#include "CAN.h"
+#include "SPI.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -29,9 +31,10 @@ void initialize(void){
 	usart_init(MYUBRR);
 	SRAM_init();
 	ADC_init();
-	JOY_init();
+	//JOY_init();
 	OLED_init();
 	MENU_init();
+	CAN_init();
 	sei();
 }
 
@@ -42,7 +45,9 @@ void test(void) {
 	// JOY_test();
 	// OLED_test();
 	//MENU_test();
-	SPI_test();
+	//SPI_test();
+	
+	CAN_test();
 	
 }
 
@@ -51,9 +56,9 @@ void test(void) {
 int main(void) {
 	initialize(); 	
 	test();
-	
 	while(1) {
-		MENU_run();
+		
+		//MENU_run();
 	}
 	
 	return 0;

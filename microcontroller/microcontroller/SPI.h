@@ -11,7 +11,7 @@
 
 void SPI_init();
 
-void SPI_send(char c);
+void SPI_send(uint8_t c);
 
 //reads one byte from the SPI
 char SPI_read();

@@ -9,22 +9,22 @@
 #ifndef CAN_H_
 #define CAN_H_
 
-struct can_message {
+typedef struct {
 	unsigned int id;
 	uint8_t length;
 	uint8_t data[8];
-};
+}can_message;
 
 
 void CAN_init();
 
-void CAN_message_send(&can_message msg);
+void CAN_message_send(can_message* msg);
 
 void CAN_error();
 
-void CAN_transmit_complete();
+bool CAN_transmit_complete(int transmit_buffer_numb);
 
-void CAN_data_receive();
+void CAN_data_receive(int receive_buffer_numb, can_message* received_msg);
 
 // Interrupt vector
 void CAN_int_vect();
