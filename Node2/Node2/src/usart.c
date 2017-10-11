@@ -20,7 +20,7 @@ void usart_init(unsigned int ubbr) {
 	UCSR0B = (1<<RXEN0) | (1<<TXEN0);
 	
 	/* Set frame format: 8data, 2stop bit */
-	UCSR0C = (1<<URSEL0) | (1<<USBS0) | (3<<UCSZ00);
+	UCSR0C = (1<<USBS0) | (3<<UCSZ00);
 	
 	
 	/* Enable printf-thing */
@@ -32,7 +32,6 @@ void usart_transmit_to_computer(unsigned int data) {
 	/* Wait for empty transmit buffer */
 	while (!(UCSR0A & (1<<UDRE0)))
 	;
-	
 	/* Put data into buffer (sends the data) */
 	UDR0 = data;
 }

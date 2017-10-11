@@ -8,10 +8,10 @@
 #ifndef USART_H_
 #define USART_H_
 
-#define F_CPU 4915200  // Clock frequency in Hz
-#define FOSC 4915200
+#define FOSC 16000000
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
+
 
 /**
  * Initialize USART interface for transmit and receive.

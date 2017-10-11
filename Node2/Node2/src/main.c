@@ -30,11 +30,23 @@
  */
 #include <asf.h>
 
-int main (void)
-{
-	// Insert system clock initialization code here (sysclk_init()).
 
-	board_init();
+#include "usart.h"
+#include "defines.h"
 
-	// Insert application code here, after the board has been initialized.
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+void initialize(){
+	usart_init(MYUBRR);
+}
+
+int main(void){
+	initialize();
+	usart_transmit_to_computer('a');
+	printf("\nDet funker.\n");
+	return 0;
 }
