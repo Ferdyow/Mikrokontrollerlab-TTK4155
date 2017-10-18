@@ -9,7 +9,7 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
-#include "usart.h";
+#include "usart.h"
 
 #define set_bit( reg, bit ) (reg |= (1 << bit))
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))

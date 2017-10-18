@@ -52,5 +52,7 @@ void OLED_set_screen();
 void OLED_set_line(uint8_t line);
 void OLED_test();
 
+void OLED_print_arrow();
+
 
 #endif /* OLED_DRIVER_H_ */

@@ -44,6 +44,8 @@ void MENU_enter_selection();
 
 void MENU_go_back();
 
+void MENU_run();
+
 menu_entry* add_entry(menu_entry* parent, char* name, void* function_ptr);
 
 #endif /* MENU_H_ */

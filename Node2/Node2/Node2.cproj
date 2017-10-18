@@ -201,7 +201,25 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\CAN.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\CAN.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\defines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\MCP2515.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\MCP2515.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SPI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SPI.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\usart.c">

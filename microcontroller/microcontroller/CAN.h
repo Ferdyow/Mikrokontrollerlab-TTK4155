@@ -9,6 +9,11 @@
 #ifndef CAN_H_
 #define CAN_H_
 
+#define BUFFER_LENGTH 16
+#define TB0 0
+#define TB1 1
+#define TB2 2
+
 typedef struct {
 	unsigned int id;
 	uint8_t length;
@@ -29,5 +34,6 @@ void CAN_data_receive(can_message* received_msg);
 // Interrupt vector
 void CAN_int_vect();
 
+void CAN_test();
 
 #endif /* CAN_H_ */

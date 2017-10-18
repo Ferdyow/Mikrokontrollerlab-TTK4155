@@ -9,16 +9,16 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-void SPI_init();
+void SPI_init(void);
 
 void SPI_send(uint8_t c);
 
 //reads one byte from the SPI
-char SPI_read();
+uint8_t SPI_read(void);
 
-void SPI_test();
+void SPI_test(void);
 
-void SPI_deselect();
-void SPI_select();
+void SPI_deselect(void);
+void SPI_select(void);
 
 #endif /* SPI_H_ */

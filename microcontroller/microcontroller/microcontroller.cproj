@@ -145,7 +145,7 @@
     <Compile Include="MENU.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="microcontroller.c">
+    <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="OLED_driver.c">

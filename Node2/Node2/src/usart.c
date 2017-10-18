@@ -37,7 +37,7 @@ void usart_transmit_to_computer(unsigned int data) {
 }
 
 
-unsigned char usart_receive_from_computer(void) {
+uint8_t usart_receive_from_computer(void) {
 	/* Wait for data to be received */
 	while (!(UCSR0A & (1<<RXC0)))
 	;

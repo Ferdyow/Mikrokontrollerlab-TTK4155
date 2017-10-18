@@ -17,10 +17,7 @@
 #include "MCP2515.h"
 #include "CAN.h"
 
-#define BUFFER_LENGTH 16
-#define TB0 0
-#define TB1 1
-#define TB2 2
+
 
 volatile int flag_RX0 = 0;
 volatile int flag_RX1 = 0;
@@ -102,6 +99,7 @@ void CAN_message_send(can_message* msg) {
 	uint8_t buffer_states = (uint8_t)(1 << buffer_numb);
 	MCP2515_request_to_send(buffer_states);
 	
+	
 }
 
 void CAN_error() {
@@ -123,14 +121,18 @@ void CAN_error() {
 }
 
 
-bool CAN_transmit_complete(int transmit_buffer_numb) {	
-	if(MCP2515_read(MCP_TXB0CTRL) & MCP_TXREQ){
+bool CAN_transmit_complete(int transmit_buffer_numb) {
+	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * transmit_buffer_numb;
+	
+	printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+	
+	printf("TXB0CTRL: 0x%02x\n", MCP2515_read(address));
+	
+	if(MCP2515_read(address) & MCP_TXREQ){
 		return false;
 	}
+	
 	return true; 
-
-
-
 }
 
 
@@ -188,7 +190,12 @@ void CAN_test(){
 	my_message.data[1] = 0xFF;
 	my_message.data[2] = 0x55;
 	CAN_message_send(&my_message);
-	while(!CAN_transmit_complete(0));
+	printf("Before transmit complete");
+	int i = 0;
+	while(!CAN_transmit_complete(0)) {
+		break;
+	} //Her sitter den fast i loopback
+	printf("After transmit complete");
 	CAN_data_receive(&received_message);
 	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);
 	for (uint8_t byte = 0; byte < my_message.length;byte++){

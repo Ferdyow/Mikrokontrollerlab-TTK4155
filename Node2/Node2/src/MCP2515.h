@@ -2,15 +2,15 @@
 #define __MCP2515_H
 
 
-uint8_t MCP2515_init();
-char MCP2515_read(char address);
-void MCP2515_write(char address, char data);
+uint8_t MCP2515_init(void);
+uint8_t MCP2515_read(uint8_t address);
+void MCP2515_write(uint8_t address, uint8_t data);
 void MCP2515_request_to_send(uint8_t buffer_states);
 
 //A 1 in the bit_mask allows the bit to be changed
-void MCP2515_bit_modify(char reg_address, char masked_bits, char new_data);
-void MCP2515_reset();
-char MCP2515_read_status();
+void MCP2515_bit_modify(uint8_t reg_address, uint8_t masked_bits, uint8_t new_data);
+void MCP2515_reset(void);
+uint8_t MCP2515_read_status(void);
 
 //#define MCP2515_loopback_mode() MCP2515_bit_modify(MCP_CANSTAT, 0xE0, 0x40)
 /*

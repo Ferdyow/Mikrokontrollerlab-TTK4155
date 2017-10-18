@@ -31,11 +31,14 @@ void initialize(void){
 	usart_init(MYUBRR);
 	SRAM_init();
 	ADC_init();
-	//JOY_init();
+	JOY_init();
 	OLED_init();
 	MENU_init();
 	CAN_init();
+	
 	sei();
+	
+	
 }
 
 
@@ -48,18 +51,45 @@ void test(void) {
 	//SPI_test();
 	CAN_test();
 	
+	can_message my_message;
+	my_message.id = 150;
+	my_message.length = 3;
+	my_message.data[0] = 0x00;
+	my_message.data[1] = 0xFF;
+	my_message.data[2] = 0x55;
+	
+	while(1) {
+		while(!CAN_transmit_complete(TB0)){}
+		CAN_message_send(&my_message);
+		MENU_run();
+	}
+	
 	
 }
 
-
+void send_joystick_pos(){
+	can_message msg;
+	msg.id  = 0;
+	msg.length = 2;
+	JOY_position_t pos;
+	
+	MENU_run();
+	pos = JOY_getPosition();
+	msg.data[0] = pos.x;
+	msg.data[1] = pos.y;
+	printf("SENDING:\nx: %d\ty:%d\n\n",pos.x, pos.y);
+	CAN_message_send(&msg);
+	while(!CAN_transmit_complete(TB0)){
+			
+	} //HER KRÆSJER DEN
+	printf("1. EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
+	
+}
 
 int main(void) {
-	initialize(); 	
+	initialize(); 
+	//send_joystick_pos();
 	test();
-	while(1) {
-		//test();
-		MENU_run();
-	}
 	
 	return 0;
 }

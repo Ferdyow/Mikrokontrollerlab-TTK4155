@@ -15,6 +15,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 volatile menu_entry* current_entry;
 volatile menu_entry* selected_entry;
@@ -32,6 +33,8 @@ void MENU_init() {
 	menu_entry* highscore = add_entry(main_menu, "Highscore", test_function);
 	menu_entry* settings = add_entry(main_menu, "Settings", NULL);
 	menu_entry* extras = add_entry(main_menu, "Extra features", NULL);
+	menu_entry* yolo = add_entry(main_menu, "YOLO", NULL);
+	
 	
 	// Sub-menu settings
 	menu_entry* brightness = add_entry(settings, "Brightness", NULL);
@@ -177,6 +180,7 @@ menu_entry* add_entry(menu_entry* parent_node, char* name, void* function_ptr){
 		
 		// Keep going until you reach the last child (that has no younger sibling)
 		while (temp_node->next_sibling_node != NULL) {
+			printf("temp_node->next_sibling_node->name: %s\n", temp_node->next_sibling_node->name);
 			temp_node = temp_node->next_sibling_node;
 		}
 		
