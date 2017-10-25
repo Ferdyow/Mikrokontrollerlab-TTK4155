@@ -54,7 +54,9 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../src/CAN.c \
 ../src/MCP2515.c \
+../src/servo.c \
 ../src/SPI.c \
+../src/PWM.c \
 ../src/usart.c \
 ../src/ASF/mega/boards/stk600/rcx_x/init.c \
 ../src/main.c
@@ -69,7 +71,9 @@ ASM_SRCS +=
 OBJS +=  \
 src/CAN.o \
 src/MCP2515.o \
+src/servo.o \
 src/SPI.o \
+src/PWM.o \
 src/usart.o \
 src/ASF/mega/boards/stk600/rcx_x/init.o \
 src/main.o
@@ -77,7 +81,9 @@ src/main.o
 OBJS_AS_ARGS +=  \
 src/CAN.o \
 src/MCP2515.o \
+src/servo.o \
 src/SPI.o \
+src/PWM.o \
 src/usart.o \
 src/ASF/mega/boards/stk600/rcx_x/init.o \
 src/main.o
@@ -85,7 +91,9 @@ src/main.o
 C_DEPS +=  \
 src/CAN.d \
 src/MCP2515.d \
+src/servo.d \
 src/SPI.d \
+src/PWM.d \
 src/usart.d \
 src/ASF/mega/boards/stk600/rcx_x/init.d \
 src/main.d
@@ -93,7 +101,9 @@ src/main.d
 C_DEPS_AS_ARGS +=  \
 src/CAN.d \
 src/MCP2515.d \
+src/servo.d \
 src/SPI.d \
+src/PWM.d \
 src/usart.d \
 src/ASF/mega/boards/stk600/rcx_x/init.d \
 src/main.d
@@ -112,6 +122,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

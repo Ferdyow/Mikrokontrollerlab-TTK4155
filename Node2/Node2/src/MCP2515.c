@@ -28,7 +28,7 @@ uint8_t MCP2515_init(void) {
 	SPI_init();
 	MCP2515_reset();
 	
-	_delay_ms(.1); //why oh why
+	_delay_us(100); //why oh why
 	//check bit 7-5 of MCP_CANSTAT which signify the operation mode
 	const uint8_t device_mode = MCP2515_read(MCP_CANSTAT) & MODE_MASK;
 

@@ -29,7 +29,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
  
- #define F_CPU 4915200  // Clock frequency in Hz
+ #define F_CPU 16000000  // Clock frequency in Hz
  
 #include <asf.h>
 
@@ -39,6 +39,8 @@
 #include "CAN.h"
 #include "MCP2515.h"
 #include "SPI.h"
+#include "PWM.h"
+#include "servo.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -50,7 +52,8 @@ void initialize(void){
 	cli();
 	usart_init(MYUBRR);
 	CAN_init();
-	//sei();
+	servo_init();
+	sei();
 }
 
 void test(void){
@@ -67,27 +70,38 @@ void test(void){
 	}
 }
 
-void receive_joystick_pos(){
+can_message receive_joystick_pos(){
 	can_message msg;
 	msg.length = 0;
-	printf("EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
+	//printf("EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
 	while (!msg.length){
 		CAN_data_receive(&msg);
-		printf("EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
+		//printf("EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
 	}
-	printf("%d\n", msg.length);
-	if(msg.length){
-		printf("RECEIVED:\nlength: %d\nid: %d\n", msg.length, msg.id);
-		printf("x: %d\ty:%d\n\n",msg.data[0],msg.data[1]);
-	}
+	//printf("%d\n", msg.length);
+	//if(msg.length){
+		//printf("RECEIVED:\nlength: %d\nid: %d\n", msg.length, msg.id);
+		//printf("x: %d\ty:%d\n\n",msg.data[0],msg.data[1]);
+	//}
+	return msg;
 }
 
 int main(void){
 	initialize();
 	printf("CANCTRL: 0x%02x\n", MCP2515_read(MCP_CANCTRL));
 	printf("Usart funker.\n");
-	receive_joystick_pos();
 	
+	can_message message;
+	int8_t x = 0;
+	
+	while(1){
+		message = receive_joystick_pos();
+		x = message.data[0];
+		//printf("[NODE2][main] x = %d\n", x);
+		servo_set(x);
+	}
+	
+	//CAN_test();
 	//test();
 	return 0;
 }

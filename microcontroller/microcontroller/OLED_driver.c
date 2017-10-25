@@ -176,7 +176,7 @@ void OLED_test(){
 	for(int co = 0; co < 255; co += 50){
 		OLED_set_brightness(co);
 		OLED_set_screen();
-		_delay_ms(100);
+		_delay_ms(500);
 		
 	}
 	

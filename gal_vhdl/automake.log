@@ -1,10 +1,6 @@
 ispLEVER Auto-Make Log File
 ---------------------------
 
-Updating: Hierarchy
-Start to record tcl script...
-Finished recording TCL script.
-
-Starting: 'C:\ispLEVER_Classic2_0\ispcpld\bin\vhd2jhd.exe "gal.vhd" -o "gal.jhd" -m "C:\ispLEVER_Classic2_0\ispcpld/generic/lib/vhd/location.map" -p "C:\ispLEVER_Classic2_0\ispcpld/generic/lib"'
+Starting: 'C:\ispLEVER_Classic2_0\ispcpld\bin\checkini.exe -err=automake.err "C:\ispLEVER_Classic2_0\ispcpld\config\gen_GAL.ini"'
 
 Done: completed successfully.

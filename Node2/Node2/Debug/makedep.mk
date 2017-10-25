@@ -6,7 +6,11 @@ src\CAN.c
 
 src\MCP2515.c
 
+src\servo.c
+
 src\SPI.c
+
+src\PWM.c
 
 src\usart.c
 

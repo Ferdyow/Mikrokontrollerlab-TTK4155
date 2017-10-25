@@ -4,7 +4,7 @@
  * Created: 04.10.2017 16:45:07
  *  Author: ferdyow
  */
-#define F_CPU 4915200  // Clock frequency in Hz
+#define F_CPU 16000000 // Clock frequency in Hz
 
 #include <stdio.h>
 #include <stdint.h>
@@ -14,8 +14,10 @@
 #include <avr/interrupt.h>
 #include <avr/delay.h>
 
+#include "defines.h"
 #include "MCP2515.h"
 #include "CAN.h"
+
 
 #define BUFFER_LENGTH 16
 #define TB0 0
@@ -27,7 +29,7 @@ volatile int flag_RX1 = 0;
 
 //interrupt service routine
 //find the interrupt and use the correct one
-ISR(INT4_vect){
+ISR(INT5_vect){
 	//interrupt when a message is received
 	CAN_int_vect();
 }
@@ -36,7 +38,7 @@ ISR(INT4_vect){
 void CAN_int_vect(void) {
 	
 	uint8_t int_flags = MCP2515_read(MCP_CANINTF);
-	printf("flags: %x\n",int_flags);
+	//printf("INTERRUPT VECTOR CALLED\Nflags: %x\n",int_flags);
 	if(int_flags & MCP_RX0IF){
 		MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
 		flag_RX0 = 1;
@@ -50,14 +52,25 @@ void CAN_int_vect(void) {
 
 //hex to binary is left as an exercise to the reader :)
 void CAN_init(void) {
+	//global interrupt enable
+	clear_bit(EIMSK, INT5);
 	
-	//enable external interrupt on ATmega162
-	//enable interrupt on MCP2515
+	//interrupt when low (done by default
+	clear_bit(EICRB, ISC51);
+	clear_bit(EICRB, ISC50);
+	
+	//enable interrupt on ATmega2560
+	set_bit(EIMSK, INT5);
+	
+	
+	//interrupt when low (egentlig default satt)
+	//clear_bit(MCUCR,ISC01);
+	//clear_bit(MCUCR, ISC00);
 	
 	
 	MCP2515_init();
 	
-	printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+	printf("CANSTAT in init: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
 	//enable rollover: message will rollover to RX1 if RX0 is full
 	//also sets filter for RXB0 to only accept all transmission
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100
@@ -89,7 +102,7 @@ void CAN_message_send(can_message* msg) {
 	//transmit is done using the TX registers, have to check which transmit_buffer_register we are writing from 
 	uint8_t buffer_numb = 0; //Not sure how this logic is done yet
 	if (!CAN_transmit_complete(buffer_numb)){
-		printf("noe har gått galt");
+		printf("[NODE2][CAN_message_send] Noe har gått galt");
 		return;
 	}
 
@@ -145,16 +158,19 @@ bool CAN_transmit_complete(int transmit_buffer_numb) {
 
 
 void CAN_data_receive(can_message* received_msg){
-	int receive_buffer_numb;
+	cli();
+	int receive_buffer_numb = 0;
 	if(flag_RX0){
 		receive_buffer_numb = 0;
+		flag_RX0 = 0;
 	}
 	else if(flag_RX1){
 		receive_buffer_numb = 1;
+		flag_RX1 = 0;
 	}
 	else{
 		received_msg->length = 0;
-		return;
+		return; //works when this is commented out (interrupt not used)
 	}
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
 	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);
@@ -177,33 +193,64 @@ void CAN_data_receive(can_message* received_msg){
 		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_numb;
 		received_msg->data[byte] = MCP2515_read(address);
 	}
-
 	
 	
 	
+	sei();
 	
 }
 
 
+void test_usart_communication(){
+	int received_data;
+	for (int data = 0x0; data <= 0x10; data++) {
+		MCP2515_write(MCP_CANCTRL, data);
+		received_data = MCP2515_read(MCP_CANCTRL);
+		if (received_data == data){
+			printf("great success!\n");
+		}
+		else{
+			printf("for fucks sake\n");
+		}
+		printf("data sent: 0x%02x\ndata received: 0x%02x\n\n", data, received_data);
+		
+	}
+}
 
-void CAN_test(void){
+void CAN_test(){
+	//test_usart_communication();
+	
+	//TEST IN LOOPBACK MODE
+	MCP2515_bit_modify(MCP_CANCTRL, 0xE0, 0x40);
+	printf("\nCANSTAT before: %x\n", MCP2515_read(MCP_CANSTAT));
+	while(!CAN_transmit_complete(TB0)){}
 	can_message my_message;
+	can_message received_message;
+	received_message.length = 0;
 	my_message.id = 150;
 	my_message.length = 3;
 	my_message.data[0] = 0x00;
 	my_message.data[1] = 0xFF;
 	my_message.data[2] = 0x55;
+	CAN_message_send(&my_message);
+	printf("Before transmit complete\n");
+	int i = 0;
+	while(!CAN_transmit_complete(0)) {
+	} 
+	printf("After transmit complete\n");
+	CAN_data_receive(&received_message);
+	
+	
+	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);
+	for (uint8_t byte = 0; byte < my_message.length;byte++){
+		printf("Data nr. %d: %x\n", byte, my_message.data[byte]);
+	}
+	printf("\n\nRECEIVED:\n\nlength: %d\nid: %d\n", received_message.length, received_message.id);
+	for (uint8_t byte = 0; byte < received_message.length;byte++){
+		printf("Data nr. %d: %x\n", byte, received_message.data[byte]);
+	}
+	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
 	
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
-
-		CAN_message_send(&my_message);
-		
-	printf("\nCANSTAT after: %x\n", MCP2515_read(MCP_CANSTAT));
-	printf("TXCTRL: %x\n", MCP2515_read(MCP_TXB0CTRL));
-	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
-	_delay_ms(500);
-
 	
-	
-	/*CAN_error();*/
 }

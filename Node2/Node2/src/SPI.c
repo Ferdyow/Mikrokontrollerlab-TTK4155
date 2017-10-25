@@ -22,13 +22,6 @@
 #define SCK PB1
 
 void SPI_init(void){
-	set_bit(EIMSK, INT4);
-	
-	//interrupt when low (egentlig default satt)
-	clear_bit(MCUCR,ISC01);
-	clear_bit(MCUCR, ISC00);
-	
-
 	//set mosi, sck, ss as output, others as input
 	//--MOSI - master out slave in
 	//--sck - serial clock

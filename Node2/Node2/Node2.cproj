@@ -216,10 +216,22 @@
     <Compile Include="src\MCP2515.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\servo.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\servo.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\SPI.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\PWM.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\PWM.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\usart.c">

@@ -7,13 +7,13 @@
 
 #define F_CPU 4915200  // Clock frequency in Hz
 
-#include "usart.h"
-#include "adc.h"
 #include "defines.h"
+#include "usart.h"
+#include "sram.h"
+#include "adc.h"
 #include "joy.h"
 #include "OLED_driver.h"
 #include "MENU.h"
-#include "sram.h"
 #include "MCP2515.h"
 #include "CAN.h"
 #include "SPI.h"
@@ -33,9 +33,8 @@ void initialize(void){
 	ADC_init();
 	JOY_init();
 	OLED_init();
-	MENU_init();
+	//MENU_init();
 	CAN_init();
-	
 	sei();
 	
 	
@@ -43,13 +42,13 @@ void initialize(void){
 
 
 void test(void) {
-	// SRAM_test();
-	// ADC_test();
-	// JOY_test();
-	// OLED_test();
+	//SRAM_test();
+	//ADC_test(); //skal ikke funke
+	//JOY_test();
+	//OLED_test();
 	//MENU_test();
 	//SPI_test();
-	CAN_test();
+	//CAN_test(); //resets, bad-interrupt
 	
 	can_message my_message;
 	my_message.id = 150;
@@ -73,23 +72,26 @@ void send_joystick_pos(){
 	msg.length = 2;
 	JOY_position_t pos;
 	
-	MENU_run();
 	pos = JOY_getPosition();
 	msg.data[0] = pos.x;
 	msg.data[1] = pos.y;
-	printf("SENDING:\nx: %d\ty:%d\n\n",pos.x, pos.y);
+	printf("SENDING:\nx: %d\ty:%d\n\n", pos.x, pos.y);
 	CAN_message_send(&msg);
-	while(!CAN_transmit_complete(TB0)){
-			
-	} //HER KRÆSJER DEN
-	printf("1. EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
+	while(!CAN_transmit_complete(TB0))
+		;
+	//printf("1. EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
 	
 }
 
 int main(void) {
-	initialize(); 
-	//send_joystick_pos();
-	test();
+	initialize();
+	while(1){
+		//MENU_run();
+		send_joystick_pos();
+	}
+
+	//test();
+	//CAN_test();
 	
 	return 0;
 }
