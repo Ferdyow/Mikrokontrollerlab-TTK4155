@@ -44,7 +44,7 @@ void PWM_init(){
 	//set output pin PB5(OC1A: output clock 1 A)
 	set_bit(DDRB, DDB5);
 
-	//compares TCTn and OCRnx - cleared when match TCTn = BOTTOM
+	//compares TCTn and OCRnx - cleared when match -> TCTn = BOTTOM
 }
 
 void PWM_set_width(float on_time_ms){

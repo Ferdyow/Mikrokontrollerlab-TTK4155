@@ -10,6 +10,8 @@
 #define TIMER_H_
 
 void PWM_init();
+
+//Makes the time module count up to a value such that it will have an ON time of the given value
 void PWM_set_width(float on_time_ms);
 
 
