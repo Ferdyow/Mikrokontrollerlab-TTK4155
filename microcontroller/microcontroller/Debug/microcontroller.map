@@ -91,7 +91,7 @@ Discarded input sections
  .text.CAN_error
                 0x00000000       0x7a CAN.o
  .text.CAN_data_receive
-                0x00000000       0xd6 CAN.o
+                0x00000000       0xe2 CAN.o
  .text.CAN_test
                 0x00000000      0x202 CAN.o
  .text          0x00000000        0x0 joy.o
@@ -1026,17 +1026,17 @@ END GROUP
  .debug_abbrev  0x00000e80      0x1ae sram.o
  .debug_abbrev  0x0000102e      0x122 usart.o
 
-.debug_line     0x00000000      0xdfa
+.debug_line     0x00000000      0xdfd
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x12d adc.o
- .debug_line    0x0000012d      0x254 CAN.o
- .debug_line    0x00000381      0x1c5 joy.o
- .debug_line    0x00000546      0x147 MCP2515.o
- .debug_line    0x0000068d      0x169 main.o
- .debug_line    0x000007f6      0x2e2 OLED_driver.o
- .debug_line    0x00000ad8      0x12b SPI.o
- .debug_line    0x00000c03      0x112 sram.o
- .debug_line    0x00000d15       0xe5 usart.o
+ .debug_line    0x0000012d      0x257 CAN.o
+ .debug_line    0x00000384      0x1c5 joy.o
+ .debug_line    0x00000549      0x147 MCP2515.o
+ .debug_line    0x00000690      0x169 main.o
+ .debug_line    0x000007f9      0x2e2 OLED_driver.o
+ .debug_line    0x00000adb      0x12b SPI.o
+ .debug_line    0x00000c06      0x112 sram.o
+ .debug_line    0x00000d18       0xe5 usart.o
 
 .debug_frame    0x00000000      0x688
  *(.debug_frame)
@@ -1071,16 +1071,16 @@ END GROUP
  .debug_str     0x00000746       0x52 usart.o
                                 0x1cf (size before relaxing)
 
-.debug_loc      0x00000000     0x1552
+.debug_loc      0x00000000     0x1554
  *(.debug_loc)
  .debug_loc     0x00000000      0x2ed adc.o
- .debug_loc     0x000002ed      0x4e5 CAN.o
- .debug_loc     0x000007d2      0x39a joy.o
- .debug_loc     0x00000b6c      0x285 MCP2515.o
- .debug_loc     0x00000df1       0xbb main.o
- .debug_loc     0x00000eac      0x3de OLED_driver.o
- .debug_loc     0x0000128a      0x2a2 sram.o
- .debug_loc     0x0000152c       0x26 usart.o
+ .debug_loc     0x000002ed      0x4e7 CAN.o
+ .debug_loc     0x000007d4      0x39a joy.o
+ .debug_loc     0x00000b6e      0x285 MCP2515.o
+ .debug_loc     0x00000df3       0xbb main.o
+ .debug_loc     0x00000eae      0x3de OLED_driver.o
+ .debug_loc     0x0000128c      0x2a2 sram.o
+ .debug_loc     0x0000152e       0x26 usart.o
 
 .debug_macinfo
  *(.debug_macinfo)

@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <avr/io.h>
-//#include <util/delay.h>
 #include <avr/pgmspace.h>
 
 #include "SPI.h"
@@ -55,7 +54,7 @@ void SPI_send(uint8_t data){
 	//Start transmission
 	SPDR = data;	
 	//wait for transmission complete SPSR: register with SPIF flag, SPIF: bit set to 1 when data is read
-	loop_until_bit_is_set(SPSR, SPIF);
+	loop_til_bit_is_set(SPSR, SPIF);
 }
 
 
@@ -63,7 +62,7 @@ uint8_t SPI_read(void){
 	//must send a dummy bit to receive data
 	SPI_send(0);
 	
-	loop_until_bit_is_set(SPSR, SPIF);
+	loop_til_bit_is_set(SPSR, SPIF);
 	//printf("SPDR: %x \t", SPDR);
 	uint8_t data = SPDR;
 	//printf("data: %x \n", data);

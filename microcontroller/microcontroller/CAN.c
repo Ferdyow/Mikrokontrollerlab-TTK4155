@@ -137,6 +137,7 @@ bool CAN_transmit_complete(int transmit_buffer_numb) {
 
 
 void CAN_data_receive(can_message* received_msg){
+	cli();
 	int receive_buffer_numb;
 	if(flag_RX0){
 		receive_buffer_numb = 0;
@@ -147,6 +148,8 @@ void CAN_data_receive(can_message* received_msg){
 		flag_RX1 = 0;
 	}
 	else{
+		received_msg->length = 0;
+		sei();
 		return;
 	}
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
@@ -171,7 +174,7 @@ void CAN_data_receive(can_message* received_msg){
 		received_msg->data[byte] = MCP2515_read(address);
 	}
 
-	
+	sei();
 	
 	
 	
@@ -194,8 +197,8 @@ void CAN_test(){
 	CAN_message_send(&my_message);
 	printf("Before transmit complete\n");
 	int i = 0;
-	while(!CAN_transmit_complete(0)) {
-	} 
+	while(!CAN_transmit_complete(0))
+		;
 	printf("After transmit complete\n");
 	CAN_data_receive(&received_message);
 	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);

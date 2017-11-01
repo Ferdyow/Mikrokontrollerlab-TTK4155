@@ -17,15 +17,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00001150  00000000  00000000  00003d46  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000dfa  00000000  00000000  00004e96  2**0
+  7 .debug_line   00000dfd  00000000  00000000  00004e96  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000688  00000000  00000000  00005c90  2**2
+  8 .debug_frame  00000688  00000000  00000000  00005c94  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000798  00000000  00000000  00006318  2**0
+  9 .debug_str    00000798  00000000  00000000  0000631c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00001552  00000000  00000000  00006ab0  2**0
+ 10 .debug_loc    00001554  00000000  00000000  00006ab4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000218  00000000  00000000  00008002  2**0
+ 11 .debug_ranges 00000218  00000000  00000000  00008008  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:

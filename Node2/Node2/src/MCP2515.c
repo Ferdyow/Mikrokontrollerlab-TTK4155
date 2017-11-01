@@ -4,16 +4,18 @@
  * Created: 04.10.2017 15:16:37
  *  Author: ferdyow
  */ 
- #define F_CPU 4915200  // Clock frequency in Hz
- 
+
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include <avr/delay.h>
-
 #include "MCP2515.h"
 #include "SPI.h"
+#include "defines.h"
+#include <util/delay.h>
+
 
 #define RESET 0xC0
 #define READ 0x03

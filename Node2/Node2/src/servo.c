@@ -5,11 +5,6 @@
  *  Author: ferdyow
  */ 
 
-#define MAX_WIDTH 2.0
-#define MIN_WIDTH 1.0
-
-#define WIDTH_MIDPOINT (MAX_WIDTH + MIN_WIDTH) / 2
-#define WIDTH_RADIUS   (MAX_WIDTH - MIN_WIDTH) / 2
 
 #include <stdio.h>
 
@@ -17,7 +12,15 @@
 #include "PWM.h"
 #include "servo.h"
 
-servo_init(){
+
+#define MAX_WIDTH 2.0
+#define MIN_WIDTH 1.0
+
+#define WIDTH_MIDPOINT (MAX_WIDTH + MIN_WIDTH) / 2
+#define WIDTH_RADIUS   (MAX_WIDTH - MIN_WIDTH) / 2
+
+
+void servo_init(void){
 	PWM_init();
 	PWM_set_width(WIDTH_MIDPOINT);
 }

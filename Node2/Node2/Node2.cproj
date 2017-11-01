@@ -201,6 +201,12 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ADC.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\CAN.c">
       <SubType>compile</SubType>
     </Compile>
@@ -208,6 +214,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\defines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\IR.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\IR.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\MCP2515.c">
@@ -232,6 +244,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\PWM.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\TWI_Master.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\TWI_Master.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\usart.c">

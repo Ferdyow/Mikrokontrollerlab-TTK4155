@@ -6,21 +6,21 @@
  */ 
 
 #define PERIOD_MS 20
-#define F_CPU  16000000
 #define PRESCALER 8
 
 
-#include "defines.h"
-#include "PWM.h"
+
 
 #include <stdio.h>
 #include <stdint.h>
 #include <avr/io.h>
-//#include <avr/pgmspace.h>
-//#include <stdbool.h>
+
 #include <avr/interrupt.h>
 
-void PWM_init(){
+#include "defines.h"
+#include "PWM.h"
+
+void PWM_init(void){
 	//if clk_io = 1 / F_CPU: prescalar = 8, TOP = 39 999
 
 	//select source of clock signal and set prescaler = 8

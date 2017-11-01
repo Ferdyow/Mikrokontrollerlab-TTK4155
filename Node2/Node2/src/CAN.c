@@ -4,7 +4,8 @@
  * Created: 04.10.2017 16:45:07
  *  Author: ferdyow
  */
-#define F_CPU 16000000 // Clock frequency in Hz
+
+
 
 #include <stdio.h>
 #include <stdint.h>
@@ -12,11 +13,12 @@
 #include <avr/pgmspace.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
 
 #include "defines.h"
 #include "MCP2515.h"
 #include "CAN.h"
+
+#include <util/delay.h>
 
 
 #define BUFFER_LENGTH 16
@@ -26,6 +28,12 @@
 
 volatile int flag_RX0 = 0;
 volatile int flag_RX1 = 0;
+
+
+//test functions
+void test_usart_communication(void);
+
+
 
 //interrupt service routine
 //find the interrupt and use the correct one
@@ -92,9 +100,6 @@ void CAN_init(void) {
 	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
 
 	printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
-	
-	
-
 }
 
 void CAN_message_send(can_message* msg) {
@@ -170,7 +175,8 @@ void CAN_data_receive(can_message* received_msg){
 	}
 	else{
 		received_msg->length = 0;
-		return; //works when this is commented out (interrupt not used)
+		sei();
+		return;
 	}
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
 	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);
@@ -193,15 +199,12 @@ void CAN_data_receive(can_message* received_msg){
 		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_numb;
 		received_msg->data[byte] = MCP2515_read(address);
 	}
-	
-	
-	
 	sei();
 	
 }
 
 
-void test_usart_communication(){
+void test_usart_communication(void){
 	int received_data;
 	for (int data = 0x0; data <= 0x10; data++) {
 		MCP2515_write(MCP_CANCTRL, data);
@@ -217,7 +220,7 @@ void test_usart_communication(){
 	}
 }
 
-void CAN_test(){
+void CAN_test(void){
 	//test_usart_communication();
 	
 	//TEST IN LOOPBACK MODE
@@ -234,7 +237,6 @@ void CAN_test(){
 	my_message.data[2] = 0x55;
 	CAN_message_send(&my_message);
 	printf("Before transmit complete\n");
-	int i = 0;
 	while(!CAN_transmit_complete(0)) {
 	} 
 	printf("After transmit complete\n");
