@@ -41,6 +41,7 @@
 #include "PWM.h"
 #include "servo.h"
 #include "IR.h"
+#include "motor.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -60,6 +61,9 @@ void initialize(void){
 	CAN_init();
 	servo_init();
 	IR_init();
+	
+	
+	motor_init();
 	sei();
 }
 
@@ -85,7 +89,7 @@ can_message receive_joystick_pos(void){
 		CAN_data_receive(&msg);
 	}
 	
-	return msg;
+	return msg;	
 }
 
 void test_servo_and_ir(void){
@@ -99,11 +103,13 @@ void test_servo_and_ir(void){
 		//y = message.data[1];
 		//printf("[NODE2][main] x = %d\n", x);
 		servo_set(x);
-		if (IR_is_disrupted()) {
-			printf("[NODE 2][main] IR disrupted!\n");
-			} else {
-			printf("[NODE 2][main] IR clear\n");
-		}
+		motor_set_velocity(x);
+		motor_get_velocity();
+		//if (IR_is_disrupted()) {
+			//printf("[NODE 2][main] IR disrupted!\r");
+		//} else {
+			//printf("[NODE 2][main] IR clear\r");
+		//}
 	}
 }
 

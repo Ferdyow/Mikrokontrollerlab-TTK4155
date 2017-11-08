@@ -8,13 +8,19 @@ src\CAN.c
 
 src\IR.c
 
+src\MAX520.c
+
 src\MCP2515.c
+
+src\motor.c
 
 src\servo.c
 
 src\SPI.c
 
 src\PWM.c
+
+src\time.c
 
 src\TWI_Master.c
 

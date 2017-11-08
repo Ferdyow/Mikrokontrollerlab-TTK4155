@@ -152,7 +152,7 @@ char ADC_read(char channel){
   c8:	08 95       	ret
 
 000000ca <CAN_int_vect>:
-	} 
+		;
 	printf("After transmit complete\n");
 	CAN_data_receive(&received_message);
 	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);
@@ -171,8 +171,8 @@ char ADC_read(char channel){
   e2:	21 e0       	ldi	r18, 0x01	; 1
   e4:	30 e0       	ldi	r19, 0x00	; 0
   e6:	30 93 67 02 	sts	0x0267, r19
-	while(!CAN_transmit_complete(0)) {
-	} 
+	while(!CAN_transmit_complete(0))
+		;
 	printf("After transmit complete\n");
 	CAN_data_receive(&received_message);
 	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);

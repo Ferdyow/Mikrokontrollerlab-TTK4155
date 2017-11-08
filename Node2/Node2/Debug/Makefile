@@ -55,10 +55,13 @@ C_SRCS +=  \
 ../src/ADC.c \
 ../src/CAN.c \
 ../src/IR.c \
+../src/MAX520.c \
 ../src/MCP2515.c \
+../src/motor.c \
 ../src/servo.c \
 ../src/SPI.c \
 ../src/PWM.c \
+../src/time.c \
 ../src/TWI_Master.c \
 ../src/usart.c \
 ../src/ASF/mega/boards/stk600/rcx_x/init.c \
@@ -75,10 +78,13 @@ OBJS +=  \
 src/ADC.o \
 src/CAN.o \
 src/IR.o \
+src/MAX520.o \
 src/MCP2515.o \
+src/motor.o \
 src/servo.o \
 src/SPI.o \
 src/PWM.o \
+src/time.o \
 src/TWI_Master.o \
 src/usart.o \
 src/ASF/mega/boards/stk600/rcx_x/init.o \
@@ -88,10 +94,13 @@ OBJS_AS_ARGS +=  \
 src/ADC.o \
 src/CAN.o \
 src/IR.o \
+src/MAX520.o \
 src/MCP2515.o \
+src/motor.o \
 src/servo.o \
 src/SPI.o \
 src/PWM.o \
+src/time.o \
 src/TWI_Master.o \
 src/usart.o \
 src/ASF/mega/boards/stk600/rcx_x/init.o \
@@ -101,10 +110,13 @@ C_DEPS +=  \
 src/ADC.d \
 src/CAN.d \
 src/IR.d \
+src/MAX520.d \
 src/MCP2515.d \
+src/motor.d \
 src/servo.d \
 src/SPI.d \
 src/PWM.d \
+src/time.d \
 src/TWI_Master.d \
 src/usart.d \
 src/ASF/mega/boards/stk600/rcx_x/init.d \
@@ -114,10 +126,13 @@ C_DEPS_AS_ARGS +=  \
 src/ADC.d \
 src/CAN.d \
 src/IR.d \
+src/MAX520.d \
 src/MCP2515.d \
+src/motor.d \
 src/servo.d \
 src/SPI.d \
 src/PWM.d \
+src/time.d \
 src/TWI_Master.d \
 src/usart.d \
 src/ASF/mega/boards/stk600/rcx_x/init.d \
@@ -137,6 +152,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 
@@ -199,7 +220,7 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker : 4.8.1
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Node2.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=atmega2560 -Wl,--relax  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Node2.map" -Wl,-u,vfprintf -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=atmega2560 -Wl,--relax  
 	@echo Finished building target: $@
 	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Node2.elf" "Node2.hex"
 	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Node2.elf" "Node2.eep" || exit 0
