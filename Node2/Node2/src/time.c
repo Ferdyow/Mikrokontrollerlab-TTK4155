@@ -18,8 +18,8 @@ void time_reset(void);
 void time_init(){
 	//Normal port operation, non PWM
 	
-	//set IOCLK, no prescaler
-	set_bit(TCCR3B, CS30);
+	//prescaler 256 (see table 20-9)
+	set_bit(TCCR3B, CS32);
 	time_reset();
 	
 }
@@ -27,6 +27,8 @@ void time_init(){
 //setter time started til current time
 void time_reset(void) {
 	TCNT3 = 0;
+	//printf("OVERFLOW FLAG: %d\n", test_bit(TIFR3, TOV3));
+	set_bit(TIFR3, TOV3);
 }
 
 uint16_t time_passed(void){

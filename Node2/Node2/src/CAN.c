@@ -78,7 +78,7 @@ void CAN_init(void) {
 	
 	MCP2515_init();
 	
-	printf("CANSTAT in init: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+	//printf("CANSTAT in init: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
 	//enable rollover: message will rollover to RX1 if RX0 is full
 	//also sets filter for RXB0 to only accept all transmission
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100
@@ -92,14 +92,14 @@ void CAN_init(void) {
 	//CANINTF cointains the interrupt flags for each interrupt source. this should be cleared by a bit_modify
 	
 	MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
-	printf("CANINTE: 0x%02x\n", MCP2515_read(MCP_CANINTE));
+	//printf("CANINTE: 0x%02x\n", MCP2515_read(MCP_CANINTE));
 	//interrupts for RX1, RX0 enabled
 	
 	//set loopback mode: 0x40
 	//later use normal mode 0x00
 	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
 
-	printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+	//printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
 }
 
 void CAN_message_send(can_message* msg) {
@@ -255,4 +255,15 @@ void CAN_test(void){
 	
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
 	
+}
+
+can_message receive_control_inputs(void){
+	can_message msg;
+	msg.length = 0;
+	
+	while (!msg.length) {
+		CAN_data_receive(&msg);
+	}
+	
+	return msg;
 }

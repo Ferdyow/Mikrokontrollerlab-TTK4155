@@ -28,7 +28,7 @@ typedef struct {
 void JOY_init();
 
 /*returns true/1 if the button is pressed, false/0 otherwise*/
-bool JOY_button_pressed(button b);
+int JOY_button_pressed(button b);
 
 /**
 * Calculate position (between -100 and 100) using current signal and values from calibration

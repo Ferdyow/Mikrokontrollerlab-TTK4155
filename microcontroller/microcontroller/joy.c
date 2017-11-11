@@ -71,19 +71,19 @@ void JOY_calibrate(){
 	mid.y = (max.y + min.y) / 2;
 }
 
-bool JOY_button_pressed(button b) {
+int JOY_button_pressed(button b) {
 	switch (b) {
 	case 0:
-		if (test_bit(PINB, PINB0)) return true;
+		if (test_bit(PINB, PINB0)) return 1;
 		break;
 	case 1:
-		if (test_bit(PINB, PINB1)) return true;
+		if (test_bit(PINB, PINB1)) return 1;
 		break;
 	case 2:
-		if (!test_bit(PINB, PINB2)) return true;
+		if (!test_bit(PINB, PINB2)) return 1;
 		break;
 	}
-	return false;
+	return 0;
 }
 
 JOY_position_t JOY_getPosition() {

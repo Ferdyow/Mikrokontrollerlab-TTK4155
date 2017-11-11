@@ -6,4 +6,5 @@
  */ 
 
 void time_init(void);
+void time_reset(void);
 uint16_t time_passed(void);

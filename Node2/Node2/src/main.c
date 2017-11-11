@@ -42,6 +42,7 @@
 #include "servo.h"
 #include "IR.h"
 #include "motor.h"
+#include "PI.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -50,7 +51,7 @@
 #include <stdbool.h>
 
 void initialize(void);
-can_message receive_joystick_pos(void);
+can_message receive_control_inputs(void);
 void test(void);
 void test_servo_and_ir(void);
 
@@ -61,8 +62,7 @@ void initialize(void){
 	CAN_init();
 	servo_init();
 	IR_init();
-	
-	
+	PI_init();
 	motor_init();
 	sei();
 }
@@ -81,45 +81,21 @@ void test(void){
 	}
 }
 
-can_message receive_joystick_pos(void){
-	can_message msg;
-	msg.length = 0;
-	
-	while (!msg.length) {
-		CAN_data_receive(&msg);
-	}
-	
-	return msg;	
-}
-
 void test_servo_and_ir(void){
 	can_message message;
-	int8_t x = 0;
-	//int8_t y = 0;
+	int8_t joystick_x = 0;
 		
 	while(1){
-		message = receive_joystick_pos();
-		x = message.data[0];
-		//y = message.data[1];
-		//printf("[NODE2][main] x = %d\n", x);
-		servo_set(x);
-		motor_set_velocity(x);
+		message = receive_control_inputs();
+		joystick_x = message.data[0];
+		servo_set(joystick_x);
+		motor_set_velocity(joystick_x);
 		motor_get_velocity();
-		//if (IR_is_disrupted()) {
-			//printf("[NODE 2][main] IR disrupted!\r");
-		//} else {
-			//printf("[NODE 2][main] IR clear\r");
-		//}
 	}
 }
 
 int main(void){
 	initialize();
-	//while(1){
-		//printf("CANCTRL: 0x%02x\n", MCP2515_read(MCP_CANCTRL));
-		//printf("Usart funker.\n");
-	//}
-	
 	test_servo_and_ir();
 	return 0;
 }

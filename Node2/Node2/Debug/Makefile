@@ -58,6 +58,7 @@ C_SRCS +=  \
 ../src/MAX520.c \
 ../src/MCP2515.c \
 ../src/motor.c \
+../src/PI.c \
 ../src/servo.c \
 ../src/SPI.c \
 ../src/PWM.c \
@@ -81,6 +82,7 @@ src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
 src/motor.o \
+src/PI.o \
 src/servo.o \
 src/SPI.o \
 src/PWM.o \
@@ -97,6 +99,7 @@ src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
 src/motor.o \
+src/PI.o \
 src/servo.o \
 src/SPI.o \
 src/PWM.o \
@@ -113,6 +116,7 @@ src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
 src/motor.d \
+src/PI.d \
 src/servo.d \
 src/SPI.d \
 src/PWM.d \
@@ -129,6 +133,7 @@ src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
 src/motor.d \
+src/PI.d \
 src/servo.d \
 src/SPI.d \
 src/PWM.d \
@@ -152,6 +157,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
