@@ -27,7 +27,7 @@ void CAN_message_send(can_message* msg);
 
 void CAN_error();
 
-bool CAN_transmit_complete(int transmit_buffer_numb);
+bool CAN_transmit_complete(int transmit_buffer_index);
 
 void CAN_data_receive(can_message* received_msg);
 

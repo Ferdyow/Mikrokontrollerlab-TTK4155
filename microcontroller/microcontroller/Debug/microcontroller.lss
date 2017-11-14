@@ -13,19 +13,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000290  00000000  00000000  0000129e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000291a  00000000  00000000  0000152e  2**0
+  5 .debug_info   00002948  00000000  00000000  0000152e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00001166  00000000  00000000  00003e48  2**0
+  6 .debug_abbrev 0000115f  00000000  00000000  00003e76  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000e05  00000000  00000000  00004fae  2**0
+  7 .debug_line   00000dfe  00000000  00000000  00004fd5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000006a8  00000000  00000000  00005db4  2**2
+  8 .debug_frame  000006a8  00000000  00000000  00005dd4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000798  00000000  00000000  0000645c  2**0
+  9 .debug_str    000007f8  00000000  00000000  0000647c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000015a5  00000000  00000000  00006bf4  2**0
+ 10 .debug_loc    00001612  00000000  00000000  00006c74  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000218  00000000  00000000  00008199  2**0
+ 11 .debug_ranges 00000200  00000000  00000000  00008286  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -278,7 +278,7 @@ char ADC_read(char channel){
      18a:	ec 01       	movw	r28, r24
      18c:	08 81       	ld	r16, Y
      18e:	19 81       	ldd	r17, Y+1	; 0x01
-		
+	
 	printf("\nCANSTAT after: %x\n", MCP2515_read(MCP_CANSTAT));
      190:	b8 01       	movw	r22, r16
      192:	76 95       	lsr	r23
@@ -331,8 +331,6 @@ char ADC_read(char channel){
 
 000001ea <CAN_transmit_complete>:
 	_delay_ms(500);
-
-	
 	
 	/*CAN_error();*/
      1ea:	03 96       	adiw	r24, 0x03	; 3

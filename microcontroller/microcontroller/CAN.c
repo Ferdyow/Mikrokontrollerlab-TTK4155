@@ -18,11 +18,10 @@
 #include "CAN.h"
 
 
-
 volatile int flag_RX0 = 0;
 volatile int flag_RX1 = 0;
 
-//interrupt service routine
+// Interrupt service routine
 ISR(INT0_vect){
 	CAN_int_vect();
 }
@@ -43,6 +42,7 @@ void CAN_int_vect() {
 	
 	
 }
+
 
 //hex to binary is left as an exercise to the reader :)
 void CAN_init() {
@@ -69,11 +69,8 @@ void CAN_init() {
 	//set loopback mode: 0x40
 	//later use normal mode 0x00
 	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
-
-	
-	
-
 }
+
 
 void CAN_message_send(can_message* msg) {
 	//transmit is done using the TX registers, have to check which transmit_buffer_register we are writing from 
@@ -102,6 +99,7 @@ void CAN_message_send(can_message* msg) {
 	
 }
 
+
 void CAN_error() {
 	printf("\n");
 	printf("\n| --------------------- |");
@@ -121,63 +119,54 @@ void CAN_error() {
 }
 
 
-bool CAN_transmit_complete(int transmit_buffer_numb) {
-	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * transmit_buffer_numb;
-	
-	//printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
-	
-	//printf("TXB0CTRL: 0x%02x\n", MCP2515_read(address));
-	
-	if(MCP2515_read(address) & MCP_TXREQ){
-		return false;
-	}
-	
-	return true; 
+bool CAN_transmit_complete(int transmit_buffer_index) {
+	const int transmit_buffer_address = MCP_TXB0CTRL + BUFFER_LENGTH * transmit_buffer_index;
+	const int transmit_buffer_data_frame = MCP2515_read(transmit_buffer_address);
+	const int transmission_ongoing = transmit_buffer_data_frame & MCP_TXREQ;
+	return !transmission_ongoing;
 }
 
 
-void CAN_data_receive(can_message* received_msg){
+void CAN_data_receive(can_message* received_message){
+	
 	cli();
-	int receive_buffer_numb;
+	int receive_buffer_index;
 	if(flag_RX0){
-		receive_buffer_numb = 0;
+		receive_buffer_index = 0;
 		flag_RX0 = 0;
 	}
 	else if(flag_RX1){
-		receive_buffer_numb = 1;
+		receive_buffer_index = 1;
 		flag_RX1 = 0;
 	}
 	else{
-		received_msg->length = 0;
-		sei();
+		received_message->length = 0;
+		sei();  // Make sure interrupts are re-enabled before returning.
 		return;
 	}
-	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
-	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);
 	
-	//only want the last 3 bits
-	id_low = id_low >> 5;
+	const int receive_buffer_address = MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_index;
 	
-	/*
+	uint8_t id_high = MCP2515_read(receive_buffer_address);
+	uint8_t id_low = MCP2515_read(receive_buffer_address);	
+	
+	/* The id of the received message is constructed using the 8 high bits, and the last 3 low bits of the id.
 		id_low:	    X XXXX LLL
 		id_high: HHHH HHHH
 		id:		 HHHH HHHH LLL
 	*/
-	received_msg->id = (id_high << 3) + id_low; 
+	received_message->id = (id_high << 3) + (id_low >> 5); 
 	
-	//read the data length contained in the last 3 bits of the RXBnDLC register
-	received_msg->length = (MCP2515_read(MCP_RXB0DLC + BUFFER_LENGTH * receive_buffer_numb) % (1<<3));
+	// Read the data length contained in the last 3 bits of the RXBnDLC register
+	received_message->length = (MCP2515_read(receive_buffer_address) % (1<<3));
 	
-	//read the data
-	for (uint8_t byte = 0; byte < received_msg->length; byte++){
-		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_numb;
-		received_msg->data[byte] = MCP2515_read(address);
+	// Read the data
+	for (uint8_t byte = 0; byte < received_message->length; byte++){
+		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_index;
+		received_message->data[byte] = MCP2515_read(address);
 	}
 
 	sei();
-	
-	
-	
 }
 
 
@@ -218,13 +207,11 @@ void CAN_test(){
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
 
 	CAN_message_send(&my_message);
-		
+	
 	printf("\nCANSTAT after: %x\n", MCP2515_read(MCP_CANSTAT));
 	printf("TXCTRL: %x\n", MCP2515_read(MCP_TXB0CTRL));
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
 	_delay_ms(500);
-
-	
 	
 	/*CAN_error();*/
 }

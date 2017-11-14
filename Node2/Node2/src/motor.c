@@ -170,31 +170,6 @@ void motor_find_max_speed_auto(void){
 	sei(); // Interrupts need to be enabled in order to set velocity
 	motor_set_velocity(0); 
 	cli();
-
-	/* Ferdys code:
-	int direction = 1;
-	for (int i = 0; i < 10; i++){
-		direction *= -1;
-		motor_set_velocity(100*direction);
-		//wait until top speed is reached
-		_delay_ms(100);
-		
-		//reset encoder
-		clear_bit(MJ1, RST);
-		_delay_us(25);
-		set_bit(MJ1, RST);
-		
-		//reset timer
-		time_reset();
-		
-		_delay_ms(100);
-		double speed = abs(motor_read_position())/(double)(time_passed());
-		if(speed > max_speed){
-			max_speed = speed; 
-		}
-	}
-	motor_set_speed(0);
-	motor_set_direction(LEFT);*/
 }
 
 void motor_enable(void) {
@@ -206,10 +181,9 @@ void motor_disable(void) {
 }
 
 void motor_set_velocity(int16_t motor_velocity) { // u
-	direction motor_direction;
 	
 	// Find the motor direction. Negative velocity corresponds to left.
-	motor_direction = (motor_velocity < 0) ? LEFT : RIGHT;
+	direction motor_direction = (motor_velocity < 0) ? LEFT : RIGHT;
 	
 	// Speed is in absolute value. Make sure it is not greater than 100.
 	uint8_t motor_speed = abs(motor_velocity);
