@@ -153,6 +153,16 @@ void OLED_print_char(char c){
 	}
 }
 
+void OLED_print_char_inverse(char c) {
+	if (c == '\0') return;
+	uint8_t ascii_starting_point = 32;
+	uint16_t letter_index = c - ascii_starting_point;
+	for (int col = 0; col < FONT_SIZE; col++) {
+		write_data(~pgm_read_byte(&font8[letter_index][col]));
+	}
+}
+
+
 
 //for testing purposes
 void OLED_set_screen() {
@@ -207,3 +217,4 @@ void OLED_print_arrow(){
 	write_data(0b00111100);
 	write_data(0b00011000);
 }
+

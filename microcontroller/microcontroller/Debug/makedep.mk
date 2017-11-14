@@ -4,9 +4,15 @@
 
 adc.c
 
+brightness.c
+
 CAN.c
 
+game.c
+
 joy.c
+
+keyboard.c
 
 MCP2515.c
 

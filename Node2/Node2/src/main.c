@@ -96,6 +96,6 @@ void test_servo_and_ir(void){
 
 int main(void){
 	initialize();
-	//test_servo_and_ir();
+	test_servo_and_ir();
 	return 0;
 }

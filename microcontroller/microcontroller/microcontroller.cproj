@@ -115,6 +115,12 @@
     <Compile Include="adc.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="brightness.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="brightness.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="CAN.c">
       <SubType>compile</SubType>
     </Compile>
@@ -127,10 +133,22 @@
     <Compile Include="fonts.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="game.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="game.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="joy.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="joy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="keyboard.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="keyboard.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MCP2515.c">

@@ -38,8 +38,11 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../adc.c \
+../brightness.c \
 ../CAN.c \
+../game.c \
 ../joy.c \
+../keyboard.c \
 ../MCP2515.c \
 ../MENU.c \
 ../main.c \
@@ -57,8 +60,11 @@ ASM_SRCS +=
 
 OBJS +=  \
 adc.o \
+brightness.o \
 CAN.o \
+game.o \
 joy.o \
+keyboard.o \
 MCP2515.o \
 MENU.o \
 main.o \
@@ -69,8 +75,11 @@ usart.o
 
 OBJS_AS_ARGS +=  \
 adc.o \
+brightness.o \
 CAN.o \
+game.o \
 joy.o \
+keyboard.o \
 MCP2515.o \
 MENU.o \
 main.o \
@@ -81,8 +90,11 @@ usart.o
 
 C_DEPS +=  \
 adc.d \
+brightness.d \
 CAN.d \
+game.d \
 joy.d \
+keyboard.d \
 MCP2515.d \
 MENU.d \
 main.d \
@@ -93,8 +105,11 @@ usart.d
 
 C_DEPS_AS_ARGS +=  \
 adc.d \
+brightness.d \
 CAN.d \
+game.d \
 joy.d \
+keyboard.d \
 MCP2515.d \
 MENU.d \
 main.d \
@@ -117,6 +132,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

@@ -33,8 +33,8 @@ void initialize(void){
 	ADC_init();
 	JOY_init();
 	OLED_init();
-	//MENU_init();
-	CAN_init();
+	MENU_init();
+	//CAN_init();
 	sei();
 	
 	
@@ -90,8 +90,8 @@ void send_joystick_pos(){
 int main(void) {
 	initialize();
 	while(1){
-		//MENU_run();
-		send_joystick_pos();
+		MENU_run();
+		//send_joystick_pos();
 	}
 
 	//test();

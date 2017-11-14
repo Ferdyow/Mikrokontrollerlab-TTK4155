@@ -44,6 +44,8 @@ void OLED_print(char* str);
 //prints a character c to the current pointer pos
 void OLED_print_char(char c);
 
+void OLED_print_char_inverse(char c);
+
 //sets the brightness between 0 and 255
 void OLED_set_brightness(uint8_t lvl);
 
