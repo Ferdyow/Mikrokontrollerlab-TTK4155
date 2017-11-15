@@ -12,5 +12,4 @@
 void solenoid_init();
 void solenoid_send_pulse();
 
-
 #endif /* SOLENOID_H_ */

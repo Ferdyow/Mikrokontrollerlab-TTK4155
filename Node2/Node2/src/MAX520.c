@@ -23,10 +23,10 @@
 uint8_t max520_address = 0x00;
 
 
-void MAX520_init(uint8_t three_bit_adress){
+void MAX520_init(uint8_t three_bit_address){
 	TWI_Master_Initialise(); //Initialize TWI for transferring
 	sei();
-	max520_address = MAX520_ADDRESS_BASE + (three_bit_adress << 1); //Set the correct address for the TWI bus
+	max520_address = MAX520_ADDRESS_BASE + (three_bit_address << 1); //Set the correct address for the TWI bus
 }
 
 

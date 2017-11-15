@@ -14,15 +14,26 @@
 #include "motor.h"
 #include "control.h"
 #include "solenoid.h"
+#include "servo.h"
 
 
 volatile int timer_flag;
+volatile int solenoid_charge;
 
+#define INTERRUPT_FREQUENCY ((double) 200)/3  // Hz
+#define SOLENOID_CHARGE_TIME ((double) 1000)/1000  // s
+
+#define SOLENOID_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SOLENOID_CHARGE_TIME)
 
 // Set the timer_flag when the timer has counted to OCR0A
 ISR(TIMER0_COMPA_vect){
+	// Increment solenoid charge
+	solenoid_charge = MIN(solenoid_charge + 1, SOLENOID_MAX_CHARGE);
+	
+	// Set timer flag
 	timer_flag = 1;
 }
+
 
 
 // Initializes timer
@@ -50,10 +61,12 @@ void CONTROL_run(control control_type) {
 		uint8_t slider_right = control_inputs.data[SLIDER_RIGHT];
 		
 		uint8_t buttons = control_inputs.data[BUTTONS];
-		if(buttons & (1 << JOY_BUTTON)){
+		if ((solenoid_charge == SOLENOID_MAX_CHARGE) && (buttons & (1 << JOY_BUTTON))){
 			solenoid_send_pulse();
-			_delay_ms(200);
+			solenoid_charge = 0;
 		}
+		
+		servo_set(slider_left);
 		
 		if (timer_flag) {
 			timer_flag = 0;

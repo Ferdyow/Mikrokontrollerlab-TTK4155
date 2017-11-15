@@ -12,7 +12,9 @@
 #include "PWM.h"
 #include "servo.h"
 
+#include <avr/interrupt.h>
 
+// DO NOT CHANGE THESE VALUES, as it might break the servo.
 #define MAX_WIDTH 2.0
 #define MIN_WIDTH 1.0
 
@@ -25,13 +27,12 @@ void servo_init(void){
 	PWM_set_width(WIDTH_MIDPOINT);
 }
 
-void servo_set(int8_t x){
+void servo_set(uint8_t x){
 	// Calculate the width for the PWM.
-	float width = WIDTH_MIDPOINT + x * WIDTH_RADIUS / 100.0;
+	float width = MIN_WIDTH + (MAX_WIDTH - MIN_WIDTH) * ((float) x) / 255;
 	
 	// Make sure width is within range.
-	if      (width < MIN_WIDTH) width = MIN_WIDTH;
-	else if (width > MAX_WIDTH) width = MAX_WIDTH;
+	width = SATURATE(width, MIN_WIDTH, MAX_WIDTH);
 	
 	PWM_set_width(width);
 }

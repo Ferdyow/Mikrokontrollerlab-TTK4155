@@ -74,7 +74,7 @@ void initialize(void){
 int main(void){
 	initialize(); 
 	printf("[NODE2] Initialization complete!\n\n");
-	//solenoid_send_pulse();
+	
 	CONTROL_run(CLOSED_LOOP);
 	
 	return 0;

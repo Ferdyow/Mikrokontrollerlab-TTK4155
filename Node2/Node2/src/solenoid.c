@@ -20,6 +20,7 @@ void solenoid_init(){
 	set_bit(PORTB, PB4);
 }
 
+
 void solenoid_send_pulse(){
 	clear_bit(PORTB, PB4);
 	_delay_ms(30);

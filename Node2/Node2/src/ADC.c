@@ -13,12 +13,16 @@
 
 
 void ADC_init(void){
-	set_bit(ADCSRA, ADEN); //Enables the ADC
-	//Use a prescaler to determine the frequency of successive approximation (ADPS bit in ADCSRA) (we used 128)
+	// Enable ADC
+	set_bit(ADCSRA, ADEN); 
+	
+	// Using a prescaler of 128. (To determine frequency of successive approximations. ADPS bit in ADCSRA)
 	set_bit(ADCSRA, ADPS2);
-	set_bit(ADCSRA, ADPS1);	
-	set_bit(ADCSRA, ADPS0);					
-	set_bit(ADMUX, REFS0); //Voltage reference: AVCC with external capacitor at AREF pin (Table 26-3)
+	set_bit(ADCSRA, ADPS1);
+	set_bit(ADCSRA, ADPS0);
+	
+	// Voltage reference: AVCC with external capacitor at AREF pin [Table 26-3]
+	set_bit(ADMUX, REFS0); 
 	
 }
 

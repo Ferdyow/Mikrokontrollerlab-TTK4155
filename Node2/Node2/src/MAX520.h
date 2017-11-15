@@ -10,7 +10,7 @@
 #define MAX520_H_
 #include <stdio.h>
 
-void MAX520_init(uint8_t three_bit_adress);
+void MAX520_init(uint8_t three_bit_address);
 
 void MAX520_send(uint8_t channel, uint8_t data);
 

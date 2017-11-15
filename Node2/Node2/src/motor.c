@@ -166,10 +166,8 @@ void motor_find_max_speed_auto(void){
 			time_sum += (uint64_t)time;
 			
 			double speed = abs(motor_read_position_change())/time;
-			if (speed > max_speed) {
-				max_speed = speed;
-				printf("[AUTOMATIC] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
-			}
+			max_speed = MAX(speed, max_speed);
+			
 			_delay_ms(50);
 		}
 	}
@@ -200,7 +198,7 @@ void motor_set_velocity(int16_t motor_velocity) { // u
 	
 	// Set direction and speed of motor.
 	motor_set_direction(motor_direction);
-	motor_set_speed(motor_speed * MOTOR_GAIN);
+	motor_set_speed(motor_speed);
 }
 
 void motor_set_direction(direction motor_direction) {
@@ -208,7 +206,7 @@ void motor_set_direction(direction motor_direction) {
 }
 
 void motor_set_speed(uint8_t motor_speed) {
-	MAX520_send(MOTOR_SPEED_CHANNEL, motor_speed);
+	MAX520_send(MOTOR_SPEED_CHANNEL, MOTOR_GAIN * motor_speed);
 }
 
 
@@ -238,10 +236,6 @@ int16_t motor_read_position_change(void) {
 
 int8_t motor_get_velocity(void) {
 	double velocity = ((double) motor_read_position_change()) / time_passed();
-	int velocity_percentage;
-	velocity_percentage = velocity * 100/max_speed;
-	
-	printf("Velocity percentage: %d\n", velocity_percentage);
-	
-	return velocity_percentage;
+	int velocity_percentage = velocity * 100/max_speed;	
+	return SATURATE(velocity_percentage, -100, 100);
 }

@@ -5,11 +5,6 @@
  *  Author: ferdyow
  */ 
 
-#define PERIOD_MS 20
-#define PRESCALER 8
-
-
-
 
 #include <stdio.h>
 #include <stdint.h>
@@ -19,6 +14,11 @@
 
 #include "defines.h"
 #include "PWM.h"
+
+
+#define PERIOD_MS 20
+#define PRESCALER 8
+
 
 void PWM_init(void){
 	//if clk_io = 1 / F_CPU: prescalar = 8, TOP = 39 999

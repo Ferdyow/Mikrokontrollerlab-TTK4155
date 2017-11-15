@@ -23,10 +23,10 @@ volatile PI_controller_t controller;
 
 
 void PI_init() {
+	controller.max_error_sum = 20;
 	controller.error_sum = 0;
 	controller.k_p = 0.5;
 	controller.k_i = 0.2;
-	controller.max_error_sum = 20;
 }
 
 

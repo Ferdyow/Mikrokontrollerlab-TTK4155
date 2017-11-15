@@ -12,7 +12,7 @@
 void servo_init(void);
 
 //Takes a percentage between -100 and 100 and converts it to PWM output between 0.9 and 2.1 ms
-void servo_set(int8_t);
+void servo_set(uint8_t);
 
 
 
