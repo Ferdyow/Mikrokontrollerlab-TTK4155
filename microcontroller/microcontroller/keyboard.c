@@ -10,13 +10,13 @@
 #define LINE_LENGTH  12
 
 
-/* redefinition of characters to print æ, ø, å, Æ, Ø, Å
-* æ = '$'
-* ø = '%'
-* å = '&'
-* Æ = '''
-* Ø = '('
-* Å = ')'
+/* redefinition of characters to print ï¿½, ï¿½, ï¿½, ï¿½, ï¿½, ï¿½
+* ï¿½ = '$'
+* ï¿½ = '%'
+* ï¿½ = '&'
+* ï¿½ = '''
+* ï¿½ = '('
+* ï¿½ = ')'
 */
 
 const char LETTERS_SMALL[NUMB_LETTERS] = {
@@ -107,7 +107,7 @@ void print_left_arrow_inverse() {
 void print_right_arrow() {
 	print_blank(6);
 
-	//left-arrow
+	//right-arrow
 	write_data(0b01111100);
 	write_data(0b00111000);
 	write_data(0b00010000);
@@ -118,7 +118,7 @@ void print_right_arrow() {
 void print_right_arrow_inverse() {
 	print_fill(6);
 
-	//left-arrow
+	//right-arrow
 	write_data(~0b01111100);
 	write_data(~0b00111000);
 	write_data(~0b00010000);
