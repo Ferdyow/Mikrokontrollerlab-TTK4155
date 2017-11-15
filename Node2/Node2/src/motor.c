@@ -19,10 +19,6 @@
 #include "time.h"
 #include "CAN.h"
 
-
-// IMPLEMENTS OPEN LOOP CONTROL
-
-
 // Ports
 #define MJ1  PORTH // the port on the 2560
 #define MJ2  PINK
@@ -87,22 +83,33 @@ void motor_find_max_speed_manual(void);
 /* FUNCTION IMPLEMENTATIONS                                             */
 /************************************************************************/
 
-void motor_init(void){
-	printf("Inside motor_init\n");
-	MAX520_init(0b000); 
-	
-	// Other initialization below
+void motor_init(max_speed_mode mode){
+	MAX520_init(0b000);
 	motor_enable();
 	clear_bit(MJ1, OE);  // Enable encoder
 	set_bit(MJ1, RST);
 	
-	motor_set_direction(LEFT);
-	motor_set_speed(0);
+	motor_set_velocity(0);
 	
 	// Set PORTH as output
 	DDRH = 0xFF;
-	time_init();
-	motor_find_max_speed_auto();
+	time_init();  // Used for measurement of speed/velocity.
+	
+	// Read the change in position to clear the encoder before measurements are made
+	motor_read_position_change();
+	
+	switch (mode) {
+		case DEFAULT:
+		max_speed = MOTOR_DEFAULT_MAX_SPEED;
+		break;
+		
+		case MANUAL:
+		motor_find_max_speed_manual();
+		break;
+		
+		case AUTOMATIC:
+		motor_find_max_speed_auto();
+	}
 }
 
 void motor_find_max_speed_manual(void){
@@ -118,14 +125,18 @@ void motor_find_max_speed_manual(void){
 	
 	while(!button_is_pressed) {
 		message = receive_control_inputs();
-		joystick_x = message.data[0];
-		motor_set_velocity(joystick_x);
+		joystick_x = message.data[JOYSTICK_X];
 		const int RL_BUTTONS = 0b011;
-		button_is_pressed = message.data[2] & RL_BUTTONS;
+		button_is_pressed = message.data[BUTTONS] & RL_BUTTONS;
+		
+		motor_set_velocity(joystick_x);
+
 		double speed = abs(motor_read_position_change())/(double)(time_passed());
 		if (speed > max_speed) {
 			max_speed = speed;
+			printf("[MANUAL] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
 		}
+		_delay_ms(10);
 	}
 	
 	printf("---------------------------------------------------------\n");
@@ -136,19 +147,20 @@ void motor_find_max_speed_manual(void){
 
 void motor_find_max_speed_auto(void){
 	cli();
-	const int16_t velocity[] = {50, -50, 100, -100, 150, -150};
-	const uint8_t time_interval = 200; //85; // Unit unknown
+	const int16_t velocities[] = {100, -100, 100, -100, 100, -100, 100, -100, 100, -100};
+	const uint8_t time_interval = 85;  // Unit unknown
 	
-	const int velocity_size = sizeof(velocity)/sizeof(velocity[0]); // Size of array
-	for (int i = 0; i < velocity_size; i++) {
+	const int velocity_count = sizeof(velocities)/sizeof(velocities[0]); // Size of array
+	for (int i = 0; i < velocity_count; i++) {
 		// Used to keep track of how long the motor has been going in one direction.
 		uint64_t time_sum = 0;
-		printf("Set velocity to: %d\n", velocity[i]);
+		printf("Set velocity to: %d\n", velocities[i]);
 		
 		sei(); // Interrupts need to be enabled in order to set velocity
-		motor_set_velocity(velocity[i]); 
+		motor_set_velocity(velocities[i]); 
 		cli();
 		
+		// A somewhat hacky way of doing it. Consider switching to a separate timer in the future.
 		while((uint8_t)((time_sum)>>8) < time_interval) {
 			double time = time_passed();
 			time_sum += (uint64_t)time;
@@ -156,16 +168,13 @@ void motor_find_max_speed_auto(void){
 			double speed = abs(motor_read_position_change())/time;
 			if (speed > max_speed) {
 				max_speed = speed;
+				printf("[AUTOMATIC] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
 			}
-			
-			printf("speed: %d\n", (int)(speed*1000));
 			_delay_ms(50);
 		}
-		printf("MAX SPEED: %d\n", (int)(max_speed*1000));
-		
-		// Wait 1 second, and reset the time_sum
-		_delay_ms(1000);
 	}
+	
+	printf("[AUTOMATIC] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
 	
 	sei(); // Interrupts need to be enabled in order to set velocity
 	motor_set_velocity(0); 
@@ -186,8 +195,8 @@ void motor_set_velocity(int16_t motor_velocity) { // u
 	direction motor_direction = (motor_velocity < 0) ? LEFT : RIGHT;
 	
 	// Speed is in absolute value. Make sure it is not greater than 100.
+	motor_velocity = SATURATE(motor_velocity, -100, 100);
 	uint8_t motor_speed = abs(motor_velocity);
-	motor_speed = (motor_speed > 100) ? 100 : motor_speed;
 	
 	// Set direction and speed of motor.
 	motor_set_direction(motor_direction);
@@ -213,18 +222,18 @@ int16_t motor_read_position_change(void) {
 	clear_bit(MJ1, OE);
 	clear_bit(MJ1, SEL);
 	_delay_us(20);
-	uint16_t position = (MJ2 << 8);
+	uint16_t position_change = (MJ2 << 8);
 	
 	set_bit(MJ1, SEL);
 	_delay_us(20);
-	position += MJ2;
+	position_change += MJ2;
 	
 	clear_bit(MJ1, RST);
 	_delay_us(25);
 	set_bit(MJ1, RST);
 	set_bit(MJ1, OE);
 	
-	return position;
+	return position_change;
 }
 
 int8_t motor_get_velocity(void) {
@@ -232,16 +241,15 @@ int8_t motor_get_velocity(void) {
 	int velocity_percentage;
 	velocity_percentage = velocity * 100/max_speed;
 	
-	if (fabs(velocity) > max_speed){
+	/*if (fabs(velocity) > max_speed){
 		// Calibrate velocity if max_speed is greater than previous measurements
 		max_speed = velocity;
 		velocity_percentage = 100 * fabs(velocity)/velocity;
 	}
 	else {
 		velocity_percentage = velocity * 100/max_speed;
-	}
+	}*/
+	printf("Velocity percentage: %d\n", velocity_percentage);
 	
-	printf("Velocity_percentage: %d\n", velocity_percentage);
-	//printf("Position: %d\n", motor_read_position());
 	return velocity_percentage;
 }

@@ -54,6 +54,7 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../src/ADC.c \
 ../src/CAN.c \
+../src/control.c \
 ../src/IR.c \
 ../src/MAX520.c \
 ../src/MCP2515.c \
@@ -78,6 +79,7 @@ ASM_SRCS +=
 OBJS +=  \
 src/ADC.o \
 src/CAN.o \
+src/control.o \
 src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
@@ -95,6 +97,7 @@ src/main.o
 OBJS_AS_ARGS +=  \
 src/ADC.o \
 src/CAN.o \
+src/control.o \
 src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
@@ -112,6 +115,7 @@ src/main.o
 C_DEPS +=  \
 src/ADC.d \
 src/CAN.d \
+src/control.d \
 src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
@@ -129,6 +133,7 @@ src/main.d
 C_DEPS_AS_ARGS +=  \
 src/ADC.d \
 src/CAN.d \
+src/control.d \
 src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
@@ -157,6 +162,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

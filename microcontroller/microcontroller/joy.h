@@ -44,6 +44,7 @@ JOY_position_t JOY_getPosition();
 /*returns the most extreme direction of the joystick if it is moved beyond a threshold of 5% from neutral*/
 JOY_direction_t JOY_getDirection();
 
+SLI_position_t SLI_getPosition();
 
 
 #endif /* JOYSTICK_H_ */

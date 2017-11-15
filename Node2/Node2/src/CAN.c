@@ -264,6 +264,5 @@ can_message receive_control_inputs(void){
 	while (!msg.length) {
 		CAN_data_receive(&msg);
 	}
-	
 	return msg;
 }

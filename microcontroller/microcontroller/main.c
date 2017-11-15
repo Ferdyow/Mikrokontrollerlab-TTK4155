@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+void send_control_input(void);
 
 void initialize(void){
 	cli();
@@ -63,39 +64,36 @@ void test(void){
 	
 }
 
-
-void send_joystick_pos(){
-	can_message msg;
-	msg.id  = 0;
-	msg.length = 3;
-	JOY_position_t pos;
+void send_control_input(void) {
+	can_message control_input;
+	control_input.id = 0;
+	control_input.length = 5;
 	
-	pos = JOY_getPosition();
-	msg.data[0] = pos.x;
-	msg.data[1] = pos.y;
+	JOY_position_t joy_position = JOY_getPosition();
+	control_input.data[JOYSTICK_X] = joy_position.x;
+	control_input.data[JOYSTICK_Y] = joy_position.y;
 	
-	//contains 000 0 JOYSTICK RIGHT LEFT button
-	msg.data[2] = JOY_button_pressed(JOY_BUTTON) << JOY_BUTTON | JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON | JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
-	printf("SENDING:\nx: %d\ty:%d \tbuttons: %d	\n\n", pos.x, pos.y, msg.data[2]);
-	//printf("BUTTONS: \t%2d\t\t%2d\t\t%2d\n", test_bit(PINB, PINB0), test_bit(PINB, PINB1), !test_bit(PINB, PINB2));
-	CAN_message_send(&msg);
+	SLI_position_t sli_position = SLI_getPosition();
+	control_input.data[SLIDER_LEFT] = sli_position.left;
+	control_input.data[SLIDER_RIGHT] = sli_position.right;
+	
+	int joy_button = JOY_button_pressed(JOY_BUTTON) << JOY_BUTTON;
+	int left_button = JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
+	int right_button = JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON;
+	control_input.data[BUTTONS] = joy_button | left_button | right_button;
+	
+	CAN_message_send(&control_input);
+	
 	while(!CAN_transmit_complete(TB0))
 		;
-	//printf("1. EFGL: 0x%02x\n", MCP2515_read(MCP_EFLG));
-	
 }
 
 int main(void) {
-	
 	initialize();
-	while(1){
-		printf("MAIN TEST\n");
-		MENU_run();
-		//send_joystick_pos();
+	printf("Initialization of Node 1 complete!\n\n");
+	while(1) {
+		send_control_input();
 	}
 
-	//test();
-	//CAN_test();
-	
 	return 0;
 }

@@ -9,7 +9,14 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-void motor_init(void);
+typedef enum { DEFAULT, MANUAL, AUTOMATIC } max_speed_mode;
+#define MOTOR_DEFAULT_MAX_SPEED ((double) 484) / 1000
+
+/**
+ * Initialize the motor, and find its maximum speed.
+ * @param {int} max_speed_mode - How to find the maximum speed of the motor. (MOTOR_DEFAULT_MODE, MOTOR_MANUAL_MODE, MOTOR_AUTOMATIC_MODE)
+ */
+void motor_init(max_speed_mode mode);
 
 /**
  * Set the velocity of the servo motor (sideways)
