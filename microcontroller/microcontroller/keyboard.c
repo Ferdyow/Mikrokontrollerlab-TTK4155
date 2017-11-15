@@ -1,5 +1,6 @@
 #include "joy.h"
 #include "OLED_driver.h"
+#include "print.h"
 #include "defines.h"
 
 #include <util/delay.h>
@@ -19,6 +20,9 @@
 * � = ')'
 */
 
+//Inverse is defined as 1
+enum{ NORMAL, INVERSE};
+
 const char LETTERS_SMALL[NUMB_LETTERS] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?', 
 	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '&', '+', 
@@ -33,6 +37,8 @@ const char LETTERS_BIG[NUMB_LETTERS] = {
 	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', ';', ':', '#'
 };
 
+/*	VARIABLES						*/
+/************************************/
 char* letters = LETTERS_SMALL;
 char*  written_string = "";
 
@@ -42,130 +48,19 @@ typedef struct {
 
 position pos = {0,0};
 
-void print_blank(int number) {
-	for (int i = 0; i < number; i++) {
-		write_data(0x00);
-	}
-}
 
-void print_fill(int number) {
-	for (int i = 0; i < number; i++) {
-		write_data(0xFF);
-	}
-}
+/* HELPER FUNCTION		*/
+/************************************/
 
-void print_shift() {
-	print_blank(4);
-	//up-arrow
-	write_data(0b00010000);
-	write_data(0b00011000);
-	write_data(0b00111100);
-	write_data(0b00111110);
-	write_data(0b00111100);
-	write_data(0b00011000);
-	write_data(0b00010000);
-
-	print_blank(5);
-}
-
-void print_shift_inverse() {
-	print_fill(4);
-
-	//up-arrow
-	write_data(~0b00010000);
-	write_data(~0b00011000);
-	write_data(~0b00111100);
-	write_data(~0b00111110);
-	write_data(~0b00111100);
-	write_data(~0b00011000);
-	write_data(~0b00010000);
-
-	print_fill(5);
-}
-
-void print_left_arrow() {
-	print_blank(6);
-	//left-arrow
-	
-	write_data(0b00010000);
-	write_data(0b00111000);
-	write_data(0b01111100);
-	
-	print_blank(7);
-}
-
-void print_left_arrow_inverse() {
-	print_fill(6);
-	//left-arrow
-	write_data(~0b00010000);
-	write_data(~0b00111000);
-	write_data(~0b01111100);
-
-	print_fill(7);
-}
-
-void print_right_arrow() {
-	print_blank(6);
-
-	//right-arrow
-	write_data(0b01111100);
-	write_data(0b00111000);
-	write_data(0b00010000);
-	
-	print_blank(7);
-}
-
-void print_right_arrow_inverse() {
-	print_fill(6);
-
-	//right-arrow
-	write_data(~0b01111100);
-	write_data(~0b00111000);
-	write_data(~0b00010000);
-
-	print_fill(7);
+void append(char c) {
+	int len = strlen(written_string);
+	written_string[len] = c;
+	written_string[len + 1] = '\0';
 }
 
 
-void print_spacebar() {
-	print_blank(4);
-
-	//spacebar
-	write_data(0b00111000);
-	for (int i = 0; i < 39;i++) write_data(0b00100000);
-	write_data(0b00111000);
-
-	print_blank(5);
-}
-
-void print_spacebar_inverse() {
-	print_blank(4);
-
-	//spacebar
-	write_data(~0b00111000);
-	for (int i = 0; i < 39;i++) write_data(~0b00100000);
-	write_data(~0b00111000);
-
-	print_blank(5);
-}
-
-
-void print_options_bar() {
-	print_shift();
-	print_spacebar();
-	print_left_arrow();
-	print_right_arrow();
-}
-
-// 5 lines x 16 columns
-void keyboard_goto(int line, int column) {
-	OLED_pos(line + 3, (column+2) * 8);
-}
-
-void keyboard_goto_line(int line) {
-		keyboard_goto(line, 0);
-	}
-
+/* FUNCTION IMPLEMENTATIONS			*/
+/************************************/
 
 void keyboard_init() {
 	OLED_reset();
@@ -176,23 +71,24 @@ void keyboard_init() {
 	strcpy(written_string, "\0");
 
 	//The first letter is selected by default
-	OLED_print_char_inverse(letters[0]);
+	print_char(letters[0], INVERSE);
 
 	//print the rest of the letters
 	for (int i = 1; i < NUMB_LETTERS; i++) {
 		if (i % LINE_LENGTH == 0) {
 			keyboard_goto_line(++pos.y);
 		}
-		OLED_print_char(letters[i]);
+		print_char(letters[i], NORMAL);
 	}
 	//print the tool buttons
 	keyboard_goto_line(4);
-	print_options_bar();
+	print_options_bar(NORMAL, NORMAL, NORMAL, NORMAL);
 
 	//reset y-position
 	pos.y = 0;
 
 }
+
 
 void keyboard_print() {
 	keyboard_goto_line(0);
@@ -202,14 +98,22 @@ void keyboard_print() {
 		if (i % LINE_LENGTH == 0 && i != 0) {
 			keyboard_goto_line(++pos.y);
 		}
-		OLED_print_char(letters[i]);
+		print_char(letters[i], NORMAL);
 	}
 	//print the tool buttons
 	keyboard_goto_line(4);
-	print_options_bar();
+	print_options_bar(NORMAL, NORMAL, NORMAL, NORMAL);
 
 
 }
+// 5 lines x 16 columns
+void keyboard_goto(int line, int column) {
+	OLED_pos(line + 3, (column+2) * 8);
+}
+
+void keyboard_goto_line(int line) {
+		keyboard_goto(line, 0);
+	}
 
 void toggle_shift() {
 	if (letters == LETTERS_SMALL) {
@@ -221,17 +125,12 @@ void toggle_shift() {
 
 	keyboard_print();
 	keyboard_goto_line(4);
-	print_shift_inverse();
+	print_shift(INVERSE);
 		
 	pos.y = 4;
 	pos.x = 0;
 }
 
-void append(char c){
-	int len = strlen(written_string);
-	written_string[len] = c;
-	written_string[len+1] = '\0';
-}
 
 void keyboard_run() {
 	//printf("RESTART\n");
@@ -286,7 +185,7 @@ void keyboard_run() {
 			//old item is a letter
 			if (old_y < 4) {
 				keyboard_goto(old_y, old_x);
-				OLED_print_char(letters[old_y * LINE_LENGTH + old_x]);
+				print_char(letters[old_y * LINE_LENGTH + old_x], INVERSE);
 			}
 
 			//old item is in toolbar
@@ -294,28 +193,28 @@ void keyboard_run() {
 				if (old_x < 2) {
 					old_x = 0;
 					keyboard_goto(old_y, old_x);
-					print_shift();
+					print_shift(NORMAL);
 				}
 				else if (old_x < 8) {
 					old_x = 2; //start of spacebar
 					keyboard_goto(old_y, old_x);
-					print_spacebar();
+					print_spacebar(NORMAL);
 				}
 				else if (old_x < 10) {
 					old_x = 8; //start of left arrow
 					keyboard_goto(old_y, old_x);
-					print_left_arrow();
+					print_left_arrow(NORMAL);
 				}
 				else {
 					old_x = 10; //start of right arrow
 					keyboard_goto(old_y, old_x);
-					print_right_arrow();
+					print_right_arrow(NORMAL);
 				}
 			}
 			//selected item is a letter
 			if (pos.y < 4) {
 				keyboard_goto(pos.y,pos.x);
-				OLED_print_char_inverse(letters[pos.y * LINE_LENGTH + pos.x]);
+				print_char(letters[pos.y * LINE_LENGTH + pos.x], INVERSE);
 			}
 
 			//selected menu item is in toolbar
@@ -323,22 +222,22 @@ void keyboard_run() {
 				if (pos.x < 2) {
 					pos.x = 0;
 					keyboard_goto(pos.y, pos.x);
-					print_shift_inverse();
+					print_shift(INVERSE);
 				}
 				else if (pos.x < 8) {
 					pos.x = 2; //start of spacebar
 					keyboard_goto(pos.y, pos.x);
-					print_spacebar_inverse();
+					print_spacebar(INVERSE);
 				}
 				else if (pos.x < 10) {
 					pos.x = 8; //start of left arrow
 					keyboard_goto(pos.y, pos.x);
-					print_left_arrow_inverse();
+					print_left_arrow(INVERSE);
 				}
 				else {
 					pos.x = 10; //start of right arrow
 					keyboard_goto(pos.y, pos.x);
-					print_right_arrow_inverse();
+					print_right_arrow(INVERSE);
 				}
 			}
 			old_x = pos.x;
