@@ -48,6 +48,7 @@ typedef struct {
 }position;
 
 position pos = {0,0};
+position prev_pos = { 0,0 };
 
 
 /* HELPER FUNCTION		*/
@@ -62,9 +63,10 @@ void append_char(char c) {
 
 void print_string() {
 	OLED_home();
-	char print_string[16];
-	mempcy(print_string, written_string[strlen(written_string)-string_position, 16)
-	fprintf(OLED, "%s", print_string);
+	/char print_string[16];
+	//memcpy(print_string, written_string[strlen(written_string)-string_position], 16);
+	//fprintf(OLED, "%s", print_string);
+	fprintf(OLED, "%s", written_string);
 	keyboard_goto(pos.y, pos.x);
 }
 
@@ -99,6 +101,9 @@ void keyboard_init() {
 
 	//reset y-position
 	pos.y = 0;
+
+	//ignore button pressed right away
+	_delay_ms(500);
 
 }
 
@@ -145,149 +150,170 @@ void toggle_shift() {
 	pos.x = 0;
 }
 
+void keyboard_register_position_change(JOY_direction_t direction) {
+	if (direction == NEUTRAL);
+	else if (direction == DOWN && pos.y < 4) {
+		prev_pos.y = pos.y++;
+	}
+	else if (direction == UP && pos.y > 0) {
+		prev_pos.y = pos.y--;
+	}
+	else if (direction == LEFT && pos.x > 0) {
+		prev_pos.x = pos.x--;
+	}
+	else if (direction == RIGHT && pos.x < LINE_LENGTH - 1) {
+
+		if (pos.y == 4) {
+			if (pos.x < 2) {
+				prev_pos.x = 0;
+				pos.x = 2;
+			}
+			else if (pos.x < 8) {
+				prev_pos.x = 2;
+				pos.x = 8;
+			}
+			else if (pos.x < 10) {
+				prev_pos.x = 8;
+				pos.x = 10;
+			}
+		}
+		else {
+			prev_pos.x = pos.x++;
+		}
+	}
+}
+
+
+void keyboard_unselect_prev() {
+	//old item is a letter
+	if (prev_pos.y < 4) {
+		keyboard_goto(prev_pos.y, prev_pos.x);
+		print_char(letters[prev_pos.y * LINE_LENGTH + prev_pos.x], NORMAL);
+	}
+
+	//old item is in toolbar
+	else {
+		if (prev_pos.x < 2) {
+			prev_pos.x = 0;
+			keyboard_goto(prev_pos.y, prev_pos.x);
+			print_shift(NORMAL);
+		}
+		else if (prev_pos.x < 8) {
+			prev_pos.x = 2; //start of spacebar
+			keyboard_goto(prev_pos.y, prev_pos.x);
+			print_spacebar(NORMAL);
+		}
+		else if (prev_pos.x < 10) {
+			prev_pos.x = 8; //start of left arrow
+			keyboard_goto(prev_pos.y, prev_pos.x);
+			print_left_arrow(NORMAL);
+		}
+		else {
+			prev_pos.x = 10; //start of right arrow
+			keyboard_goto(prev_pos.y, prev_pos.x);
+			print_right_arrow(NORMAL);
+		}
+	}
+}
+
+void keyboard_select_curr() {
+	//selected item is a letter
+	if (pos.y < 4) {
+		keyboard_goto(pos.y, pos.x);
+		print_char(letters[pos.y * LINE_LENGTH + pos.x], INVERSE);
+	}
+
+	//selected menu item is in toolbar
+	else {
+		if (pos.x < 2) {
+			pos.x = 0;
+			keyboard_goto(pos.y, pos.x);
+			print_shift(INVERSE);
+		}
+		else if (pos.x < 8) {
+			pos.x = 2; //start of spacebar
+			keyboard_goto(pos.y, pos.x);
+			print_spacebar(INVERSE);
+		}
+		else if (pos.x < 10) {
+			pos.x = 8; //start of left arrow
+			keyboard_goto(pos.y, pos.x);
+			print_left_arrow(INVERSE);
+		}
+		else {
+			pos.x = 10; //start of right arrow
+			keyboard_goto(pos.y, pos.x);
+			print_right_arrow(INVERSE);
+		}
+	}
+}
+
+
+void keyboard_item_pressed() {
+	if (pos.y < 4) {
+		append_char(letters[pos.y * LINE_LENGTH + pos.x]);
+		//printf("APPEND written string: %s", written_string);
+		//replace with a print function that remembers which part is printed, used with < >
+		print_string();
+	}
+	else {
+		if (pos.x < 2) {
+			toggle_shift();
+		}
+		else if (pos.x < 8) {
+			append_char(32);
+			print_string();
+		}
+		
+		//last two probably not working
+		else if (pos.x < 10 && string_position > 0) {
+			string_position--;
+		}
+		else if (pos.x < 12 && string_position < strlen(written_string)) {
+			string_position++;
+		}
+	}
+}
+
+
 
 void keyboard_run() {
 	keyboard_init();
-	_delay_ms(500);
-	int old_y=0;
-	int old_x=0;
 	JOY_direction_t direction;
+
+	//detect changes
 	int position_moved = 0;
 	int button_pressed = 0;
 
 	while (!JOY_button_pressed(LEFT_BUTTON)) {
 		//Check if we switch letter
 		direction = JOY_getDirection();
-		if (direction == NEUTRAL);
-		else if (direction == DOWN && pos.y < 4) {
-			old_y = pos.y++;
-		}
-		else if (direction == UP && pos.y > 0) {
-			old_y = pos.y--;
-		}
-		else if (direction == LEFT && pos.x > 0) {
-			old_x = pos.x--;
-		}
-		else if (direction == RIGHT && pos.x < LINE_LENGTH-1) {
-			
-			if(pos.y == 4){
-				if (pos.x < 2){
-					old_x = 0;
-					pos.x = 2;
-				}
-				 else if (pos.x < 8){
-					old_x = 2;
-					pos.x = 8;
-				}
-				else if(pos.x < 10){
-					old_x = 8;
-					pos.x = 10;	
-				}
-			}
-			else{
-				old_x = pos.x++;
-			}
-		}
-
-		//Add logic to handle the bottom taskbar
-		if (old_y != pos.y || old_x != pos.x) {
-			printf("old_y: %d, y: %d, old_x: %d, old_y %d\n", old_y, pos.y, old_x, pos.x);
+		keyboard_register_position_change(direction);
+		
+		if (prev_pos.y != pos.y || prev_pos.x != pos.x) {
+			printf("prev_pos.y: %d, y: %d, prev_pos.x: %d, prev_pos.y %d\n", prev_pos.y, pos.y, prev_pos.x, pos.x);
 			position_moved = 1;
 			//unselect the old letter and select the new one
+			keyboard_unselect_prev();
+			keyboard_select_curr();
 
-			//old item is a letter
-			if (old_y < 4) {
-				keyboard_goto(old_y, old_x);
-				print_char(letters[old_y * LINE_LENGTH + old_x], NORMAL);
-			}
-
-			//old item is in toolbar
-			else {
-				if (old_x < 2) {
-					old_x = 0;
-					keyboard_goto(old_y, old_x);
-					print_shift(NORMAL);
-				}
-				else if (old_x < 8) {
-					old_x = 2; //start of spacebar
-					keyboard_goto(old_y, old_x);
-					print_spacebar(NORMAL);
-				}
-				else if (old_x < 10) {
-					old_x = 8; //start of left arrow
-					keyboard_goto(old_y, old_x);
-					print_left_arrow(NORMAL);
-				}
-				else {
-					old_x = 10; //start of right arrow
-					keyboard_goto(old_y, old_x);
-					print_right_arrow(NORMAL);
-				}
-			}
-			//selected item is a letter
-			if (pos.y < 4) {
-				keyboard_goto(pos.y,pos.x);
-				print_char(letters[pos.y * LINE_LENGTH + pos.x], INVERSE);
-			}
-
-			//selected menu item is in toolbar
-			else {
-				if (pos.x < 2) {
-					pos.x = 0;
-					keyboard_goto(pos.y, pos.x);
-					print_shift(INVERSE);
-				}
-				else if (pos.x < 8) {
-					pos.x = 2; //start of spacebar
-					keyboard_goto(pos.y, pos.x);
-					print_spacebar(INVERSE);
-				}
-				else if (pos.x < 10) {
-					pos.x = 8; //start of left arrow
-					keyboard_goto(pos.y, pos.x);
-					print_left_arrow(INVERSE);
-				}
-				else {
-					pos.x = 10; //start of right arrow
-					keyboard_goto(pos.y, pos.x);
-					print_right_arrow(INVERSE);
-				}
-			}
-			old_x = pos.x;
-			old_y = pos.y;
+			//Reset position
+			prev_pos.x = pos.x;
+			prev_pos.y = pos.y;
 		}
 
 
 		//check if we wish to add the current letter to our string or activate an option
 		if (JOY_button_pressed(JOY_BUTTON)) {
 			button_pressed = 1;
-			if (pos.y < 4) {
-				append_char(letters[pos.y * LINE_LENGTH + pos.x]);
-				//printf("APPEND written string: %s", written_string);
-				//replace with a print function that remembers which part is printed, used with < >
-				print_string();
-			}
-			else {
-				if(pos.x < 2){
-					toggle_shift();
-				}
-				else if(pos.x < 8){
-					append_char(32);
-					print_string();
-				}
-				ëlse if (pos.x < 10 && string_position > 0) {
-					string_position--;
-				}
-				else if (pos.x < 12 && string_position < strlen(written_string)) {
-					string_position++;
-				}
-			}
+			keyboard_item_pressed();
+			
 		}
-
 		//check if we wish to remove a letter from our string
 		else if (JOY_button_pressed(RIGHT_BUTTON)) {
 			button_pressed = 1;
-			remove_last_char();
+			//not working
+			//remove_last_char();
 			//printf("REMOVE written string: %s", written_string);
 			print_string();
 		}
