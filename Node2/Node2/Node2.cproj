@@ -259,6 +259,12 @@
     <Compile Include="src\servo.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\solenoid.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\solenoid.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\SPI.c">
       <SubType>compile</SubType>
     </Compile>

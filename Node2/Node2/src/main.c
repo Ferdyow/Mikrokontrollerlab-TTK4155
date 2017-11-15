@@ -43,6 +43,7 @@
 #include "motor.h"
 #include "PI.h"
 #include "control.h"
+#include "solenoid.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -65,6 +66,7 @@ void initialize(void){
 	motor_init(DEFAULT);
 	PI_init();
 	CONTROL_init();
+	solenoid_init();
 	sei();
 }
 
@@ -72,7 +74,7 @@ void initialize(void){
 int main(void){
 	initialize(); 
 	printf("[NODE2] Initialization complete!\n\n");
-	
+	//solenoid_send_pulse();
 	CONTROL_run(CLOSED_LOOP);
 	
 	return 0;

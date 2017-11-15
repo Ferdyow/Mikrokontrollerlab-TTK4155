@@ -13,6 +13,7 @@
 #include "PI.h"
 #include "motor.h"
 #include "control.h"
+#include "solenoid.h"
 
 
 volatile int timer_flag;
@@ -48,6 +49,11 @@ void CONTROL_run(control control_type) {
 		uint8_t slider_left = control_inputs.data[SLIDER_LEFT];
 		uint8_t slider_right = control_inputs.data[SLIDER_RIGHT];
 		
+		uint8_t buttons = control_inputs.data[BUTTONS];
+		if(buttons & (1 << JOY_BUTTON)){
+			solenoid_send_pulse();
+			_delay_ms(200);
+		}
 		
 		if (timer_flag) {
 			timer_flag = 0;

@@ -20,6 +20,8 @@ src\PI.c
 
 src\servo.c
 
+src\solenoid.c
+
 src\SPI.c
 
 src\PWM.c

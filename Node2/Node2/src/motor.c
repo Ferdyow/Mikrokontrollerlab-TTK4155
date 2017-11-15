@@ -241,14 +241,6 @@ int8_t motor_get_velocity(void) {
 	int velocity_percentage;
 	velocity_percentage = velocity * 100/max_speed;
 	
-	/*if (fabs(velocity) > max_speed){
-		// Calibrate velocity if max_speed is greater than previous measurements
-		max_speed = velocity;
-		velocity_percentage = 100 * fabs(velocity)/velocity;
-	}
-	else {
-		velocity_percentage = velocity * 100/max_speed;
-	}*/
 	printf("Velocity percentage: %d\n", velocity_percentage);
 	
 	return velocity_percentage;

@@ -61,6 +61,7 @@ C_SRCS +=  \
 ../src/motor.c \
 ../src/PI.c \
 ../src/servo.c \
+../src/solenoid.c \
 ../src/SPI.c \
 ../src/PWM.c \
 ../src/time.c \
@@ -86,6 +87,7 @@ src/MCP2515.o \
 src/motor.o \
 src/PI.o \
 src/servo.o \
+src/solenoid.o \
 src/SPI.o \
 src/PWM.o \
 src/time.o \
@@ -104,6 +106,7 @@ src/MCP2515.o \
 src/motor.o \
 src/PI.o \
 src/servo.o \
+src/solenoid.o \
 src/SPI.o \
 src/PWM.o \
 src/time.o \
@@ -122,6 +125,7 @@ src/MCP2515.d \
 src/motor.d \
 src/PI.d \
 src/servo.d \
+src/solenoid.d \
 src/SPI.d \
 src/PWM.d \
 src/time.d \
@@ -140,6 +144,7 @@ src/MCP2515.d \
 src/motor.d \
 src/PI.d \
 src/servo.d \
+src/solenoid.d \
 src/SPI.d \
 src/PWM.d \
 src/time.d \
@@ -162,6 +167,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
