@@ -40,7 +40,8 @@ const char LETTERS_BIG[NUMB_LETTERS] = {
 /*	VARIABLES						*/
 /************************************/
 char* letters = LETTERS_SMALL;
-char  written_string[17];
+char  written_string[40];
+int string_position=0; 
 
 typedef struct {
 	int x, y
@@ -52,12 +53,24 @@ position pos = {0,0};
 /* HELPER FUNCTION		*/
 /************************************/
 
-void append(char c) {
+void append_char(char c) {
 	int len = strlen(written_string);
 	written_string[len] = c;
 	written_string[len + 1] = '\0';
+	string_position++;
 }
 
+void print_string() {
+	OLED_home();
+	char print_string[16];
+	mempcy(print_string, written_string[strlen(written_string)-string_position, 16)
+	fprintf(OLED, "%s", print_string);
+	keyboard_goto(pos.y, pos.x);
+}
+
+void remove_last_char() {
+	written_string[strlen(written_string) - 1] = '\0';
+}
 
 /* FUNCTION IMPLEMENTATIONS			*/
 /************************************/
@@ -106,6 +119,7 @@ void keyboard_print() {
 
 
 }
+
 // 5 lines x 16 columns
 void keyboard_goto(int line, int column) {
 	OLED_pos(line + 3, (column+2) * 8);
@@ -133,7 +147,6 @@ void toggle_shift() {
 
 
 void keyboard_run() {
-	//printf("RESTART\n");
 	keyboard_init();
 	_delay_ms(500);
 	int old_y=0;
@@ -249,19 +262,24 @@ void keyboard_run() {
 		if (JOY_button_pressed(JOY_BUTTON)) {
 			button_pressed = 1;
 			if (pos.y < 4) {
-				append(letters[pos.y * LINE_LENGTH + pos.x]);
-				OLED_home();
+				append_char(letters[pos.y * LINE_LENGTH + pos.x]);
 				//printf("APPEND written string: %s", written_string);
 				//replace with a print function that remembers which part is printed, used with < >
-				fprintf(OLED, "%s", written_string);
-				keyboard_goto(pos.y, pos.x);
+				print_string();
 			}
 			else {
 				if(pos.x < 2){
 					toggle_shift();
 				}
 				else if(pos.x < 8){
-					append(32);
+					append_char(32);
+					print_string();
+				}
+				ëlse if (pos.x < 10 && string_position > 0) {
+					string_position--;
+				}
+				else if (pos.x < 12 && string_position < strlen(written_string)) {
+					string_position++;
 				}
 			}
 		}
@@ -269,11 +287,9 @@ void keyboard_run() {
 		//check if we wish to remove a letter from our string
 		else if (JOY_button_pressed(RIGHT_BUTTON)) {
 			button_pressed = 1;
-			written_string[strlen(written_string) - 1] = 0;
-			OLED_home();
+			remove_last_char();
 			//printf("REMOVE written string: %s", written_string);
-			fprintf(OLED, "%s", written_string);
-			keyboard_goto(pos.y, pos.x);
+			print_string();
 		}
 		
 		if(position_moved){
