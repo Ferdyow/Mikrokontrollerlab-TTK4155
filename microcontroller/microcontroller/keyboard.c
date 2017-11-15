@@ -64,8 +64,9 @@ void append_char(char c) {
 void print_string() {
 	OLED_home();
 	char print_string[16];
-	mempcy(print_string, written_string[strlen(written_string)-string_position, 16)
-	fprintf(OLED, "%s", print_string);
+	//memcpy(print_string, written_string[strlen(written_string)-string_position], 16);
+	//fprintf(OLED, "%s", print_string);
+	fprintf(OLED, "%s", written_string);
 	keyboard_goto(pos.y, pos.x);
 }
 
@@ -101,7 +102,7 @@ void keyboard_init() {
 	//reset y-position
 	pos.y = 0;
 
-	//wait so it doesnt register button pressed right away
+	//ignore button pressed right away
 	_delay_ms(500);
 
 }
@@ -247,7 +248,7 @@ void keyboard_select_curr() {
 	}
 }
 
-void keyboard_item_selected() {
+void keyboard_item_pressed() {
 	if (pos.y < 4) {
 		append_char(letters[pos.y * LINE_LENGTH + pos.x]);
 		//printf("APPEND written string: %s", written_string);
@@ -262,7 +263,7 @@ void keyboard_item_selected() {
 			append_char(32);
 			print_string();
 		}
-		ëlse if (pos.x < 10 && string_position > 0) {
+		else if (pos.x < 10 && string_position > 0) {
 			string_position--;
 		}
 		else if (pos.x < 12 && string_position < strlen(written_string)) {
@@ -270,7 +271,7 @@ void keyboard_item_selected() {
 		}
 	}
 }
-}
+
 
 
 void keyboard_run() {
@@ -304,7 +305,7 @@ void keyboard_run() {
 			button_pressed = 1;
 			keyboard_item_pressed();
 			
-
+		}
 		//check if we wish to remove a letter from our string
 		else if (JOY_button_pressed(RIGHT_BUTTON)) {
 			button_pressed = 1;
