@@ -25,4 +25,10 @@ static FILE oled_out = FDEV_SETUP_STREAM(OLED_print_char, NULL, _FDEV_SETUP_WRIT
 #define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
 //#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
 
+#define MAX(a,b)				 ((a < b) ?  (b) : (a))
+#define MIN(a,b)				 ((a > b) ?  (b) : (a))
+#define SATURATE(x,low,high)	 ( MIN( MAX((x), (low)), (high) ) ) 
+
+enum calibration { CALIBRATION_DEFAULT, CALIBRATION_MANUAL };
+
 #endif /* DEFINES_H_ */

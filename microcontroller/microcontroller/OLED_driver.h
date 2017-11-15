@@ -17,41 +17,83 @@
 #define OLED_CMD_ADDRESS 0x1000
 
 
-
+/**
+ * Initialize the OLED display.
+ */
 void OLED_init();
 
-//turns off screen, resets writing to (0,0)
+/**
+ * Clear the display and reset the cursor position to (0, 0).
+ */
 void OLED_reset();
 
-//resets writing to (0,0)
-void OLED_home();
+/**
+ * Reset cursor position to (0, 0).
+ */
+void OLED_reset_cursor();
 
-//go to page taken as input
+/**
+ * Switch to a different line/page on the OLED display.
+ * @param {uint8_t} line - The line/page to switch to.
+ */
 void OLED_goto_line(uint8_t line); 
 
-//go to column taken as input
+/**
+ * Switch to a different column on the OLED display.
+ * @param {uint8_t} column - The column to switch to.
+ */
 void OLED_goto_column(uint8_t column);
 
-
+/**
+ * Clear an entire line/page of the OLED display.
+ * @param {uint8_t} line - The line/page to clear.
+ */
 void OLED_clear_line(uint8_t line);
 
-//set screen pointer to given position
+/**
+ * Set the cursor position to (line, column)
+ * @param {uint8_t} line - The line/page to place the cursor at.
+ * @param {uint8_t} column - The column to place the cursor at.
+ */
 void OLED_pos(uint8_t line, uint8_t column);
 
-
+/**
+ * Print an array of characters to the OLED-display.
+ * @param {char*} str - The C-string to print.
+ */
 void OLED_print(char* str);
 
-//prints a character c to the current pointer pos
-void OLED_print_char(char c);
+/**
+ * Print a single character to the OLED-display. Has support for newline/return characters.
+ * @param {char} character - The character to print.
+ */
+void OLED_print_char(char character);
 
-//sets the brightness between 0 and 255
-void OLED_set_brightness(uint8_t lvl);
+/**
+ * Set the brightness level of the OLED-display. (min 0, max 255)
+ * @param {uint8_t} brightness_level - The amount of brightness.
+ */
+void OLED_set_brightness(uint8_t brightness_level);
 
-//for testing purposes
+/**
+ * Turn every pixel of the OLED-display on.
+ */
 void OLED_set_screen();
+
+/**
+ * Turn every pixel of a single line/page on.
+ * @param {uint8_t} line - The line/page that will be lit up.
+ */
 void OLED_set_line(uint8_t line);
+
+/**
+ * Run various tests on the OLED display, to confirm that it is working.
+ */
 void OLED_test();
 
+/**
+ * Print an arrow to the OLED display. Nice for displaying menu selections.
+ */
 void OLED_print_arrow();
 
 

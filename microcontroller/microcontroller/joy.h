@@ -10,7 +10,12 @@
 #define JOYSTICK_H_
 #include <stdbool.h>
 
-typedef enum{ LEFT_BUTTON, RIGHT_BUTTON, JOY_BUTTON }button;
+#define JOY_DEFAULT_MAX_X 255
+#define JOY_DEFAULT_MAX_Y 255
+#define JOY_DEFAULT_MIN_X 0
+#define JOY_DEFAULT_MIN_Y 0
+
+typedef enum { LEFT_BUTTON, RIGHT_BUTTON, JOY_BUTTON } button;
 typedef enum { LEFT, RIGHT, UP, DOWN, NEUTRAL } JOY_direction_t;
 
 typedef struct{
@@ -22,10 +27,10 @@ typedef struct{
 typedef struct {
 	int left;
 	int right;
-}SLI_position_t;
+} SLI_position_t;
 
 /*Initializes the use of the buttons and starts calibration*/
-void JOY_init();
+void JOY_init(int calibraton_mode);
 
 /*returns true/1 if the button is pressed, false/0 otherwise*/
 int JOY_button_pressed(button b);

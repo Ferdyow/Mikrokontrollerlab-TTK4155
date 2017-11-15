@@ -16,21 +16,41 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 
+#define FONT_SIZE 8
 #define OLED_PAGE_COUNT 8
 #define OLED_COLUMN_COUNT 128
 volatile char* data_address = OLED_DATA_ADDRESS;
 volatile char* cmd_address = OLED_CMD_ADDRESS;
+volatile int current_line = 0;
+volatile int current_column = 0;
 
-uint8_t FONT_SIZE = 8;
+/************************************************************************/
+/* HELPING FUNCTION DECLARATIONS                                        */
+/************************************************************************/
 
-
-
-//hjelpefunksjoner
+/**
+ * Write a command to the OLED controller.
+ */
 void write_cmd(uint8_t cmd); //write_command
+
+/**
+ * Write data to the OLED display RAM.
+ */
 void write_data(uint8_t data); //write_data
-void OLED_print_arrow();
 
+/**
+ * Set all RAM-bits of OLED display to 0. (Making all pixels dark)
+ */
+void OLED_clear_screen(void);
 
+/**
+ * Draw an arrow on the OLED display.
+ */
+void OLED_print_arrow(void);
+
+/************************************************************************/
+/* FUNCTION IMPLEMENTATIONS                                             */
+/************************************************************************/
 void write_cmd(uint8_t cmd){
 	*cmd_address = cmd;
 }
@@ -40,72 +60,67 @@ void write_data(uint8_t data){
 }
 
 void OLED_init(){
-	
-	
-	const char addresses[] = {
-		0xae, //disable display
-		0xa1, //segment remap
-		0xda, //common pads hardware: alternative
+	const char commands[] = {
+		0xAE, // Display off
+		0xA1, // Segment remap
+		0xDA, // Common pads hardware: alternative
 		0x12,
 		
-		0xc8, //common output scan direction:com63~com0
-		0xa8, //multiplex ration mode:63
-		0x3f,
+		0xC8, // Common output scan direction:com63~com0
+		0xA8, // Multiplex ration mode:63
+		0x3F,
 		
-		0xd5, //display divide ratio/osc. freq. mode
+		0xD5, // Display divide ratio/osc. freq. mode
 		0x80,
 		
-		0x81, //contrast control
+		0x81, // Contrast control
 		0x50,
 		
-		0xd9, //set pre_charged period
+		0xD9, // Set pre_charged period
 		0x21,
 		
-		//set Memory adressing mode to pages
-		0x20, 
+		0xA7, // Invert display
+		
+		0x20, // Set Memory adressing mode to pages
 		0x02,
 		
-		0xdb, //VCOM deselect level Mode
+		0xDB, // VCOM deselect level Mode
 		0x30,
 		
-		0xad, //master configuration
+		0xAD, // Master configuration
 		0x00,
 		
-		0xa4, //out follows RAM content
-		0xa6, //set normal display
-		0xaf //display on
+		0xA4, // Out follows RAM content
+		0xA6, // Set normal display
+		0xAF  // Display on
 	};
 	
-	const int addresses_length = sizeof(addresses)/sizeof(addresses[0]);
-	for (int i = 0; i < addresses_length; i++) {
-		write_cmd(addresses[i]);
+	const int command_count = sizeof(commands)/sizeof(commands[0]);
+	for (int i = 0; i < command_count; i++) {
+		write_cmd(commands[i]);
 	}
-	
 	OLED_reset();
-	
 }
-
-
 
 void OLED_reset() {
-	for(int page = 0; page < OLED_PAGE_COUNT; page++) {
-		OLED_clear_line(page);
-	}
-	OLED_home();
+	OLED_clear_screen();
+	OLED_reset_cursor();
 }
 
-
-
-
-void OLED_home(){
+void OLED_reset_cursor(){
 	OLED_pos(0,0);
 }
 
+void OLED_clear_screen() {
+	for(int page = 0; page < OLED_PAGE_COUNT; page++) {
+		OLED_clear_line(page);
+	}
+}
+
 void OLED_clear_line(uint8_t line) {
-	OLED_pos(line,0);
+	OLED_pos(line, 0);
 	for (int column = 0; column < OLED_COLUMN_COUNT; column++) {
 		write_data(0x00);
-		
 	}
 }
 
@@ -120,84 +135,82 @@ void OLED_pos(uint8_t line, uint8_t column) {
 }
 
 void OLED_goto_line(uint8_t line){
-	if (line < 0 || line > 7){
+	if (line < 0 || line > 7) 
 		return;
-	}
-	write_cmd(0xB0+line);
+	
+	write_cmd(0xB0 + line);
+	current_line = line;
 }
 
 void OLED_goto_column(uint8_t column){
-	if (column < 0 || column > 127){
+	if (column < 0 || column > 127) 
 		return;
-	}
-	write_cmd(0x00+column%16); //lower column register
-	write_cmd(0x10+column/16); //higher column register
-
-}
-
-void OLED_set_brightness(uint8_t lvl){
-	//if out of bounds set to min/max
-	if (lvl < 0) lvl = 0;
-	else if(lvl > 255) lvl = 255;
 	
-	write_cmd(0x81);
-	write_cmd(lvl);
+	write_cmd(0x00 + column%16); // Lower column register
+	write_cmd(0x10 + column/16); // Higher column register
+	current_column = column;
 }
 
-void OLED_print_char(char c){
-	if (c == '\0') return;
+void OLED_set_brightness(uint8_t brightness_level){
+	write_cmd(0x81);
+	write_cmd(brightness_level);
+}
+
+void OLED_print_char(char character){
 	uint8_t ascii_starting_point = 32;
-	uint16_t letter_index = c - ascii_starting_point;
-	for (int col = 0; col < FONT_SIZE; col++){
-		write_data(pgm_read_byte(&font8[letter_index][col]));
+	uint16_t letter_index = character - ascii_starting_point;
+	
+	switch (character) {
+		case '\0'  :
+		break;
+		
+		case '\n'  :  
+		// Reset cursor and move it to the next line
+		OLED_pos(current_line + 1, 0);  
+		break;
+		
+		case '\r'  :  
+		// Reset cursor to start of current line
+		OLED_pos(current_line, 0);  
+		break;
+		
+		default :
+		// Print character using the included fonts
+		for (int col = 0; col < FONT_SIZE; col++){
+			write_data(pgm_read_byte(&font8[letter_index][col]));
+		}
 	}
 }
 
 
 //for testing purposes
 void OLED_set_screen() {
-	for(int page = 0; page < OLED_PAGE_COUNT; page++) {
+	for (int page = 0; page < OLED_PAGE_COUNT; page++) {
 		OLED_set_line(page);
 	}
-	OLED_home();
+	OLED_reset_cursor();
 }
 
 void OLED_set_line(uint8_t line) {
 	OLED_pos(line,0);
 	for (int column = 0; column < OLED_COLUMN_COUNT; column++) {
 		write_data(0xFF);
-		
 	}
 }
 
-void OLED_test(){
-	
-	//test brightness
-	for(int co = 0; co < 255; co += 50){
+void OLED_test() {
+	// Test brightness
+	for (int co = 0; co < 255; co += 50){
 		OLED_set_brightness(co);
 		OLED_set_screen();
 		_delay_ms(500);
 		
 	}
 	
-	//test moving the pointer
-	//write_data(0x11);
-	//
-	//OLED_goto_line(5);
-	//write_data(0xFF);
-	//
-	//OLED_pos(3,100);
-	//write_data(0x55);
-	
 	OLED_reset();
-	//for (char c = 'a'; c <= 'z'; c++){
-		//OLED_print_char(c);
-	//}
 	OLED_pos(1,0);
 	OLED_print_arrow();
 	fprintf(OLED, "%s", " Extra features");
-	
-	
 }
 
 void OLED_print_arrow(){

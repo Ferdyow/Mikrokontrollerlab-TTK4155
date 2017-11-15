@@ -13,8 +13,6 @@
 #include <stdio.h>
 
 
-
-
 void SRAM_init(void){
 	//Enable external memory interface
 	set_bit(MCUCR, SRE);
@@ -24,6 +22,7 @@ void SRAM_init(void){
 	clear_bit(SFIOR, XMM1);
 	clear_bit(SFIOR, XMM0);
 }
+
 
 void SRAM_test(void)
 {

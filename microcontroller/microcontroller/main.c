@@ -27,17 +27,14 @@
 
 void initialize(void){
 	cli();
-	OLED_reset();
 	usart_init(MYUBRR);
 	SRAM_init();
 	ADC_init();
-	JOY_init();
+	JOY_init(CALIBRATION_DEFAULT);
 	OLED_init();
-	//MENU_init();
+	MENU_init();
 	CAN_init();
 	sei();
-	
-	
 }
 
 
@@ -66,6 +63,7 @@ void test(void){
 	
 }
 
+
 void send_joystick_pos(){
 	can_message msg;
 	msg.id  = 0;
@@ -77,7 +75,7 @@ void send_joystick_pos(){
 	msg.data[1] = pos.y;
 	
 	//contains 000 0 JOYSTICK RIGHT LEFT button
-	msg.data[2] = JOY_button_pressed(JOY_BUTTON) << JOY_BUTTON | JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON  | JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
+	msg.data[2] = JOY_button_pressed(JOY_BUTTON) << JOY_BUTTON | JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON | JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
 	printf("SENDING:\nx: %d\ty:%d \tbuttons: %d	\n\n", pos.x, pos.y, msg.data[2]);
 	//printf("BUTTONS: \t%2d\t\t%2d\t\t%2d\n", test_bit(PINB, PINB0), test_bit(PINB, PINB1), !test_bit(PINB, PINB2));
 	CAN_message_send(&msg);
@@ -88,10 +86,12 @@ void send_joystick_pos(){
 }
 
 int main(void) {
+	
 	initialize();
 	while(1){
-		//MENU_run();
-		send_joystick_pos();
+		printf("MAIN TEST\n");
+		MENU_run();
+		//send_joystick_pos();
 	}
 
 	//test();

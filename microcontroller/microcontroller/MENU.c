@@ -30,21 +30,20 @@ void MENU_init() {
 	
 	// Main menu
 	menu_entry* play = add_entry(main_menu, "Play game", NULL);
-	menu_entry* highscore = add_entry(main_menu, "Highscore", test_function);
+	add_entry(main_menu, "Highscore", test_function);
 	menu_entry* settings = add_entry(main_menu, "Settings", NULL);
 	menu_entry* extras = add_entry(main_menu, "Extra features", NULL);
-	//menu_entry* yolo = add_entry(main_menu, "YOLO", NULL);
 	
 	
 	// Sub-menu settings
-	menu_entry* brightness = add_entry(settings, "Brightness", NULL);
-	menu_entry* font = add_entry(settings, "Set font", NULL);
+	add_entry(settings, "Brightness", NULL);
+	add_entry(settings, "Set font", NULL);
 	
 	// Sub-menu extras
-	menu_entry* keyboard = add_entry(extras, "Keyboard", NULL);
-	menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
-	menu_entry* pong = add_entry(extras, "Play pong", NULL);
-	menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
+	add_entry(extras, "Keyboard", NULL);
+	add_entry(extras, "Mandelbrot", NULL);
+	add_entry(extras, "Play pong", NULL);
+	add_entry(extras, "rotating cube", NULL);
 	
 	current_entry = main_menu;
 	selected_entry = play;

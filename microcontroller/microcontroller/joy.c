@@ -17,7 +17,8 @@
 #include <stdlib.h>
 
  /*"on the go"-calibration is done manually (not needed in the .h file)*/
-void JOY_calibrate();
+void JOY_calibrate(int calibration_mode);
+void JOY_print_calibration_status(void);
 
 #define X_COORD 0
 #define Y_COORD 1
@@ -29,43 +30,52 @@ struct Coordinate {
 	uint8_t y;
 } max, min, rad, mid;
 
-void JOY_init(){
+void JOY_init(int calibraton_mode){
 	//set pull-up resistors on PORTB for JOY_button
 	set_bit(PORTB,PB2);
 	clear_bit(DDRB,PB2);
 	clear_bit(SFIOR, PUD);
-	JOY_calibrate();
+	JOY_calibrate(calibraton_mode);
 }
 
-void JOY_calibrate(){
-	max.x = 0;
-	max.y = 0;
-	min.x = 255;
-	min.y = 255;
-	uint8_t x;
-	uint8_t y;
+void JOY_print_calibration_status() {
 	OLED_reset();
-	printf("\nMove the joystick to all extreme points.\n");
-	printf("Press the joystick when you're done.\n");
-	//check channels 
-	while(test_bit(PINB,PINB2)){
-		// Read sensor values
-		x = ADC_read(0);
-		y = ADC_read(1);
-		
-		// Calibrate x
-		if (min.x > x) min.x = x; 
-		else if (max.x < x) max.x = x;
-		
-		// Calibrate y
-		if (min.y > y) min.y = y;
-		else if (max.y < y) max.y = y;		
-	}
+	fprintf(OLED, "%s\n", "Calibrate JOY");
+	fprintf(OLED, "x_max: %6d\n", max.x);
+	fprintf(OLED, "x_min: %6d\n", min.x);
+	fprintf(OLED, "y_max: %6d\n", max.y);
+	fprintf(OLED, "y_min: %6d\n", min.y);
+	fprintf(OLED, "\n%s\n", "Click when done");
+}
 
+void JOY_calibrate(int calibraton_mode){
+	max.x = JOY_DEFAULT_MAX_X;
+	max.y = JOY_DEFAULT_MAX_Y;
+	min.x = JOY_DEFAULT_MIN_X;
+	min.y = JOY_DEFAULT_MIN_Y;
+	
+	if (calibraton_mode == CALIBRATION_MANUAL) {
+		// Loop while joystick button is not pressed.
+		while(test_bit(PINB,PINB2)) {
+			// Read sensor values
+			uint8_t x = ADC_read(X_COORD);
+			uint8_t y = ADC_read(Y_COORD);
+			
+			// Find max and min values for x and y:
+			max.x = MAX(x, max.x);
+			max.y = MAX(y, max.y);
+			min.x = MIN(x, min.x);
+			min.y = MIN(y, min.y);
+			
+			JOY_print_calibration_status();
+			_delay_ms(50);
+		}
+	}
+	
 	// Find distance from middle to edges (radius)
 	rad.x = (max.x - min.x) / 2;
 	rad.y = (max.y - min.y) / 2;
-	
+		
 	// Find mid point using edges.
 	mid.x = (max.x + min.x) / 2;
 	mid.y = (max.y + min.y) / 2;
@@ -126,6 +136,8 @@ void JOY_test() {
 	while (1) {
 		JOY_position_t posJ = JOY_getPosition();
 		SLI_position_t posS = SLI_getPosition();
-		printf("X-position: %4d\t\tY-position: %4d\t\tLeft slider: %4d\t\t Right slider: %4d\t\tLeft button: %4d\tRight button: %4d\tjoystick button: %4d\n",posJ.x, posJ.y, posS.left, posS.right, test_bit(PINB,PB0), test_bit(PINB, PB1), !test_bit(PINB, PB2));
+		printf("X-position: %4d\t\tY-position: %4d\t\t", posJ.x, posJ.y);
+		printf("Left slider: %4d\t\t Right slider: %4d\t\t", posS.left, posS.right);
+		printf("Left button: %4d\tRight button: %4d\tjoystick button: %4d\n", test_bit(PINB,PB0), test_bit(PINB, PB1), !test_bit(PINB, PB2));
 	}
 }
