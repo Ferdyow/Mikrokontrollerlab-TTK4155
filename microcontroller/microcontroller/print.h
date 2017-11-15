@@ -1,4 +1,4 @@
-ifndef PRINT_H_
+#ifndef PRINT_H_
 #define PRINT_H_
 
 //Print number amount of blank/filled columns at the current position

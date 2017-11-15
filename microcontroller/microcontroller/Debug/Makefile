@@ -47,6 +47,7 @@ C_SRCS +=  \
 ../MENU.c \
 ../main.c \
 ../OLED_driver.c \
+../print.c \
 ../SPI.c \
 ../sram.c \
 ../usart.c
@@ -69,6 +70,7 @@ MCP2515.o \
 MENU.o \
 main.o \
 OLED_driver.o \
+print.o \
 SPI.o \
 sram.o \
 usart.o
@@ -84,6 +86,7 @@ MCP2515.o \
 MENU.o \
 main.o \
 OLED_driver.o \
+print.o \
 SPI.o \
 sram.o \
 usart.o
@@ -99,6 +102,7 @@ MCP2515.d \
 MENU.d \
 main.d \
 OLED_driver.d \
+print.d \
 SPI.d \
 sram.d \
 usart.d
@@ -114,6 +118,7 @@ MCP2515.d \
 MENU.d \
 main.d \
 OLED_driver.d \
+print.d \
 SPI.d \
 sram.d \
 usart.d
@@ -132,6 +137,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

@@ -22,6 +22,8 @@ main.c
 
 OLED_driver.c
 
+print.c
+
 SPI.c
 
 sram.c

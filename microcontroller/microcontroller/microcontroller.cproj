@@ -172,6 +172,12 @@
     <Compile Include="OLED_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="print.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="print.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="SPI.c">
       <SubType>compile</SubType>
     </Compile>

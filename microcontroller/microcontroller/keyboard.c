@@ -40,7 +40,7 @@ const char LETTERS_BIG[NUMB_LETTERS] = {
 /*	VARIABLES						*/
 /************************************/
 char* letters = LETTERS_SMALL;
-char*  written_string = "";
+char  written_string[17];
 
 typedef struct {
 	int x, y
@@ -185,7 +185,7 @@ void keyboard_run() {
 			//old item is a letter
 			if (old_y < 4) {
 				keyboard_goto(old_y, old_x);
-				print_char(letters[old_y * LINE_LENGTH + old_x], INVERSE);
+				print_char(letters[old_y * LINE_LENGTH + old_x], NORMAL);
 			}
 
 			//old item is in toolbar
