@@ -13,7 +13,7 @@
 
 
 void solenoid_init(){
-	//set output pin PB4(OC1A: output clock 1 A)
+	//set output pin PB4
 	set_bit(DDRB, DDB4);
 	
 	//set high to disconnect
