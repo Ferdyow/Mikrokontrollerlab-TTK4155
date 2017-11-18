@@ -63,7 +63,7 @@ void append_char(char c) {
 
 void print_string() {
 	OLED_home();
-	/char print_string[16];
+	//char print_string[16];
 	//memcpy(print_string, written_string[strlen(written_string)-string_position], 16);
 	//fprintf(OLED, "%s", print_string);
 	fprintf(OLED, "%s", written_string);

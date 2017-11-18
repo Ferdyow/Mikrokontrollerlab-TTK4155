@@ -41,13 +41,13 @@ void MENU_init() {
 	
 	// Sub-menu settings
 	menu_entry* brightness = add_entry(settings, "Brightness", brightness_run);
-	menu_entry* font = add_entry(settings, "Set font", NULL);
+	//menu_entry* font = add_entry(settings, "Set font", NULL);
 	
 	// Sub-menu extras
 	menu_entry* keyboard = add_entry(extras, "Keyboard", keyboard_run);
-	menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
+	//menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
 	menu_entry* pong = add_entry(extras, "Play pong", NULL);
-	menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
+	//menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
 	
 	current_entry = main_menu;
 	selected_entry = play;

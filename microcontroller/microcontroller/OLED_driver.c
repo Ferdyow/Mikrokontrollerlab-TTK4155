@@ -40,8 +40,6 @@ void write_data(uint8_t data){
 }
 
 void OLED_init(){
-	
-	
 	const char addresses[] = {
 		0xae, //disable display
 		0xa1, //segment remap
@@ -111,7 +109,7 @@ void OLED_clear_line(uint8_t line) {
 
 void OLED_pos(uint8_t line, uint8_t column) {
 	if (line < 0 || line > 7 || column < 0 || column > 127) {
-		printf("Out of range in OLED_pos()");
+		printf("Out of range in OLED_pos()\n");
 		return; 
 	}
 	
