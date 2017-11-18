@@ -9,6 +9,13 @@
 #ifndef CAN_H_
 #define CAN_H_
 
+#include <stdio.h>
+#include <stdint.h>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
 #define BUFFER_LENGTH 16
 #define TB0 0
 #define TB1 1
@@ -27,7 +34,7 @@ void CAN_message_send(can_message* msg);
 
 void CAN_error();
 
-bool CAN_transmit_complete(int transmit_buffer_index);
+bool CAN_transmit_complete(int transmit_buffer_numb);
 
 void CAN_data_receive(can_message* received_msg);
 

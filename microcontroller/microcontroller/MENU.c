@@ -9,6 +9,9 @@
 #include "MENU.h"
 #include "defines.h"
 #include "joy.h"
+#include "keyboard.h"
+#include "brightness.h"
+#include "game.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -36,14 +39,14 @@ void MENU_init() {
 	
 	
 	// Sub-menu settings
-	add_entry(settings, "Brightness", NULL);
-	add_entry(settings, "Set font", NULL);
+	menu_entry* brightness = add_entry(settings, "Brightness", brightness_run);
+	//menu_entry* font = add_entry(settings, "Set font", NULL);
 	
 	// Sub-menu extras
-	add_entry(extras, "Keyboard", NULL);
-	add_entry(extras, "Mandelbrot", NULL);
-	add_entry(extras, "Play pong", NULL);
-	add_entry(extras, "rotating cube", NULL);
+	menu_entry* keyboard = add_entry(extras, "Keyboard", keyboard_run);
+	//menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
+	menu_entry* pong = add_entry(extras, "Play pong", NULL);
+	//menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
 	
 	current_entry = main_menu;
 	selected_entry = play;
@@ -67,6 +70,7 @@ void MENU_select_prev() {
 
 void MENU_enter_selection() {
 	if (selected_entry->function_ptr != NULL) {
+		printf("HEI\n");
 		selected_entry->function_ptr();
 	}
 	

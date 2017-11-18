@@ -93,6 +93,7 @@ int main(void) {
 	printf("Initialization of Node 1 complete!\n\n");
 	while(1) {
 		send_control_input();
+		MENU_run();
 	}
 
 	return 0;
