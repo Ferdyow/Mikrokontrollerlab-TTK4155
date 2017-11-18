@@ -21,8 +21,7 @@ brightness_run() {
 	SLI_position_t slider_position;
 	while (!JOY_button_pressed(LEFT_BUTTON)) {
 		slider_position = SLI_getPosition();
-		//printf("slider_position %d\n", slider_position.right);
-		printf("slider_position (left) %d\n", slider_position.left);
-		OLED_set_brightness(slider_position.left); //RIGHT funker ikke
+		//printf("slider_position (left) %d\n", slider_position.left);
+		OLED_set_brightness(slider_position.left); 
 	}
 }

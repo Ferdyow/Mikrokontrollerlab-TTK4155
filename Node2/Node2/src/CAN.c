@@ -39,7 +39,9 @@ void test_usart_communication(void);
 //find the interrupt and use the correct one
 ISR(INT5_vect){
 	//interrupt when a message is received
+	cli();
 	CAN_int_vect();
+	sei();
 }
 
 
@@ -178,6 +180,9 @@ void CAN_data_receive(can_message* received_msg){
 		sei();
 		return;
 	}
+	//prevents crashing
+	_delay_ms(10);
+
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
 	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);
 	
@@ -260,7 +265,6 @@ void CAN_test(void){
 can_message receive_control_inputs(void){
 	can_message msg;
 	msg.length = 0;
-	
 	while (!msg.length) {
 		CAN_data_receive(&msg);
 	}

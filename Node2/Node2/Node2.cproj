@@ -208,6 +208,9 @@
     <Compile Include="src\ADC.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\common\utils\asf.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\CAN.c">
       <SubType>compile</SubType>
     </Compile>
@@ -295,9 +298,6 @@
     <Compile Include="src\usart.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\asf.h">
-      <SubType>compile</SubType>
-    </None>
     <None Include="src\config\conf_board.h">
       <SubType>compile</SubType>
     </None>

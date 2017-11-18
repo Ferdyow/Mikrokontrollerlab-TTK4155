@@ -32,7 +32,7 @@ void MENU_init() {
 	menu_entry* main_menu = add_entry(NULL, "Main menu", NULL);
 	
 	// Main menu
-	menu_entry* play = add_entry(main_menu, "Play game", NULL);
+	menu_entry* play = add_entry(main_menu, "Play game", game_play);
 	add_entry(main_menu, "Highscore", test_function);
 	menu_entry* settings = add_entry(main_menu, "Settings", NULL);
 	menu_entry* extras = add_entry(main_menu, "Extra features", NULL);
@@ -70,8 +70,8 @@ void MENU_select_prev() {
 
 void MENU_enter_selection() {
 	if (selected_entry->function_ptr != NULL) {
-		printf("HEI\n");
 		selected_entry->function_ptr();
+		MENU_draw_current_menu();
 	}
 	
 	if (selected_entry->child_node == NULL) return;
@@ -106,26 +106,7 @@ void MENU_draw_current_menu() {
 }
 
 
-void MENU_test(){
-	int delay = 100;
-	_delay_ms(delay);
-	MENU_select_next();
-	_delay_ms(delay);
-	MENU_select_next();
-	_delay_ms(delay);
-	MENU_select_next();
-	_delay_ms(delay);
-	MENU_select_next();	
-	
-	_delay_ms(delay);
-	MENU_select_prev();
-	_delay_ms(delay);
-	MENU_select_prev();
-	_delay_ms(delay);
-	MENU_select_prev();
-	_delay_ms(delay);
-	MENU_select_prev();
-}
+
 
 
 void MENU_run() {
@@ -153,8 +134,8 @@ void MENU_run() {
 		_delay_ms(255);
 		change = false;
 	}
-}
 
+}
 
 
 menu_entry* add_entry(menu_entry* parent_node, char* name, void* function_ptr){
@@ -195,3 +176,24 @@ menu_entry* add_entry(menu_entry* parent_node, char* name, void* function_ptr){
 	// Parent/child/sibling bindings complete. Return the new node.
 	return new_entry;
 }
+
+//void MENU_test(){
+//int delay = 100;
+//_delay_ms(delay);
+//MENU_select_next();
+//_delay_ms(delay);
+//MENU_select_next();
+//_delay_ms(delay);
+//MENU_select_next();
+//_delay_ms(delay);
+//MENU_select_next();
+//
+//_delay_ms(delay);
+//MENU_select_prev();
+//_delay_ms(delay);
+//MENU_select_prev();
+//_delay_ms(delay);
+//MENU_select_prev();
+//_delay_ms(delay);
+//MENU_select_prev();
+//}

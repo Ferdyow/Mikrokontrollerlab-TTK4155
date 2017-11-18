@@ -103,19 +103,19 @@ void CAN_message_send(can_message* msg) {
 }
 
 void CAN_error() {
-	printf("\n");
-	printf("\n| --------------------- |");
-	printf("\n| CAN_ERROR |");
-	printf("\n| --------------------- |");
-	printf("\n\n");
-	
-	if(MCP2515_read(MCP_TEC)){
-		printf("TRANSMIT ERROR");
-		
-	}
-	if(MCP2515_read(MCP_REC)){
-		printf("RECEIVED ERROR");
-	}
+	//printf("\n");
+	//printf("\n| --------------------- |");
+	//printf("\n| CAN_ERROR |");
+	//printf("\n| --------------------- |");
+	//printf("\n\n");
+	//
+	//if(MCP2515_read(MCP_TEC)){
+		//printf("TRANSMIT ERROR");
+		//
+	//}
+	//if(MCP2515_read(MCP_REC)){
+		//printf("RECEIVED ERROR");
+	//}
 	
 	
 }
@@ -183,48 +183,48 @@ void CAN_data_receive(can_message* received_msg){
 
 
 void CAN_test(){
-	//TEST IN LOOPBACK MODE
-	MCP2515_bit_modify(MCP_CANCTRL, 0xE0, 0x40);
-	printf("\nCANSTAT before: %x\n", MCP2515_read(MCP_CANSTAT));
-	while(!CAN_transmit_complete(TB0)){}
-	can_message my_message;
-	can_message received_message;
-	my_message.id = 150;
-	my_message.length = 3;
-	my_message.data[0] = 0x00;
-	my_message.data[1] = 0xFF;
-	my_message.data[2] = 0x55;
-	CAN_message_send(&my_message);
-	printf("Before transmit complete\n");
-	int i = 0;
-	while(!CAN_transmit_complete(0))
-		;
-	printf("After transmit complete\n");
-	CAN_data_receive(&received_message);
-	printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);
-	for (uint8_t byte = 0; byte < my_message.length;byte++){
-		printf("Data nr. %d: %x\n", byte, my_message.data[byte]);
-	}
-	
-	
-	printf("\n\nRECEIVED:\n\nlength: %d\nid: %d\n", received_message.length, received_message.id);
-	for (uint8_t byte = 0; byte < received_message.length;byte++){
-		printf("Data nr. %d: %x\n", byte, received_message.data[byte]);
-	}
-	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
-
-	
-	
-	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
-
-	CAN_message_send(&my_message);
-		
-	printf("\nCANSTAT after: %x\n", MCP2515_read(MCP_CANSTAT));
-	printf("TXCTRL: %x\n", MCP2515_read(MCP_TXB0CTRL));
-	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
-	_delay_ms(500);
-
-	
+	////TEST IN LOOPBACK MODE
+	//MCP2515_bit_modify(MCP_CANCTRL, 0xE0, 0x40);
+	////printf("\nCANSTAT before: %x\n", MCP2515_read(MCP_CANSTAT));
+	//while(!CAN_transmit_complete(TB0)){}
+	//can_message my_message;
+	//can_message received_message;
+	//my_message.id = 150;
+	//my_message.length = 3;
+	//my_message.data[0] = 0x00;
+	//my_message.data[1] = 0xFF;
+	//my_message.data[2] = 0x55;
+	//CAN_message_send(&my_message);
+	//printf("Before transmit complete\n");
+	//int i = 0;
+	//while(!CAN_transmit_complete(0))
+		//;
+	//printf("After transmit complete\n");
+	//CAN_data_receive(&received_message);
+	//printf("\n\nSENT:\nlength: %d\nid: %d\n", my_message.length, my_message.id);
+	//for (uint8_t byte = 0; byte < my_message.length;byte++){
+		//printf("Data nr. %d: %x\n", byte, my_message.data[byte]);
+	//}
+	//
+	//
+	//printf("\n\nRECEIVED:\n\nlength: %d\nid: %d\n", received_message.length, received_message.id);
+	//for (uint8_t byte = 0; byte < received_message.length;byte++){
+		//printf("Data nr. %d: %x\n", byte, received_message.data[byte]);
+	//}
+	//MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
+//
+	//
+	//
+	//printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
+//
+	//CAN_message_send(&my_message);
+		//
+	//printf("\nCANSTAT after: %x\n", MCP2515_read(MCP_CANSTAT));
+	//printf("TXCTRL: %x\n", MCP2515_read(MCP_TXB0CTRL));
+	//printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
+	//_delay_ms(500);
+//
+	//
 	
 	/*CAN_error();*/
 }

@@ -19,17 +19,22 @@
 
 volatile int timer_flag;
 volatile int solenoid_charge;
+volatile int score_charge;
+volatile int score_ms; //keeps the score
 
-#define INTERRUPT_FREQUENCY ((double) 200)/3  // Hz
-#define SOLENOID_CHARGE_TIME ((double) 1000)/1000  // s
+#define INTERRUPT_FREQUENCY ((double) 200)/3		// Hz
+#define SOLENOID_CHARGE_TIME ((double) 200)/1000	// s
+#define SCORE_TIME ((double) 100)/1000				// s
 
 #define SOLENOID_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SOLENOID_CHARGE_TIME)
+#define SCORE_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SCORE_TIME)
 
 // Set the timer_flag when the timer has counted to OCR0A
 ISR(TIMER0_COMPA_vect){
+
 	// Increment solenoid charge
 	solenoid_charge = MIN(solenoid_charge + 1, SOLENOID_MAX_CHARGE);
-	
+	score_charge = MIN(score_charge + 1, SCORE_MAX_CHARGE);
 	// Set timer flag
 	timer_flag = 1;
 }
@@ -50,10 +55,18 @@ void CONTROL_init(void) {
 		
 	// Make sure the counter resets upon reaching its target (OCR0A). Enables interrupts [16.9.6]
 	set_bit(TIMSK0, OCIE0A);
+	
+
+	
+	 
 }
 
 
 void CONTROL_run(control control_type) {
+	//can_message score_message
+	//score_message. 
+	score_ms = 0;
+	score_charge = 0;
 	while(1) {
 		can_message control_inputs = receive_control_inputs();
 		int8_t velocity_reference = control_inputs.data[JOYSTICK_X];
@@ -64,9 +77,15 @@ void CONTROL_run(control control_type) {
 		if ((solenoid_charge == SOLENOID_MAX_CHARGE) && (buttons & (1 << JOY_BUTTON))){
 			solenoid_send_pulse();
 			solenoid_charge = 0;
+			
 		}
+		servo_set(slider_right);
 		
-		servo_set(slider_left);
+		if(score_charge == SCORE_MAX_CHARGE){
+			score_ms += 1;
+			score_charge  = 0;
+			printf("seconds: %d.%d \n", score_ms/10, score_ms%10);
+		}
 		
 		if (timer_flag) {
 			timer_flag = 0;

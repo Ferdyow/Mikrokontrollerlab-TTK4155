@@ -68,6 +68,7 @@ void OLED_print(char* str);
  * @param {char} character - The character to print.
  */
 void OLED_print_char(char character);
+void OLED_print_char_inverse(char c);
 
 /**
  * Set the brightness level of the OLED-display. (min 0, max 255)

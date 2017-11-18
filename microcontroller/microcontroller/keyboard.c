@@ -7,9 +7,12 @@
 #include <stdio.h>
 #include <string.h>
 
+
+#include <avr/pgmspace.h>
+
 #define NUMB_LETTERS 48
 #define LINE_LENGTH  12
-
+#define MAX_STRING_SIZE 40
 
 /* redefinition of characters to print �, �, �, �, �, �
 * � = '$'
@@ -23,14 +26,14 @@
 //Inverse is defined as 1
 enum{ NORMAL, INVERSE};
 
-const char LETTERS_SMALL[NUMB_LETTERS] = {
+const char PROGMEM LETTERS_SMALL[NUMB_LETTERS] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?', 
 	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '&', '+', 
 	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '%', '$', '-',
 	'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', ';', ':', '#'
 };
 
-const char LETTERS_BIG[NUMB_LETTERS] = {
+const char PROGMEM LETTERS_BIG[NUMB_LETTERS] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
 	'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', ')', '+',
 	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '(', '\'', '-',
@@ -39,39 +42,68 @@ const char LETTERS_BIG[NUMB_LETTERS] = {
 
 /*	VARIABLES						*/
 /************************************/
-char* letters = LETTERS_SMALL;
-char  written_string[40];
-int string_position=0; 
+char* letters = (char*) LETTERS_SMALL;
+char  written_string[MAX_STRING_SIZE];
+int string_position=0;
+int blinking_pos_on = 0;
 
 typedef struct {
 	int x, y
-}position;
+} position;
 
 position pos = {0,0};
 position prev_pos = { 0,0 };
 
 
-/* HELPER FUNCTION		*/
+/* HELPER FUNCTION DECLARATIONS*/
 /************************************/
+void keyboard_print();
+void keyboard_goto(int line, int column);
+void keyboard_goto_line(int line);
+void toggle_shift();
+void keyboard_register_position_change(JOY_direction_t direction);
+void keyboard_unselect_prev();
+void keyboard_select_curr();
+void keyboard_item_pressed();
+
+
+/* PRINT STRING FUNCTION   */
 
 void append_char(char c) {
 	int len = strlen(written_string);
-	written_string[len] = c;
-	written_string[len + 1] = '\0';
-	string_position++;
+	if (len < MAX_STRING_SIZE){
+		written_string[len] = c;
+		written_string[len + 1] = '\0';
+		string_position++;
+	}
+
 }
 
 void print_string() {
-	OLED_home();
+	OLED_reset_cursor();
 	//char print_string[16];
 	//memcpy(print_string, written_string[strlen(written_string)-string_position], 16);
 	//fprintf(OLED, "%s", print_string);
 	fprintf(OLED, "%s", written_string);
+	for (int i = strlen(written_string); i < 16; i++){
+		fprintf(OLED, " ");
+	}
+	
+	//set block at current pointer position
+	int pointer = MIN(strlen(written_string)%16,15)*8;
+	OLED_pos(0, pointer);
+	print_fill(8);
+	
+	blinking_pos_on = 0;
+	
 	keyboard_goto(pos.y, pos.x);
 }
 
 void remove_last_char() {
-	written_string[strlen(written_string) - 1] = '\0';
+	if (strlen(written_string) > 0){
+		written_string[strlen(written_string) - 1] = '\0';
+	}
+	
 }
 
 /* FUNCTION IMPLEMENTATIONS			*/
@@ -79,21 +111,22 @@ void remove_last_char() {
 
 void keyboard_init() {
 	OLED_reset();
-	letters = LETTERS_SMALL;
+	print_string();
+	letters = (char*)LETTERS_SMALL;
 	keyboard_goto_line(0);
 	pos.x = 0;
 	pos.y = 0;
 	strcpy(written_string, "\0");
 
 	//The first letter is selected by default
-	print_char(letters[0], INVERSE);
+	print_char(pgm_read_byte(&letters[0]), INVERSE);
 
 	//print the rest of the letters
 	for (int i = 1; i < NUMB_LETTERS; i++) {
 		if (i % LINE_LENGTH == 0) {
 			keyboard_goto_line(++pos.y);
 		}
-		print_char(letters[i], NORMAL);
+		print_char(pgm_read_byte(&letters[i]), NORMAL);
 	}
 	//print the tool buttons
 	keyboard_goto_line(4);
@@ -116,7 +149,7 @@ void keyboard_print() {
 		if (i % LINE_LENGTH == 0 && i != 0) {
 			keyboard_goto_line(++pos.y);
 		}
-		print_char(letters[i], NORMAL);
+		print_char(pgm_read_byte(&letters[i]), NORMAL);
 	}
 	//print the tool buttons
 	keyboard_goto_line(4);
@@ -136,10 +169,10 @@ void keyboard_goto_line(int line) {
 
 void toggle_shift() {
 	if (letters == LETTERS_SMALL) {
-		letters = LETTERS_BIG;
+		letters = (char*)LETTERS_BIG;
 	}
 	else {
-		letters = LETTERS_SMALL;
+		letters = (char*)LETTERS_SMALL;
 	}
 
 	keyboard_print();
@@ -188,7 +221,7 @@ void keyboard_unselect_prev() {
 	//old item is a letter
 	if (prev_pos.y < 4) {
 		keyboard_goto(prev_pos.y, prev_pos.x);
-		print_char(letters[prev_pos.y * LINE_LENGTH + prev_pos.x], NORMAL);
+		print_char(pgm_read_byte(&letters[prev_pos.y * LINE_LENGTH + prev_pos.x]), NORMAL);
 	}
 
 	//old item is in toolbar
@@ -220,7 +253,7 @@ void keyboard_select_curr() {
 	//selected item is a letter
 	if (pos.y < 4) {
 		keyboard_goto(pos.y, pos.x);
-		print_char(letters[pos.y * LINE_LENGTH + pos.x], INVERSE);
+		print_char(pgm_read_byte(&letters[pos.y * LINE_LENGTH + pos.x]), INVERSE);
 	}
 
 	//selected menu item is in toolbar
@@ -251,7 +284,7 @@ void keyboard_select_curr() {
 
 void keyboard_item_pressed() {
 	if (pos.y < 4) {
-		append_char(letters[pos.y * LINE_LENGTH + pos.x]);
+		append_char(pgm_read_byte(&letters[pos.y * LINE_LENGTH + pos.x]));
 		//printf("APPEND written string: %s", written_string);
 		//replace with a print function that remembers which part is printed, used with < >
 		print_string();
@@ -291,7 +324,7 @@ void keyboard_run() {
 		keyboard_register_position_change(direction);
 		
 		if (prev_pos.y != pos.y || prev_pos.x != pos.x) {
-			printf("prev_pos.y: %d, y: %d, prev_pos.x: %d, prev_pos.y %d\n", prev_pos.y, pos.y, prev_pos.x, pos.x);
+			//printf("prev_pos.y: %d, y: %d, prev_pos.x: %d, prev_pos.y %d\n", prev_pos.y, pos.y, prev_pos.x, pos.x);
 			position_moved = 1;
 			//unselect the old letter and select the new one
 			keyboard_unselect_prev();
@@ -313,10 +346,24 @@ void keyboard_run() {
 		else if (JOY_button_pressed(RIGHT_BUTTON)) {
 			button_pressed = 1;
 			//not working
-			//remove_last_char();
+			remove_last_char();
 			//printf("REMOVE written string: %s", written_string);
 			print_string();
 		}
+		
+		//if timer interrupts are used
+		//if(blinking_pos_on){
+			//pointer = MIN(strlen(written_string),15)*8;
+			//OLED_pos(0, pointer);
+			//print_fill(8);
+			//blinking_pos_on = 0;
+		//}
+		//else{
+			//pointer = MIN(strlen(written_string),15)*8;
+			//OLED_pos(0, pointer);
+			//print_blank(8);
+			//blinking_pos_on = 1;
+		//}
 		
 		if(position_moved){
 			position_moved = 0;

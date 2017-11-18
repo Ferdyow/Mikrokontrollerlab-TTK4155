@@ -83,13 +83,13 @@ void JOY_calibrate(int calibraton_mode){
 
 int JOY_button_pressed(button b) {
 	switch (b) {
-	case 0:
+	case LEFT_BUTTON:
 		if (test_bit(PINB, PINB0)) return 1;
 		break;
-	case 1:
+	case RIGHT_BUTTON:
 		if (test_bit(PINB, PINB1)) return 1;
 		break;
-	case 2:
+	case JOY_BUTTON:
 		if (!test_bit(PINB, PINB2)) return 1;
 		break;
 	}
@@ -100,6 +100,7 @@ JOY_position_t JOY_getPosition() {
 	JOY_position_t JOY_position;
 	JOY_position.x = (100 * (ADC_read(X_COORD) - mid.x)) / rad.x;
 	JOY_position.y = (100 * (ADC_read(Y_COORD) - mid.y)) / rad.y;
+	printf("x: %d, y: %d\n", JOY_position.x, JOY_position.y);
 	return JOY_position;
 }
 

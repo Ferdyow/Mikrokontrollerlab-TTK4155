@@ -64,35 +64,12 @@ void test(void){
 	
 }
 
-void send_control_input(void) {
-	can_message control_input;
-	control_input.id = 0;
-	control_input.length = 5;
-	
-	JOY_position_t joy_position = JOY_getPosition();
-	control_input.data[JOYSTICK_X] = joy_position.x;
-	control_input.data[JOYSTICK_Y] = joy_position.y;
-	
-	SLI_position_t sli_position = SLI_getPosition();
-	control_input.data[SLIDER_LEFT] = sli_position.left;
-	control_input.data[SLIDER_RIGHT] = sli_position.right;
-	
-	int joy_button = JOY_button_pressed(JOY_BUTTON) << JOY_BUTTON;
-	int left_button = JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
-	int right_button = JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON;
-	control_input.data[BUTTONS] = joy_button | left_button | right_button;
-	
-	CAN_message_send(&control_input);
-	
-	while(!CAN_transmit_complete(TB0))
-		;
-}
+
 
 int main(void) {
 	initialize();
 	printf("Initialization of Node 1 complete!\n\n");
 	while(1) {
-		send_control_input();
 		MENU_run();
 	}
 
