@@ -100,7 +100,7 @@ JOY_position_t JOY_getPosition() {
 	JOY_position_t JOY_position;
 	JOY_position.x = (100 * (ADC_read(X_COORD) - mid.x)) / rad.x;
 	JOY_position.y = (100 * (ADC_read(Y_COORD) - mid.y)) / rad.y;
-	printf("x: %d, y: %d\n", JOY_position.x, JOY_position.y);
+	//printf("x: %d, y: %d\n", JOY_position.x, JOY_position.y);
 	return JOY_position;
 }
 

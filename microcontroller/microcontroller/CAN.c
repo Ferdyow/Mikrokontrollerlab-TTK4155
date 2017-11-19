@@ -12,7 +12,7 @@
 #include <avr/pgmspace.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 
 #include "MCP2515.h"
 #include "CAN.h"

@@ -10,7 +10,7 @@
 #define BRIGHTNESS_H_
 
 
-void brightness_run();
-
+void brightness_run(void);
+void brightness_init(void);
 
 #endif /* BRIGHTNESS_H_ */

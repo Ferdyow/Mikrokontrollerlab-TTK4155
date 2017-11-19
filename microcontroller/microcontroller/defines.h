@@ -15,6 +15,7 @@
 
 enum {JOYSTICK_X, JOYSTICK_Y, SLIDER_LEFT, SLIDER_RIGHT, BUTTONS};
 
+#define F_CPU 4915200
 
 #define set_bit( reg, bit ) (reg |= (1 << bit))
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))

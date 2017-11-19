@@ -10,7 +10,7 @@
 #define GAME_H_
 
 void game_play();
-
+void print_highscore();
 
 
 #endif /* GAME_H_ */

@@ -9,7 +9,7 @@
 #ifndef SOLENOID_H_
 #define SOLENOID_H_
 
-void solenoid_init();
-void solenoid_send_pulse();
+void solenoid_init(void);
+void solenoid_send_pulse(void);
 
 #endif /* SOLENOID_H_ */

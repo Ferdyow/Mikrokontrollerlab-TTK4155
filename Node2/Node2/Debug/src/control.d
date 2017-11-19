@@ -22,7 +22,7 @@ src/control.d src/control.o: ../src/control.c ../src/defines.h \
  ../src/CAN.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
  ../src/PI.h ../src/motor.h ../src/control.h ../src/solenoid.h \
- ../src/servo.h
+ ../src/servo.h ../src/IR.h
 
 ../src/defines.h:
 
@@ -79,3 +79,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 ../src/solenoid.h:
 
 ../src/servo.h:
+
+../src/IR.h:

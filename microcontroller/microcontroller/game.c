@@ -4,15 +4,22 @@
 
 #include <util/delay.h>
 
+volatile int score = 0;
+volatile int highscore = 0;
+
+void send_control_input(void);
+void receive_score(void);
+
 void game_play() {
 	OLED_reset();
-	fprintf(OLED, "%s \n", "lButton: quit");
+	fprintf(OLED, "\n\n%s \n", "lButton: quit");
 	fprintf(OLED, "%s \n", "jButton: shoot");
 	//fprintf(OLED, "%s ", "r_slider: angle\n");
 	//fprintf(OLED, "%s ", "x-axis: move\n");
-	_delay_ms(1000);
+	_delay_ms(500);						//makes sure first press does not trigger solenoid
 	while(!JOY_button_pressed(LEFT_BUTTON)){
 		send_control_input();
+		receive_score();
 	}
 }
 
@@ -33,8 +40,37 @@ void send_control_input(void) {
 	int left_button = JOY_button_pressed(LEFT_BUTTON) << LEFT_BUTTON;
 	int right_button = JOY_button_pressed(RIGHT_BUTTON) << RIGHT_BUTTON;
 	control_input.data[BUTTONS] = joy_button | left_button | right_button;
-	
 	CAN_message_send(&control_input);
-	while(!CAN_transmit_complete(TB0))
-	;
+	while(!CAN_transmit_complete(TB0));
+}
+
+void receive_score(void){
+	can_message score_message;
+	score_message.length = 0;
+	
+	CAN_data_receive(&score_message);
+	//printf("score msg 0: %d \tscore msg 1: %d\n", score_message.data[0], score_message.data[1]);
+	if(score_message.length){
+	score = ((uint8_t)(score_message.data[0]) << 8) |(uint8_t) score_message.data[1];
+	if (score > highscore){
+		highscore = score;
+	}
+	OLED_reset_cursor();
+	printf("seconds %d.%d\n", score/10, score%10);
+	fprintf(OLED, "time: %d.%d    ", score/10, score%10);
+	//score_set(score_message.data[0]);
+	}
+	
+	//int ir_disrupted = score_message.data[2];
+	//if(ir_disrupted){
+	//	set_highscore();
+	//}
+}
+
+void print_highscore(){
+	OLED_reset();
+	printf("HIGHSCORE:%d.%d seconds\n", highscore/10, highscore%10);
+	fprintf(OLED, "   HIGHSCORE:\n  %d.%d seconds\n", highscore/10, highscore%10);
+	fprintf(OLED, "\n\n\n\n %s", "lButton: back");
+	while(!JOY_button_pressed(LEFT_BUTTON)){}
 }

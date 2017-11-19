@@ -20,7 +20,7 @@ typedef struct {
 /**
  * Initialize the PI-regulator with parameters.
  */
-void PI_init();
+void PI_init(void);
 
 /**
  * Takes an error as input, and produces an output signal for the motor.

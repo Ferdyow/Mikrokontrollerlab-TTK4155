@@ -181,7 +181,7 @@ void CAN_data_receive(can_message* received_msg){
 		return;
 	}
 	//prevents crashing
-	_delay_ms(10);
+	//_delay_ms(10);
 
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
 	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);

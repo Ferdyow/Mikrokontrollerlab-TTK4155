@@ -3,7 +3,7 @@
 #include "defines.h"
 
 
-brightness_init() {
+void brightness_init(void) {
 	OLED_reset();
 	fprintf(OLED, "%s ", "l_slider:");
 	OLED_pos(1,0);
@@ -16,7 +16,7 @@ brightness_init() {
 	
 }
 
-brightness_run() {
+void brightness_run(void) {
 	brightness_init();
 	SLI_position_t slider_position;
 	while (!JOY_button_pressed(LEFT_BUTTON)) {
