@@ -8,6 +8,8 @@ src\CAN.c
 
 src\control.c
 
+src\game.c
+
 src\IR.c
 
 src\MAX520.c

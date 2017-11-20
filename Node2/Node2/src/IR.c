@@ -19,7 +19,7 @@ void IR_init(void) {
 }
 
 
-bool IR_is_disrupted(void) {
+bool IR_disrupted(void) {
 	uint16_t photodiode_brightness = ADC_read(0);
 	
 	// Shift previous measurements to make room for a new one.

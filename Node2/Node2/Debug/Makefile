@@ -55,6 +55,7 @@ C_SRCS +=  \
 ../src/ADC.c \
 ../src/CAN.c \
 ../src/control.c \
+../src/game.c \
 ../src/IR.c \
 ../src/MAX520.c \
 ../src/MCP2515.c \
@@ -81,6 +82,7 @@ OBJS +=  \
 src/ADC.o \
 src/CAN.o \
 src/control.o \
+src/game.o \
 src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
@@ -100,6 +102,7 @@ OBJS_AS_ARGS +=  \
 src/ADC.o \
 src/CAN.o \
 src/control.o \
+src/game.o \
 src/IR.o \
 src/MAX520.o \
 src/MCP2515.o \
@@ -119,6 +122,7 @@ C_DEPS +=  \
 src/ADC.d \
 src/CAN.d \
 src/control.d \
+src/game.d \
 src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
@@ -138,6 +142,7 @@ C_DEPS_AS_ARGS +=  \
 src/ADC.d \
 src/CAN.d \
 src/control.d \
+src/game.d \
 src/IR.d \
 src/MAX520.d \
 src/MCP2515.d \
@@ -167,6 +172,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

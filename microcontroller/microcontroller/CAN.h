@@ -36,7 +36,7 @@ void CAN_error();
 
 bool CAN_transmit_complete(int transmit_buffer_numb);
 
-void CAN_data_receive(can_message* received_msg);
+void CAN_message_receive(can_message* received_msg);
 
 // Interrupt vector
 void CAN_int_vect();

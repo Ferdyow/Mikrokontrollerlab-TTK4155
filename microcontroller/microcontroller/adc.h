@@ -13,7 +13,6 @@
 //sets our "interrupt" pin on the ATmega162 to input
 void ADC_init();
 
-
 //Reads the value from the chosen channel and returns it
 char ADC_read(char channel);
 

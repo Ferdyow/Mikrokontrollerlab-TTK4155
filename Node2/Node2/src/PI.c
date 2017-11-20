@@ -42,5 +42,5 @@ void PI_control(double velocity_reference) {
 	// Calculate the output signal of the PI-regulator.
 	int output_signal = (controller.k_p * error) + (controller.k_i * controller.error_sum);
 	
-	motor_set_velocity(output_signal);
+	motor_set_velocity(error);
 }

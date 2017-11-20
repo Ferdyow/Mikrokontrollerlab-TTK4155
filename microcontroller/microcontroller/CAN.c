@@ -39,9 +39,6 @@ void CAN_int_vect() {
 		MCP2515_bit_modify(MCP_CANINTF, MCP_RX1IF, 0x00);
 		flag_RX1 = 1;
 	}
-			
-	
-	
 }
 
 //hex to binary is left as an exercise to the reader :)
@@ -116,35 +113,25 @@ void CAN_error() {
 	//if(MCP2515_read(MCP_REC)){
 		//printf("RECEIVED ERROR");
 	//}
-	
-	
 }
 
 
-bool CAN_transmit_complete(int transmit_buffer_numb) {
-	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * transmit_buffer_numb;
-	
-	//printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
-	
-	//printf("TXB0CTRL: 0x%02x\n", MCP2515_read(address));
-	
-	if(MCP2515_read(address) & MCP_TXREQ){
-		return false;
-	}
-	
-	return true; 
+bool CAN_transmit_complete(int transmit_buffer_index) {
+	// GOES WRONG IN HERE
+	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * transmit_buffer_index;
+	return !(MCP2515_read(address) & MCP_TXREQ);
 }
 
 
-void CAN_data_receive(can_message* received_msg){
+void CAN_message_receive(can_message* received_msg){
 	cli();
-	int receive_buffer_numb;
+	int receive_buffer_index;
 	if(flag_RX0){
-		receive_buffer_numb = 0;
+		receive_buffer_index = 0;
 		flag_RX0 = 0;
 	}
 	else if(flag_RX1){
-		receive_buffer_numb = 1;
+		receive_buffer_index = 1;
 		flag_RX1 = 0;
 	}
 	else{
@@ -152,8 +139,9 @@ void CAN_data_receive(can_message* received_msg){
 		sei();
 		return;
 	}
-	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_numb);
-	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_numb);
+	
+	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_index);
+	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_index);
 	
 	//only want the last 3 bits
 	id_low = id_low >> 5;
@@ -166,18 +154,15 @@ void CAN_data_receive(can_message* received_msg){
 	received_msg->id = (id_high << 3) + id_low; 
 	
 	//read the data length contained in the last 3 bits of the RXBnDLC register
-	received_msg->length = (MCP2515_read(MCP_RXB0DLC + BUFFER_LENGTH * receive_buffer_numb) % (1<<3));
+	received_msg->length = (MCP2515_read(MCP_RXB0DLC + BUFFER_LENGTH * receive_buffer_index) % (1<<3));
 	
 	//read the data
 	for (uint8_t byte = 0; byte < received_msg->length; byte++){
-		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_numb;
+		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_index;
 		received_msg->data[byte] = MCP2515_read(address);
 	}
 
 	sei();
-	
-	
-	
 }
 
 

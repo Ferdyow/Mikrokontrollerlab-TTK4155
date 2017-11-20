@@ -8,14 +8,16 @@
 
 #ifndef CAN_H_
 #define CAN_H_
-#include <stdbool.h>
+
+#include <stdint.h>
 
 typedef struct {
 	unsigned int id;
 	uint8_t length;
 	int8_t data[8];
-}can_message;
+} can_message;
 
+typedef enum { TRANSMIT_BUFFER_0, TRANSMIT_BUFFER_1, TRANSMIT_BUFFER_2 } transmit_buffer;
 
 void CAN_init(void);
 
@@ -23,9 +25,9 @@ void CAN_message_send(can_message* msg);
 
 void CAN_error(void);
 
-bool CAN_transmit_complete(int transmit_buffer_numb);
+int CAN_transmit_complete(transmit_buffer tb);
 
-void CAN_data_receive(can_message* received_msg);
+void CAN_message_receive(can_message* received_msg);
 
 // Interrupt vector
 void CAN_int_vect(void);

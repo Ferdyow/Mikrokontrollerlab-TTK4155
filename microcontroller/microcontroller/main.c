@@ -28,7 +28,7 @@ void send_control_input(void);
 
 void initialize(void){
 	cli();
-	usart_init(MYUBRR);
+	usart_init(MYUBRR); 
 	SRAM_init();
 	ADC_init();
 	JOY_init(CALIBRATION_DEFAULT);

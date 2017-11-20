@@ -59,23 +59,22 @@ void test_servo_and_ir(void);
 
 void initialize(void){
 	cli();
-	usart_init(MYUBRR);
-	CAN_init();
-	servo_init();
-	IR_init();
-	motor_init(DEFAULT);
-	PI_init();
-	CONTROL_init();
-	solenoid_init();
+	usart_init(MYUBRR);			printf("\n[NODE 2][main.c]: USART initialized.\n");
+	CAN_init();					printf("[NODE 2][main.c]: CAN initialized.\n");
+	servo_init();				printf("[NODE 2][main.c]: SERVO initialized.\n");
+	IR_init();					printf("[NODE 2][main.c]: IR initialized.\n");
+	motor_init(DEFAULT);		printf("[NODE 2][main.c]: MOTOR initialized!\n");
+	PI_init();					printf("[NODE 2][main.c]: PI initialized!\n");
+	CONTROL_init();				printf("[NODE 2][main.c]: CONTROL initialized!\n");
+	solenoid_init();			printf("[NODE 2][main.c]: SOLENOID initialized!\n");
+								printf("\n====== INITIALIZATION COMPLETE ======\n\n");
 	sei();
 }
 
 
 int main(void){
-	initialize(); 
-	printf("[NODE2] Initialization complete!\n\n");
-	
+	initialize();
 	CONTROL_run(CLOSED_LOOP);
-	
+	while(1);
 	return 0;
 }

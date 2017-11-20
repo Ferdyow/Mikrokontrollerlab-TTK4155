@@ -226,6 +226,12 @@
     <Compile Include="src\defines.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\game.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\game.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\IR.c">
       <SubType>compile</SubType>
     </Compile>

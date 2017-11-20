@@ -20,6 +20,6 @@ void IR_init(void);
  * Read strength of light hitting the IR-diode. 
  * max = ?, min = ?
  */
-bool IR_is_disrupted(void);
+bool IR_disrupted(void);
 
 #endif /* IR_H_ */
