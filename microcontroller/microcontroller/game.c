@@ -22,8 +22,9 @@ void game_play() {
 	
 	//send start message
 	can_message state;
-	state.length = 0;
+	state.length = 1;
 	state.id = 's';
+	state.data[0] = 0xFF;
 	CAN_message_send(&state);
 	
 	while(!JOY_button_pressed(LEFT_BUTTON)){
@@ -31,9 +32,9 @@ void game_play() {
 		receive_score();
 	}
 	//send quit message
+
 	state.id = 'q';
 	CAN_message_send(&state);
-	while(CAN_transmit_complete(0));
 }
 
 void send_control_input(void) {

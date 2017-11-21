@@ -72,26 +72,17 @@ void initialize(void){
 }
 
 
-void print_can_message(can_message* msg) {
-	printf("\n=== CAN MESSAGE BEGIN ===\n");
-	printf("id: %s\tlength: %d\t DATA:\n", msg->id, msg->length);
-	for(int i = 0; i < msg->length; i++) {
-		printf("%x\t", msg->data[i]);
-	}
-	printf("\n=== CAN MESSAGE END ===\n");
-}
+
 
 
 int main(void){
 	initialize();
 	//GAME_loop();
 	while(1) {
-		can_message msg;
-		CAN_message_receive(&msg);
-		
-		if (msg.id == 's') {
-			print_can_message(&msg);
-		}
+		//can_message msg;
+		//CAN_message_receive(&msg);
+		//print_can_message(&msg);
+		GAME_loop();
 	}
 	return 0;
 }

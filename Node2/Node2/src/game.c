@@ -32,6 +32,17 @@ void GAME_timer_init(void);
 #define SCORE_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SCORE_TIME)
 
 
+void print_can_message(can_message* msg) {
+	if(msg->length == 0) return;
+	printf("\n=== CAN MESSAGE BEGIN ===\n");
+	printf("id: %d\tlength: %d\t DATA:\n", msg->id, msg->length);
+	for(int i = 0; i < msg->length; i++) {
+		printf("%x\t", msg->data[i]);
+	}
+	printf("\n=== CAN MESSAGE END ===\n");
+}
+
+
 //Set the timer_flag 0.1s when the timer has counted to OCR4A
 ISR(TIMER4_COMPA_vect){
 	score_charge++;
@@ -93,21 +104,20 @@ void GAME_timer_init(void) {
 
 void GAME_loop(void) {
 	can_message control_inputs;
-	can_message state;
 	int8_t velocity_reference = 0;
 	uint8_t slider_left = 0;
 	uint8_t slider_right = 0;
 	uint8_t buttons = 0;
 	while(1) {
-		CAN_message_receive(&state);
-		while(state.id != 's'){
-			CAN_message_receive(&state);
-			printf("id: %d\n", state.id);
-			printf("MCP_CANINTF: %x", MCP2515_read(MCP_CANINTF));
-		}
+		do {
+			CAN_message_receive(&control_inputs);
+			print_can_message(&control_inputs);
+		} while(control_inputs.id != 's');
+		
+		printf("yolo\n");
 			
 		score_ms = 0;
-		while(1){	
+		while(control_inputs.id != 'q'){	
 			printf("1\n");
 			//control_inputs.id = 0;  // Error/empty or something else starting with e
 			CAN_message_receive(&control_inputs);

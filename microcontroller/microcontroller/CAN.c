@@ -49,7 +49,7 @@ void CAN_init() {
 	//enable interrupt on MCP2515
 	MCP2515_init();
 	
-	//enable rollover: message will rollover to RX1 if RX0 is full
+	//disable rollover: message will not rollover to RX1 if RX0 is full
 	//also sets filter for RXB0 to only accept all transmission
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100
 
@@ -82,9 +82,9 @@ void CAN_message_send(can_message* msg) {
 		//return;
 	//}
 		
-	//if(!CAN_transmit_complete(0)){
-	//	return; //ERROR
-	//}
+	if(!CAN_transmit_complete(0)){
+		return; //ERROR
+	}
 
 
 	//transmit the correct ID
