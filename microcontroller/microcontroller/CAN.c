@@ -82,9 +82,9 @@ void CAN_message_send(can_message* msg) {
 		//return;
 	//}
 		
-	if(!CAN_transmit_complete(0)){
-		return; //ERROR
-	}
+	//if(!CAN_transmit_complete(0)){
+	//	return; //ERROR
+	//}
 
 
 	//transmit the correct ID
@@ -106,7 +106,7 @@ void CAN_message_send(can_message* msg) {
 	
 	uint8_t buffer_states = (uint8_t)(1 << buffer_numb);
 	MCP2515_request_to_send(buffer_states);
-	
+	while(!CAN_transmit_complete(0));
 	
 }
 

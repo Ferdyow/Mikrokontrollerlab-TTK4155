@@ -72,8 +72,7 @@ void CAN_init(void) {
 	
 	
 	MCP2515_init();
-	
-	//printf("CANSTAT in init: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+
 	//enable rollover: message will rollover to RX1 if RX0 is full
 	//also sets filter for RXB0 to accept all transmission
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100

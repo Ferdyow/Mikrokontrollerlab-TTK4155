@@ -9,6 +9,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#include "MCP2515.h"
 #include "game.h"
 #include "CAN.h"
 #include "PI.h"
@@ -20,31 +21,29 @@
 volatile control control_type;
 
 volatile int timer_flag;
+volatile int score_charge;
 volatile int score_ms; //keeps the score
 volatile int score_flag;
 
 void GAME_timer_init(void);
 
-
-// TIMER2 = GAME
-// TIMER4 = SCORE
-
-#define GAME_FREQUENCY (double) 100		        // Hz
-#define TIMER0_PRESCALER 1024
-
-#define SCORE_FREQUENCY (double) 10 			// Hz
-#define TIMER4_PRESCALER 64
-
+#define INTERRUPT_FREQUENCY (double) 100		    // Hz
+#define SCORE_TIME ((double) 100)/1000				// s
+#define SCORE_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SCORE_TIME)
 
 
 //Set the timer_flag 0.1s when the timer has counted to OCR4A
-ISR(TIMER0_COMPA_vect) {  // Game timer interrupt
-	timer_flag++;
-}
-
-ISR(TIMER4_COMPA_vect) {  // Score timer interrupt
-	score_flag++;
-	score_ms++;
+ISR(TIMER4_COMPA_vect){
+	score_charge++;
+	
+	if(score_charge >= SCORE_MAX_CHARGE){
+		score_charge = 0;
+		score_flag = 1;
+		score_ms += 1;
+	}
+	
+	// Set timer flag
+	timer_flag = 1;
 }
 
 
@@ -66,81 +65,87 @@ void GAME_send_score(int score_ms) {
 
 void GAME_timer_init(void) {
 	// 16-bit interrupt
-	set_bit(TCCR4A, COM4A1);
-	set_bit(TCCR0A, COM0A1);
+	set_bit(TCCR4A,COM4A1);
 		
-	// Use timer 1 for score, 4 for game timer
-	// Clear timer on compare (CTC) mode (16 bit, TOP in OCR4A) page 145 (mode 4 table 17-2)
+	// Use timer4
+	// clear timer on compare (CTC) mode (16 bit, TOP in OCR4A) page 145 (mode 4 table 17-2)
+	// clear_bit(TCCR4B, WGM43);
 	set_bit(TCCR4B, WGM42);
-	set_bit(TCCR0B, WGM02);
+	// clear_bit(TCCR4A, WGM41);
+	// clear_bit(TCCR4A, WGM40);
 		
-	// Resets at this value (output compare register) ~100 Hz when prescaler = 8
-	OCR4A = (int)(F_CPU/(TIMER4_PRESCALER * SCORE_FREQUENCY));
-	OCR0A = (int)(F_CPU/(TIMER0_PRESCALER * GAME_FREQUENCY));
+	// resets at this value (output compare register) ~100 Hz when prescaler = 8
+	OCR4A = 20000;
 		
-	// Set prescaler 1024 (timer 2)
-	set_bit(TCCR0B, CS02);
-	set_bit(TCCR0B, CS00);
-	
-	// Set prescaler 64   (timer 4)
+	// set prescaler 8
+	clear_bit(TCCR4B, CS42);
 	set_bit(TCCR4B, CS41);
-	set_bit(TCCR4B, CS40);
+	clear_bit(TCCR4B, CS40);
 		
 	// output compare A match interrupt enable (17.11.35)
 	set_bit(TIMSK4, OCIE4A);
-	set_bit(TIMSK0, OCIE0A);
-	
-	////////////////////////////////////
-	
+		
 	score_flag = 0;
-	timer_flag = 0;
+	score_ms = 0;
+	score_charge = 0;
 }
 
 
 void GAME_loop(void) {
 	can_message control_inputs;
+	can_message state;
 	int8_t velocity_reference = 0;
 	uint8_t slider_left = 0;
 	uint8_t slider_right = 0;
 	uint8_t buttons = 0;
-	while(1) {	
-		control_inputs.id = 'e';  // Error/empty or something else starting with e
-		
-		CAN_message_receive(&control_inputs);
-		if (control_inputs.id == 'e') {
-			// No message
-		} else if (control_inputs.id == 'c') {
-			//printf("test\n");
-			velocity_reference = control_inputs.data[JOYSTICK_X];
-			slider_left = control_inputs.data[SLIDER_LEFT];
-			slider_right = control_inputs.data[SLIDER_RIGHT];
-			buttons = control_inputs.data[BUTTONS];	
-			//servo_set(slider_right);
-		} else if (control_inputs.id != 0) {
-			printf("SOMETHING WENT SERIOUSLY WRONG WITH THE CAN BUS [%d]\n", control_inputs.id);
-		}		
-		
-		if (buttons & (1 << JOY_BUTTON)) {
-			solenoid_send_pulse();
+	while(1) {
+		CAN_message_receive(&state);
+		while(state.id != 's'){
+			CAN_message_receive(&state);
+			printf("id: %d\n", state.id);
+			printf("MCP_CANINTF: %x", MCP2515_read(MCP_CANINTF));
 		}
-		
-		if(timer_flag) {
-			timer_flag = 0;
-			switch (control_type) {
-				case OPEN_LOOP:
-				motor_set_velocity(velocity_reference);
-				break;
-				
-				case CLOSED_LOOP:
-				PI_control(velocity_reference);
+			
+		score_ms = 0;
+		while(1){	
+			printf("1\n");
+			//control_inputs.id = 0;  // Error/empty or something else starting with e
+			CAN_message_receive(&control_inputs);
+			if (control_inputs.id == 0) {
+				// No message
+			} else if (control_inputs.id == 'c') {
+				velocity_reference = control_inputs.data[JOYSTICK_X];
+				slider_left = control_inputs.data[SLIDER_LEFT];
+				slider_right = control_inputs.data[SLIDER_RIGHT];
+				buttons = control_inputs.data[BUTTONS];	
+			} else {
+				printf("SOMETHING WENT SERIOUSLY WRONG WITH THE CAN BUS\n");
 			}
-		}
 		
-		if(score_flag){
-			score_flag = 0;
-			GAME_send_score(score_ms);
-			if(IR_disrupted()){
-				score_ms = 0;
+			servo_set(slider_right);
+		
+			if (buttons & (1 << JOY_BUTTON)) {
+				solenoid_send_pulse();
+			}
+		
+			if(timer_flag) {
+				timer_flag = 0;
+				switch (control_type) {
+					case OPEN_LOOP:
+					motor_set_velocity(velocity_reference);
+					break;
+				
+					case CLOSED_LOOP:
+					PI_control(velocity_reference);
+				}
+			}
+		
+			if(score_flag){
+				score_flag = 0;
+				GAME_send_score(score_ms);
+				if(IR_disrupted()){
+					score_ms = 0;
+				}
 			}
 		}
 	}

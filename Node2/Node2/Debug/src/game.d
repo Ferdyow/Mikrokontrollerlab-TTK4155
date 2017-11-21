@@ -18,8 +18,8 @@ src/game.d src/game.o: ../src/game.c ../src/defines.h ../src/usart.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h \
- ../src/game.h ../src/CAN.h ../src/PI.h ../src/motor.h ../src/solenoid.h \
- ../src/servo.h ../src/IR.h \
+ ../src/MCP2515.h ../src/game.h ../src/CAN.h ../src/PI.h ../src/motor.h \
+ ../src/solenoid.h ../src/servo.h ../src/IR.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h
 
 ../src/defines.h:
@@ -63,6 +63,8 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h:
+
+../src/MCP2515.h:
 
 ../src/game.h:
 

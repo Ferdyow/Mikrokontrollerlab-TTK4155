@@ -13,15 +13,27 @@ void receive_score(void);
 
 void game_play() {
 	OLED_reset();
-	fprintf(OLED, "\n\n%s \n", "lButton: quit");
+	fprintf(OLED, "time: %s", "0.0");
+	fprintf(OLED, "\n%s \n", "lButton: quit");
 	fprintf(OLED, "%s \n", "jButton: shoot");
 	//fprintf(OLED, "%s ", "r_slider: angle\n");
 	//fprintf(OLED, "%s ", "x-axis: move\n");
 	_delay_ms(500);						//makes sure first press does not trigger solenoid
+	
+	//send start message
+	can_message state;
+	state.length = 0;
+	state.id = 's';
+	CAN_message_send(&state);
+	
 	while(!JOY_button_pressed(LEFT_BUTTON)){
 		send_control_input();
 		receive_score();
 	}
+	//send quit message
+	state.id = 'q';
+	CAN_message_send(&state);
+	while(CAN_transmit_complete(0));
 }
 
 void send_control_input(void) {
