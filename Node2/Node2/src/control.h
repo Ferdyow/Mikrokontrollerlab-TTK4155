@@ -9,11 +9,4 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
-
-typedef enum {OPEN_LOOP, CLOSED_LOOP} control;
-
-void CONTROL_init(void);
-
-void CONTROL_run(control control_type);
-
 #endif /* CONTROL_H_ */

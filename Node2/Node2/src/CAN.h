@@ -34,7 +34,4 @@ void CAN_int_vect(void);
 
 void CAN_test(void);
 
-can_message receive_control_inputs(void);
-
-
 #endif /* CAN_H_ */

@@ -34,6 +34,9 @@ void time_reset(void) {
 uint16_t time_passed(void){
 	uint16_t time_passed = TCNT3;
 	time_reset();
+	if (time_passed == 0){
+		return 1;
+	}
 	return time_passed;
 }
 

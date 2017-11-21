@@ -124,19 +124,21 @@ void motor_find_max_speed_manual(void){
 	printf("---------------------------------------------------------\n");
 	
 	while(!button_is_pressed) {
-		message = receive_control_inputs();
-		joystick_x = message.data[JOYSTICK_X];
-		const int RL_BUTTONS = 0b011;
-		button_is_pressed = message.data[BUTTONS] & RL_BUTTONS;
-		
-		motor_set_velocity(joystick_x);
+		CAN_message_receive(&message);
+		if(message.length) {
+			joystick_x = message.data[JOYSTICK_X];
+			const int RL_BUTTONS = 0b011;
+			button_is_pressed = message.data[BUTTONS] & RL_BUTTONS;
+			
+			motor_set_velocity(joystick_x);
 
-		double speed = abs(motor_read_position_change())/(double)(time_passed());
-		if (speed > max_speed) {
-			max_speed = speed;
-			printf("[MANUAL] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
+			double speed = abs(motor_read_position_change())/(double)(time_passed());
+			if (speed > max_speed) {
+				max_speed = speed;
+				printf("[MANUAL] 1000 * MAX SPEED: %d\n", (int)(max_speed*1000));
+			}
+			_delay_ms(10);
 		}
-		_delay_ms(10);
 	}
 	
 	printf("---------------------------------------------------------\n");

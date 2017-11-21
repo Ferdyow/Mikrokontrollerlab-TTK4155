@@ -24,9 +24,7 @@ volatile menu_entry* current_entry;
 volatile menu_entry* selected_entry;
 
 
-void test_function() {
-	printf("\n\nHighscore clicked!\n\n");
-}
+
 
 void MENU_init() {
 	menu_entry* main_menu = add_entry(NULL, "Main menu", NULL);
@@ -45,7 +43,7 @@ void MENU_init() {
 	// Sub-menu extras
 	menu_entry* keyboard = add_entry(extras, "Keyboard", keyboard_run);
 	//menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
-	menu_entry* pong = add_entry(extras, "Play pong", NULL);
+	//menu_entry* pong = add_entry(extras, "Play pong", NULL);
 	//menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
 	
 	current_entry = main_menu;

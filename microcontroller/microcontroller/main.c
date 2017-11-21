@@ -48,20 +48,20 @@ void test(void){
 	//SPI_test();
 	//CAN_test(); //resets, bad-interrupt
 	
-	can_message my_message;
-	my_message.id = 150;
-	my_message.length = 3;
-	my_message.data[0] = 0x00;
-	my_message.data[1] = 0xFF;
-	my_message.data[2] = 0x55;
-	
-	while(1) {
-		while(!CAN_transmit_complete(TB0)){}
-		CAN_message_send(&my_message);
-		MENU_run();
-	}
-	
-	
+	//can_message my_message;
+	//my_message.id = 150;
+	//my_message.length = 3;
+	//my_message.data[0] = 0x00;
+	//my_message.data[1] = 0xFF;
+	//my_message.data[2] = 0x55;
+	//
+	//while(1) {
+		//while(!CAN_transmit_complete(TB0)){}
+		//CAN_message_send(&my_message);
+		//MENU_run();
+	//}
+	//
+	//
 }
 
 

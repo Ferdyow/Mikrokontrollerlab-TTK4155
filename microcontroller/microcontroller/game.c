@@ -26,7 +26,7 @@ void game_play() {
 
 void send_control_input(void) {
 	can_message control_input;
-	control_input.id = 0;
+	control_input.id = 'c';
 	control_input.length = 5;
 	
 	//printf("[joy_position]\n");
@@ -46,7 +46,7 @@ void send_control_input(void) {
 	control_input.data[BUTTONS] = joy_button | left_button | right_button;
 	
 	CAN_message_send(&control_input);
-	while(!CAN_transmit_complete(TB0));
+	//while(!CAN_transmit_complete(TB0));
 }
 
 void receive_score(void){
@@ -61,7 +61,7 @@ void receive_score(void){
 		highscore = score;
 	}
 	OLED_reset_cursor();
-	printf("seconds %d.%d\n", score/10, score%10);
+	//printf("seconds %d.%d\n", score/10, score%10);
 	fprintf(OLED, "time: %d.%d    ", score/10, score%10);
 	//score_set(score_message.data[0]);
 	}

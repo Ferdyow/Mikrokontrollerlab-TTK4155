@@ -44,6 +44,7 @@
 #include "PI.h"
 #include "control.h"
 #include "solenoid.h"
+#include "game.h"
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -52,7 +53,6 @@
 #include <stdbool.h>
 
 void initialize(void);
-can_message receive_control_inputs(void);
 void test(void);
 void test_servo_and_ir(void);
 
@@ -65,7 +65,7 @@ void initialize(void){
 	IR_init();					printf("[NODE 2][main.c]: IR initialized.\n");
 	motor_init(DEFAULT);		printf("[NODE 2][main.c]: MOTOR initialized!\n");
 	PI_init();					printf("[NODE 2][main.c]: PI initialized!\n");
-	CONTROL_init();				printf("[NODE 2][main.c]: CONTROL initialized!\n");
+	GAME_init(CLOSED_LOOP);		printf("[NODE 2][main.c]: CONTROL initialized!\n");
 	solenoid_init();			printf("[NODE 2][main.c]: SOLENOID initialized!\n");
 								printf("\n====== INITIALIZATION COMPLETE ======\n\n");
 	sei();
@@ -74,7 +74,7 @@ void initialize(void){
 
 int main(void){
 	initialize();
-	CONTROL_run(CLOSED_LOOP);
+	GAME_loop();
 	while(1);
 	return 0;
 }

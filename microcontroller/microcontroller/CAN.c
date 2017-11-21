@@ -24,6 +24,7 @@ volatile int flag_RX1 = 0;
 
 //interrupt service routine
 ISR(INT0_vect){
+	
 	CAN_int_vect();
 }
 
@@ -60,7 +61,8 @@ void CAN_init() {
 	//CANINTE contains the interrupt enable bits for each individual interrupt
 	//CANINTF cointains the interrupt flags for each interrupt source. this should be cleared by a bit_modify
 	
-	MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
+	//MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
+	MCP2515_write(MCP_CANINTE, 0x03);
 	//interrupts for RX1, RX0 enabled
 	
 	//set loopback mode: 0x40
@@ -75,11 +77,20 @@ void CAN_init() {
 void CAN_message_send(can_message* msg) {
 	//transmit is done using the TX registers, have to check which transmit_buffer_register we are writing from 
 	uint8_t buffer_numb = 0; //Not sure how this logic is done yet
+	//if (!CAN_transmit_complete(buffer_numb)){
+		//printf("[NODE2][CAN_message_send] Noe har gått galt");
+		//return;
+	//}
+		
+	if(!CAN_transmit_complete(0)){
+		return; //ERROR
+	}
 
 
 	//transmit the correct ID
 	uint8_t id_high = msg->id / 8;
 	uint8_t id_low = msg->id % 8;
+	
 
 	MCP2515_write(MCP_TXB0SIDH + BUFFER_LENGTH * buffer_numb, id_high);
 	MCP2515_write(MCP_TXB0SIDL + BUFFER_LENGTH * buffer_numb, (id_low << 5));

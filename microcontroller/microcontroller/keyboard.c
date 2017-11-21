@@ -111,6 +111,7 @@ void remove_last_char() {
 
 void keyboard_init() {
 	OLED_reset();
+	written_string[0]='\0';
 	print_string();
 	letters = (char*)LETTERS_SMALL;
 	keyboard_goto_line(0);
@@ -371,7 +372,7 @@ void keyboard_run() {
 		}
 		if(button_pressed){
 			button_pressed = 0;
-			_delay_ms(500);
+			_delay_ms(350);
 		}
 	}
 }

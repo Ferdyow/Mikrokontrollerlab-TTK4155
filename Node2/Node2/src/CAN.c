@@ -31,29 +31,26 @@ void test_usart_communication(void);
 
 
 
-//interrupt service routine
-//find the interrupt and use the correct one
+//interrupt service routine when message is received
 ISR(INT5_vect){
 	//interrupt when a message is received
-	cli();
 	CAN_int_vect();
-	sei();
 }
 
 
 void CAN_int_vect(void) {
-	
+	cli();
 	uint8_t int_flags = MCP2515_read(MCP_CANINTF);
 	//printf("INTERRUPT VECTOR CALLED\Nflags: %x\n",int_flags);
 	if(int_flags & MCP_RX0IF){
 		MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
 		flag_RX0 = 1;
-	}
-			
+	}		
 	if(int_flags & MCP_RX1IF){
 		MCP2515_bit_modify(MCP_CANINTF, MCP_RX1IF, 0x00);
 		flag_RX1 = 1;
 	}
+	sei();
 }
 
 //hex to binary is left as an exercise to the reader :)
@@ -78,7 +75,7 @@ void CAN_init(void) {
 	
 	//printf("CANSTAT in init: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
 	//enable rollover: message will rollover to RX1 if RX0 is full
-	//also sets filter for RXB0 to only accept all transmission
+	//also sets filter for RXB0 to accept all transmission
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100
 
 	
@@ -89,7 +86,8 @@ void CAN_init(void) {
 	//CANINTE contains the interrupt enable bits for each individual interrupt
 	//CANINTF cointains the interrupt flags for each interrupt source. this should be cleared by a bit_modify
 	
-	MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
+	//MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
+	MCP2515_write(MCP_CANINTE, 0x03);
 	//printf("CANINTE: 0x%02x\n", MCP2515_read(MCP_CANINTE));
 	//interrupts for RX1, RX0 enabled
 	
@@ -104,9 +102,12 @@ void CAN_message_send(can_message* msg) {
 	
 	//transmit is done using the TX registers, have to check which transmit_buffer_register we are writing from 
 	uint8_t buffer_numb = 0; //Not sure how this logic is done yet
-	if (!CAN_transmit_complete(buffer_numb)){
-		printf("[NODE2][CAN_message_send] Noe har gått galt");
-		return;
+	//if (!CAN_transmit_complete(buffer_numb)){
+		//printf("[NODE2][CAN_message_send] Noe har gått galt");
+		//return;
+	//}
+	if(!CAN_transmit_complete(0)){
+		return; //ERROR
 	}
 
 	//transmit the correct ID
@@ -149,7 +150,8 @@ void CAN_error(void) {
 }
 
 
-int CAN_transmit_complete(transmit_buffer tb) {	
+int CAN_transmit_complete(transmit_buffer tb) {
+	//printf("CAN_TRANSMIT_COMPLETE\n");
 	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * tb;
 	return !(MCP2515_read(address) & MCP_TXREQ);
 }
@@ -167,7 +169,9 @@ void CAN_message_receive(can_message* received_msg){
 		flag_RX1 = 0;
 	}
 	else{
+		//printf("ELSE: received_msg->id:  %d\n", received_msg->id);
 		received_msg->length = 0;
+		received_msg->id = 0;
 		sei();
 		return;
 	}
@@ -196,7 +200,6 @@ void CAN_message_receive(can_message* received_msg){
 		received_msg->data[byte] = MCP2515_read(address);
 	}
 	sei();
-	
 }
 
 
@@ -251,13 +254,4 @@ void CAN_test(void){
 	
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
 	
-}
-
-can_message receive_control_inputs(void){
-	can_message msg;
-	msg.length = 0;
-	while (!msg.length) {
-		CAN_message_receive(&msg);
-	}
-	return msg;
 }
