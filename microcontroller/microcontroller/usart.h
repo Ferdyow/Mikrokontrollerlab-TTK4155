@@ -30,7 +30,6 @@ void usart_transmit_to_computer(unsigned int data);
 /**
  * Receive data to the ATMega162 controller from the connected computer.
  * @returns {unsigned int} - The data received from the computer.
- * (NOTE: Currently not working. Consider trying another ATMega162 controller.)
  */
 unsigned char usart_receive_from_computer(void);
 

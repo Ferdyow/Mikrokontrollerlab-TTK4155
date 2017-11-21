@@ -27,6 +27,7 @@ typedef struct {
 	int8_t data[8];
 }can_message;
 
+void CAN_print_message(can_message* msg);
 
 void CAN_init();
 

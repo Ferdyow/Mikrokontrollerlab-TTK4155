@@ -67,7 +67,7 @@ void GAME_init(control c) {
 void GAME_send_score(int score_ms) {
 	can_message highscore;
 	highscore.id = 'h';
-	highscore.length = 3;
+	highscore.length = 2;
 	highscore.data[0] = score_ms >> 8;
 	highscore.data[1] = score_ms & 0xFF;
 	CAN_message_send(&highscore);
@@ -111,14 +111,11 @@ void GAME_loop(void) {
 	while(1) {
 		do {
 			CAN_message_receive(&control_inputs);
-			print_can_message(&control_inputs);
-		} while(control_inputs.id != 's');
-		
-		printf("yolo\n");
-			
+			//print_can_message(&control_inputs);
+		} while(control_inputs.id != 's');	
 		score_ms = 0;
+		
 		while(control_inputs.id != 'q'){	
-			printf("1\n");
 			//control_inputs.id = 0;  // Error/empty or something else starting with e
 			CAN_message_receive(&control_inputs);
 			if (control_inputs.id == 0) {
@@ -152,11 +149,13 @@ void GAME_loop(void) {
 		
 			if(score_flag){
 				score_flag = 0;
-				GAME_send_score(score_ms);
 				if(IR_disrupted()){
 					score_ms = 0;
 				}
+				GAME_send_score(score_ms);
 			}
 		}
+		servo_set(127);
+		motor_set_velocity(0);
 	}
 }

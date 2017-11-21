@@ -27,6 +27,8 @@ void PI_init() {
 	controller.error_sum = 0;
 	controller.k_p = 0.5;
 	controller.k_i = 0.2;
+	//controller.k_p = 0.7;
+	//controller.k_i = 0.1;
 }
 
 

@@ -7,13 +7,14 @@
 
 volatile int score = 0;
 volatile int highscore = 0;
+volatile int last_score = 0;
 
 void send_control_input(void);
 void receive_score(void);
 
 void game_play() {
 	OLED_reset();
-	fprintf(OLED, "time: %s", "0.0");
+	fprintf(OLED, "score: %s", "0.0");
 	fprintf(OLED, "\n%s \n", "lButton: quit");
 	fprintf(OLED, "%s \n", "jButton: shoot");
 	//fprintf(OLED, "%s ", "r_slider: angle\n");
@@ -65,24 +66,31 @@ void send_control_input(void) {
 void receive_score(void){
 	can_message score_message;
 	score_message.length = 0;
+	int new_score = 0;
 	
 	CAN_message_receive(&score_message);
 	//printf("score msg 0: %d \tscore msg 1: %d\n", score_message.data[0], score_message.data[1]);
-	if(score_message.length){
-	score = ((uint8_t)(score_message.data[0]) << 8) |(uint8_t) score_message.data[1];
-	if (score > highscore){
-		highscore = score;
-	}
-	OLED_reset_cursor();
-	//printf("seconds %d.%d\n", score/10, score%10);
-	fprintf(OLED, "time: %d.%d    ", score/10, score%10);
-	//score_set(score_message.data[0]);
+	CAN_print_message(&score_message);
+	if(score_message.length && score_message.id == 'h'){
+		
+		new_score = ((uint8_t)(score_message.data[0]) << 8) |(uint8_t) score_message.data[1];
+		if (new_score <= score+10 && new_score >= score){
+			score = new_score;
+
+		}
+		else if(new_score == 0 && score != 0){
+			last_score = score;
+			score = new_score;
+			OLED_pos(7,0);
+			fprintf(OLED, "last score: %d.%d", last_score/10, last_score%10);
+		}
+		if (score > highscore){
+			highscore = score;
+		}
+		OLED_reset_cursor();
+		fprintf(OLED, "score: %d.%d    ", score/10, score%10);
 	}
 	
-	//int ir_disrupted = score_message.data[2];
-	//if(ir_disrupted){
-	//	set_highscore();
-	//}
 }
 
 void print_highscore(){

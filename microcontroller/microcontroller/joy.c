@@ -5,7 +5,6 @@
  *  Author: tobib
  */ 
 
-#define F_CPU 4915200  // Clock frequency in Hz
 #include "JOY.h"
 #include "adc.h"
 #include "defines.h"
@@ -16,7 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
- /*"on the go"-calibration is done manually (not needed in the .h file)*/
+ // "on the go"-calibration is done manually (not needed in the .h file)
 void JOY_calibrate(int calibration_mode);
 void JOY_print_calibration_status(void);
 
@@ -31,10 +30,13 @@ struct Coordinate {
 } max, min, rad, mid;
 
 void JOY_init(int calibraton_mode){
-	//set pull-up resistors on PORTB for JOY_button
+	// Set pull-up resistors on PORTB for JOY_button
 	set_bit(PORTB,PB2);
-	clear_bit(DDRB,PB2);
 	clear_bit(SFIOR, PUD);
+	
+	// Set PB2 as input pin
+	clear_bit(DDRB,PB2);
+	
 	JOY_calibrate(calibraton_mode);
 }
 
@@ -98,9 +100,9 @@ int JOY_button_pressed(button b) {
 
 JOY_position_t JOY_getPosition() {
 	JOY_position_t JOY_position;
+	// Convert read values to percentages between -100 and 100
 	JOY_position.x = (100 * (ADC_read(X_COORD) - mid.x)) / rad.x;
 	JOY_position.y = (100 * (ADC_read(Y_COORD) - mid.y)) / rad.y;
-	//printf("x: %d, y: %d\n", JOY_position.x, JOY_position.y);
 	return JOY_position;
 }
 
@@ -112,16 +114,12 @@ JOY_direction_t JOY_getDirection() {
 
 	// The x-coordinate is dominating
 	else if (abs(position.x) > abs(position.y)) {
-		// Positive x => RIGHT
 		if (position.x > 0) return RIGHT;
-		// Negative x => LEFT
 		else return LEFT;
 
 	// The y-coordinate is dominating
 	} else {
-		// Positive y => UP
 		if (position.y > 0) return UP;
-		// Negative y => DOWN
 		else return DOWN;
 	}
 }
@@ -133,7 +131,8 @@ SLI_position_t SLI_getPosition() {
 	return pos;
 }
 
-void JOY_test() {
+/* COMMENTED OUT TO SAVE MEMORY */
+/*void JOY_test() {
 	while (1) {
 		JOY_position_t posJ = JOY_getPosition();
 		SLI_position_t posS = SLI_getPosition();
@@ -141,4 +140,4 @@ void JOY_test() {
 		printf("Left slider: %4d\t\t Right slider: %4d\t\t", posS.left, posS.right);
 		printf("Left button: %4d\tRight button: %4d\tjoystick button: %4d\n", test_bit(PINB,PB0), test_bit(PINB, PB1), !test_bit(PINB, PB2));
 	}
-}
+}*/

@@ -9,15 +9,17 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-
-//sets our "interrupt" pin on the ATmega162 to input
+/**
+ * Sets PINE0 to receive interrupt from ADC
+ */
 void ADC_init();
 
-//Reads the value from the chosen channel and returns it
+/**
+ * Sets PINE0 to receive interrupt from ADC
+ * @param {char} channel - Chooses which analog channel to read from
+ * @returns {char} - The read value
+ */
 char ADC_read(char channel);
-
-//tests the memory locations of the ADC
-void ADC_test(void);
 
 
 #endif /* ADC_H_ */

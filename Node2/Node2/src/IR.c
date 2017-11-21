@@ -41,7 +41,7 @@ bool IR_disrupted(void) {
 	uint16_t filtered_brightness = brightness_sum / MOVING_AVERAGE_SIZE;
 	
 	// Return whether the IR signal is disrupted or not
-	//printf("Filtered brightness: %4d\t\t", filtered_brightness);
+	printf("Filtered brightness: %4d\n", filtered_brightness);
 	return filtered_brightness < DISRUPTION_THRESHOLD;
 }
 

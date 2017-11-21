@@ -18,21 +18,29 @@
 typedef enum { LEFT_BUTTON, RIGHT_BUTTON, JOY_BUTTON } button;
 typedef enum { LEFT, RIGHT, UP, DOWN, NEUTRAL } JOY_direction_t;
 
+// Position of x- and y-axes (between -100 and 100)
 typedef struct{
-	//position (between -100 and 100 in percentage)
 	int x;
 	int y;
 } JOY_position_t;
 
+// Position of left and right slider (between 0 and 255)
 typedef struct {
 	int left;
 	int right;
 } SLI_position_t;
 
-/*Initializes the use of the buttons and starts calibration*/
+/**
+ * Initializes the use of the buttons and starts calibration
+ * @param {int} calibration_mode - Decides between default settings and manual calibration
+ */
 void JOY_init(int calibraton_mode);
 
-/*returns true/1 if the button is pressed, false/0 otherwise*/
+/**
+ * Sets PINE0 to receive interrupt from ADC
+ * @param {button} b - The button to check (LEFT_BUTTON, RIGHT_BUTTON or JOY_BUTTON)
+ * @returns {int} - 1 if button b is pressed, 0 otherwise
+ */
 int JOY_button_pressed(button b);
 
 /**
@@ -41,10 +49,17 @@ int JOY_button_pressed(button b);
 */
 JOY_position_t JOY_getPosition();
 
-/*returns the most extreme direction of the joystick if it is moved beyond a threshold of 5% from neutral*/
+/**
+ * Read the direction of the joystick. The direction is considered NEUTRAL if the joystick is within {(-5,-5), (5, 5)}
+ * @returns {JOY_direction_t} - The direction of the joystick. (LEFT, RIGHT, UP, DOWN or NEUTRAL)
+ */
 JOY_direction_t JOY_getDirection();
 
-/*returns the slider position as a value between 0 and 255*/
+/**
+ * Read the slider position.
+ * @returns {SLI_position_t} - The slider position. Between 0 and 255.
+ */
 SLI_position_t SLI_getPosition();
+
 
 #endif /* JOYSTICK_H_ */

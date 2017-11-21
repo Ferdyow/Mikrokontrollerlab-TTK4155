@@ -28,7 +28,7 @@ static FILE oled_out = FDEV_SETUP_STREAM(OLED_print_char, NULL, _FDEV_SETUP_WRIT
 //#define PC &pc_out
 
 #define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
-//#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
+#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
 
 #define MAX(a,b)				 ((a < b) ?  (b) : (a))
 #define MIN(a,b)				 ((a > b) ?  (b) : (a))

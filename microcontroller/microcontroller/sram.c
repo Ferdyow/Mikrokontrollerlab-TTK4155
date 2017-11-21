@@ -17,14 +17,14 @@ void SRAM_init(void){
 	//Enable external memory interface
 	set_bit(MCUCR, SRE);
 	
-	//disable JTAG ports
+	//use 4 pins of PORT C for external memory interface, PC7-PC4 used for JTAG instead
 	set_bit(SFIOR, XMM2);
-	clear_bit(SFIOR, XMM1);
-	clear_bit(SFIOR, XMM0);
 }
 
 
-void SRAM_test(void)
+/* COMMENTED OUT TO SAVE MEMORY   */
+
+/*void SRAM_test(void)
 {
 	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
 	uint16_t ext_ram_size = 0x800;
@@ -60,4 +60,4 @@ void SRAM_test(void)
 		}
 	}
 	printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase \n(of %4d and %4d)\n", write_errors, retrieval_errors,total1,total2);
-}
+}*/

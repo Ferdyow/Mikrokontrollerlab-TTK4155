@@ -9,10 +9,16 @@
 #ifndef SRAM_H_
 #define SRAM_H_
 
-//Initialize SRAM as an external memory unit and set available ports
+//
+
+/**
+ * Initialize SRAM as an external memory unit and use PC0-PC3 as external memory address pins
+ */
 void SRAM_init(void);
 
-//tests reading and writing to the SRAM
+/**
+ * Tests reading and writing to the SRAM
+ */
 void SRAM_test(void);
 
 

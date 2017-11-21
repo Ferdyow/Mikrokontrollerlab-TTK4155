@@ -28,6 +28,15 @@ ISR(INT0_vect){
 	CAN_int_vect();
 }
 
+void CAN_print_message(can_message* msg) {
+	if(msg->length == 0) return;
+	printf("\nid: %d\tlength: %d\t DATA:\n", msg->id, msg->length);
+	for(int i = 0; i < msg->length; i++) {
+		printf("%x\t", msg->data[i]);
+	}
+	printf("\n");
+}
+
 
 void CAN_int_vect() {
 	uint8_t int_flags = MCP2515_read(MCP_CANINTF);
