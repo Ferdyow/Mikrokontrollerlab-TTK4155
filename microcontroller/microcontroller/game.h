@@ -9,8 +9,15 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-void game_play();
-void print_highscore();
+/**
+ * Start the game. This mostly consists of sending control inputs and receiving score.
+ */
+void GAME_play(void);
+
+/**
+ * Print the high score on the OLED screen.
+ */
+void GAME_print_highscore(void);
 
 
 #endif /* GAME_H_ */

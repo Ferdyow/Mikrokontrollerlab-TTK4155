@@ -2,17 +2,51 @@
 #define __MCP2515_H
 
 
-uint8_t MCP2515_init();
+/**
+ * 
+ * @returns {uint8_t} - 0 if init successful, 1 otherwise
+ */
+uint8_t MCP2515_init(void);
+
+/**
+ * Reads value received by CAN bus by MCP2515
+ * @param {char} address - Address of the data
+ * @returns {char} - Value stored at the given address
+ */
 char MCP2515_read(char address);
+
+/**
+ * Sends value to MCP2515 to be sent on CAN
+ * @param {char} address - Address to store the data
+ * @param {char} data - Data to be sent 
+ */
 void MCP2515_write(char address, char data);
+
+/**
+ * Initiates message transmission from transmit buffer
+ * @param {uint8_t} buffer_states - Three bit, setting a 1 on the buffer initiates transmitting from it 
+ */
 void MCP2515_request_to_send(uint8_t buffer_states);
 
-//A 1 in the bit_mask allows the bit to be changed
+/**
+ * Allows clearing or setting individual bits in a register. Assumed that you are allowed to change every bit in register
+ * @param {char} reg_address - Address of register to modify 
+ * @param {char} masked_bits - A 1 on a bit allows the bit to be changed by new_data
+ * @param {char} new_data	 - Data to be written
+ */
 void MCP2515_bit_modify(char reg_address, char masked_bits, char new_data);
-void MCP2515_reset();
-char MCP2515_read_status();
 
-//#define MCP2515_loopback_mode() MCP2515_bit_modify(MCP_CANSTAT, 0xE0, 0x40)
+/**
+ * Re-initialize the internal registers of MCP2515
+ */
+void MCP2515_reset(void);
+
+/**
+ * Allows single instruction access to often used status bits
+ * return@ {char} - Contains the status
+ */
+char MCP2515_read_status(void);
+
 /*
 mcp2515.h
 

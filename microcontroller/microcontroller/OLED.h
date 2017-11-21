@@ -1,5 +1,5 @@
 /*
- * OLED_driver.h
+ * OLED.h
  *
  * Created: 20.09.2017 12:46:22
  *  Author: ferdyow
@@ -55,7 +55,7 @@ void OLED_clear_line(uint8_t line);
  * @param {uint8_t} line - The line/page to place the cursor at.
  * @param {uint8_t} column - The column to place the cursor at.
  */
-void OLED_pos(uint8_t line, uint8_t column);
+void OLED_goto_pos(uint8_t line, uint8_t column);
 
 /**
  * Print an array of characters to the OLED-display.
@@ -68,7 +68,12 @@ void OLED_print(char* str);
  * @param {char} character - The character to print.
  */
 void OLED_print_char(char character);
-void OLED_print_char_inverse(char c);
+
+/**
+ * Print the inverse of a single character to the OLED-display.
+ * @param {char} character - The character to print.
+ */
+void OLED_print_char_inverse(char character);
 
 /**
  * Set the brightness level of the OLED-display. (min 0, max 255)

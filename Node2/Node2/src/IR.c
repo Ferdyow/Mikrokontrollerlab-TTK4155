@@ -10,6 +10,7 @@
 
 #include "defines.h"
 #include "ADC.h"
+#include "IR.h"
 
 #define DISRUPTION_THRESHOLD 10
 #define MOVING_AVERAGE_SIZE 4
@@ -44,18 +45,3 @@ bool IR_disrupted(void) {
 	printf("Filtered brightness: %4d\n", filtered_brightness);
 	return filtered_brightness < DISRUPTION_THRESHOLD;
 }
-
-/* TODO:
- *
- * 10-bit resolution
- *
- * 8 available channels on Port F.
- *
- * Manual configuration
- * - Use AVCC as reference
- * - Use single conversion
- * - The ADC's operation is well described in the datasheet.
- *
-
- *
- */

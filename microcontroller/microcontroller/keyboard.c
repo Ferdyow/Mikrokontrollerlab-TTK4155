@@ -1,5 +1,5 @@
 #include "joy.h"
-#include "OLED_driver.h"
+#include "OLED.h"
 #include "print.h"
 #include "defines.h"
 
@@ -23,9 +23,10 @@
 * � = ')'
 */
 
-//Inverse is defined as 1
+// INVERSE is defined as 1, NORMAL as 0
 enum{ NORMAL, INVERSE};
 
+// Contains keyboard layout
 const char PROGMEM LETTERS_SMALL[NUMB_LETTERS] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?', 
 	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '&', '+', 
@@ -42,10 +43,10 @@ const char PROGMEM LETTERS_BIG[NUMB_LETTERS] = {
 
 /*	VARIABLES						*/
 /************************************/
+// Allows changing between normal and caps-lock
 char* letters = (char*) LETTERS_SMALL;
+
 char  written_string[MAX_STRING_SIZE];
-int string_position=0;
-int blinking_pos_on = 0;
 
 typedef struct {
 	int x, y
@@ -58,6 +59,8 @@ position prev_pos = { 0,0 };
 /* HELPER FUNCTION DECLARATIONS*/
 /************************************/
 void keyboard_print();
+
+// 5 lines x 12 columns
 void keyboard_goto(int line, int column);
 void keyboard_goto_line(int line);
 void toggle_shift();
@@ -74,28 +77,25 @@ void append_char(char c) {
 	if (len < MAX_STRING_SIZE){
 		written_string[len] = c;
 		written_string[len + 1] = '\0';
-		string_position++;
 	}
 
 }
 
 void print_string() {
 	OLED_reset_cursor();
-	//char print_string[16];
-	//memcpy(print_string, written_string[strlen(written_string)-string_position], 16);
-	//fprintf(OLED, "%s", print_string);
 	fprintf(OLED, "%s", written_string);
+
+	// Make sure to clear rest of screen
 	for (int i = strlen(written_string); i < 16; i++){
 		fprintf(OLED, " ");
 	}
 	
-	//set block at current pointer position
+	// Set block at current pointer position
 	int pointer = MIN(strlen(written_string)%16,15)*8;
-	OLED_pos(0, pointer);
+	OLED_goto_pos(0, pointer);
 	print_fill(8);
 	
-	blinking_pos_on = 0;
-	
+	// Return pointer to keyboard position
 	keyboard_goto(pos.y, pos.x);
 }
 
@@ -119,24 +119,24 @@ void keyboard_init() {
 	pos.y = 0;
 	strcpy(written_string, "\0");
 
-	//The first letter is selected by default
+	// The first letter is selected by default
 	print_char(pgm_read_byte(&letters[0]), INVERSE);
 
-	//print the rest of the letters
+	// Print the rest of the letters
 	for (int i = 1; i < NUMB_LETTERS; i++) {
 		if (i % LINE_LENGTH == 0) {
 			keyboard_goto_line(++pos.y);
 		}
 		print_char(pgm_read_byte(&letters[i]), NORMAL);
 	}
-	//print the tool buttons
+	// Print the tool buttons
 	keyboard_goto_line(4);
 	print_options_bar(NORMAL, NORMAL, NORMAL, NORMAL);
 
-	//reset y-position
+	// Reset y-position
 	pos.y = 0;
 
-	//ignore button pressed right away
+	// Ignore button pressed right away
 	_delay_ms(500);
 
 }
@@ -145,23 +145,23 @@ void keyboard_init() {
 void keyboard_print() {
 	keyboard_goto_line(0);
 	pos.y = 0;
-	//print the letters
+	// Print the letters
 	for (int i = 0; i < NUMB_LETTERS; i++) {
 		if (i % LINE_LENGTH == 0 && i != 0) {
 			keyboard_goto_line(++pos.y);
 		}
 		print_char(pgm_read_byte(&letters[i]), NORMAL);
 	}
-	//print the tool buttons
+	// Print the tool buttons
 	keyboard_goto_line(4);
 	print_options_bar(NORMAL, NORMAL, NORMAL, NORMAL);
 
 
 }
 
-// 5 lines x 16 columns
+
 void keyboard_goto(int line, int column) {
-	OLED_pos(line + 3, (column+2) * 8);
+	OLED_goto_pos(line + 3, (column+2) * 8);
 }
 
 void keyboard_goto_line(int line) {
@@ -177,9 +177,11 @@ void toggle_shift() {
 	}
 
 	keyboard_print();
+	
+	// Shift is still selected
 	keyboard_goto_line(4);
 	print_shift(INVERSE);
-		
+	
 	pos.y = 4;
 	pos.x = 0;
 }
@@ -196,7 +198,7 @@ void keyboard_register_position_change(JOY_direction_t direction) {
 		prev_pos.x = pos.x--;
 	}
 	else if (direction == RIGHT && pos.x < LINE_LENGTH - 1) {
-
+		// Move extra spaces on big toolbar items
 		if (pos.y == 4) {
 			if (pos.x < 2) {
 				prev_pos.x = 0;
@@ -219,13 +221,13 @@ void keyboard_register_position_change(JOY_direction_t direction) {
 
 
 void keyboard_unselect_prev() {
-	//old item is a letter
+	// If previous item is a letter
 	if (prev_pos.y < 4) {
 		keyboard_goto(prev_pos.y, prev_pos.x);
 		print_char(pgm_read_byte(&letters[prev_pos.y * LINE_LENGTH + prev_pos.x]), NORMAL);
 	}
 
-	//old item is in toolbar
+	// If previous item is in toolbar
 	else {
 		if (prev_pos.x < 2) {
 			prev_pos.x = 0;
@@ -233,17 +235,17 @@ void keyboard_unselect_prev() {
 			print_shift(NORMAL);
 		}
 		else if (prev_pos.x < 8) {
-			prev_pos.x = 2; //start of spacebar
+			prev_pos.x = 2; // Start of spacebar
 			keyboard_goto(prev_pos.y, prev_pos.x);
 			print_spacebar(NORMAL);
 		}
 		else if (prev_pos.x < 10) {
-			prev_pos.x = 8; //start of left arrow
+			prev_pos.x = 8; // Start of left arrow
 			keyboard_goto(prev_pos.y, prev_pos.x);
 			print_left_arrow(NORMAL);
 		}
 		else {
-			prev_pos.x = 10; //start of right arrow
+			prev_pos.x = 10; // Start of right arrow
 			keyboard_goto(prev_pos.y, prev_pos.x);
 			print_right_arrow(NORMAL);
 		}
@@ -251,13 +253,13 @@ void keyboard_unselect_prev() {
 }
 
 void keyboard_select_curr() {
-	//selected item is a letter
+	// Selected item is a letter
 	if (pos.y < 4) {
 		keyboard_goto(pos.y, pos.x);
 		print_char(pgm_read_byte(&letters[pos.y * LINE_LENGTH + pos.x]), INVERSE);
 	}
 
-	//selected menu item is in toolbar
+	// Selected item is in toolbar
 	else {
 		if (pos.x < 2) {
 			pos.x = 0;
@@ -265,17 +267,17 @@ void keyboard_select_curr() {
 			print_shift(INVERSE);
 		}
 		else if (pos.x < 8) {
-			pos.x = 2; //start of spacebar
+			pos.x = 2; // Start of spacebar
 			keyboard_goto(pos.y, pos.x);
 			print_spacebar(INVERSE);
 		}
 		else if (pos.x < 10) {
-			pos.x = 8; //start of left arrow
+			pos.x = 8; // Start of left arrow
 			keyboard_goto(pos.y, pos.x);
 			print_left_arrow(INVERSE);
 		}
 		else {
-			pos.x = 10; //start of right arrow
+			pos.x = 10; // Start of right arrow
 			keyboard_goto(pos.y, pos.x);
 			print_right_arrow(INVERSE);
 		}
@@ -286,8 +288,6 @@ void keyboard_select_curr() {
 void keyboard_item_pressed() {
 	if (pos.y < 4) {
 		append_char(pgm_read_byte(&letters[pos.y * LINE_LENGTH + pos.x]));
-		//printf("APPEND written string: %s", written_string);
-		//replace with a print function that remembers which part is printed, used with < >
 		print_string();
 	}
 	else {
@@ -299,12 +299,9 @@ void keyboard_item_pressed() {
 			print_string();
 		}
 		
-		//last two probably not working
-		else if (pos.x < 10 && string_position > 0) {
-			string_position--;
-		}
-		else if (pos.x < 12 && string_position < strlen(written_string)) {
-			string_position++;
+		//Last two buttons not implemented
+		else{
+			return;
 		}
 	}
 }
@@ -315,57 +312,41 @@ void keyboard_run() {
 	keyboard_init();
 	JOY_direction_t direction;
 
-	//detect changes
+	// Detect changes
 	int position_moved = 0;
 	int button_pressed = 0;
 
 	while (!JOY_button_pressed(LEFT_BUTTON)) {
-		//Check if we switch letter
+		// Check if we switch letter
 		direction = JOY_getDirection();
 		keyboard_register_position_change(direction);
 		
 		if (prev_pos.y != pos.y || prev_pos.x != pos.x) {
-			//printf("prev_pos.y: %d, y: %d, prev_pos.x: %d, prev_pos.y %d\n", prev_pos.y, pos.y, prev_pos.x, pos.x);
-			position_moved = 1;
-			//unselect the old letter and select the new one
+			position_moved = 1; // True
+			// Unselect the old letter and select the new one
 			keyboard_unselect_prev();
 			keyboard_select_curr();
 
-			//Reset position
+			// Reset position
 			prev_pos.x = pos.x;
 			prev_pos.y = pos.y;
 		}
 
 
-		//check if we wish to add the current letter to our string or activate an option
+		// Check if we wish to add the current letter to our string or activate an option
 		if (JOY_button_pressed(JOY_BUTTON)) {
 			button_pressed = 1;
 			keyboard_item_pressed();
 			
 		}
-		//check if we wish to remove a letter from our string
+		// Check if we wish to remove a letter from our string
 		else if (JOY_button_pressed(RIGHT_BUTTON)) {
 			button_pressed = 1;
-			//not working
 			remove_last_char();
-			//printf("REMOVE written string: %s", written_string);
 			print_string();
 		}
 		
-		//if timer interrupts are used
-		//if(blinking_pos_on){
-			//pointer = MIN(strlen(written_string),15)*8;
-			//OLED_pos(0, pointer);
-			//print_fill(8);
-			//blinking_pos_on = 0;
-		//}
-		//else{
-			//pointer = MIN(strlen(written_string),15)*8;
-			//OLED_pos(0, pointer);
-			//print_blank(8);
-			//blinking_pos_on = 1;
-		//}
-		
+		// Delay so it doesn't move several times when using Joystick
 		if(position_moved){
 			position_moved = 0;
 			_delay_ms(250);

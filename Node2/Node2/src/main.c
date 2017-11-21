@@ -42,7 +42,6 @@
 #include "IR.h"
 #include "motor.h"
 #include "PI.h"
-#include "control.h"
 #include "solenoid.h"
 #include "game.h"
 
@@ -53,8 +52,6 @@
 #include <stdbool.h>
 
 void initialize(void);
-void test(void);
-void test_servo_and_ir(void);
 
 
 void initialize(void){
@@ -72,17 +69,8 @@ void initialize(void){
 }
 
 
-
-
-
 int main(void){
 	initialize();
-	//GAME_loop();
-	while(1) {
-		//can_message msg;
-		//CAN_message_receive(&msg);
-		//print_can_message(&msg);
-		GAME_loop();
-	}
+	GAME_loop();
 	return 0;
 }

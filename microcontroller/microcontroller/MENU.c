@@ -5,7 +5,7 @@
  *  Author: ferdyow
  */ 
 #define F_CPU 4915200  // Clock frequency in Hz
-#include "OLED_driver.h"
+#include "OLED.h"
 #include "MENU.h"
 #include "defines.h"
 #include "joy.h"
@@ -30,22 +30,20 @@ void MENU_init() {
 	menu_entry* main_menu = add_entry(NULL, "Main menu", NULL);
 	
 	// Main menu
-	menu_entry* play = add_entry(main_menu, "Play game", game_play);
-	add_entry(main_menu, "Highscore", print_highscore);
+	menu_entry* play = add_entry(main_menu, "Play game", GAME_play);
+	add_entry(main_menu, "Highscore", GAME_print_highscore);
 	menu_entry* settings = add_entry(main_menu, "Settings", NULL);
 	menu_entry* extras = add_entry(main_menu, "Extra features", NULL);
 	
 	
-	// Sub-menu settings
-	menu_entry* brightness = add_entry(settings, "Brightness", brightness_run);
-	//menu_entry* font = add_entry(settings, "Set font", NULL);
+	// Sub-menu: settings
+	add_entry(settings, "Brightness", brightness_run);
+
 	
-	// Sub-menu extras
-	menu_entry* keyboard = add_entry(extras, "Keyboard", keyboard_run);
-	//menu_entry* mandelbrot = add_entry(extras, "Mandelbrot", NULL);
-	//menu_entry* pong = add_entry(extras, "Play pong", NULL);
-	//menu_entry* rcube = add_entry(extras, "rotating cube", NULL);
-	
+	// Sub-menu: extras
+	add_entry(extras, "Keyboard", keyboard_run);
+
+	// Initialize to main menu
 	current_entry = main_menu;
 	selected_entry = play;
 	MENU_draw_current_menu();
@@ -94,7 +92,7 @@ void MENU_draw_current_menu() {
 	menu_entry* temp_node = current_entry->child_node;
 	
 	while( temp_node != NULL){
-		OLED_pos(output_row++, 0);
+		OLED_goto_pos(output_row++, 0);
 		if (temp_node == selected_entry) {
 			OLED_print_arrow();
 		}

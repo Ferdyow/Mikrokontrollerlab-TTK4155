@@ -16,8 +16,8 @@
 #include "PWM.h"
 
 
-#define PERIOD_MS 20
-#define PRESCALER 8
+#define PWM_PERIOD_MS 20
+#define TIMER1_PRESCALER 8
 
 
 void PWM_init(void){
@@ -36,7 +36,7 @@ void PWM_init(void){
 	clear_bit(TCCR1A, WGM10);
 	
 	//set TOP so that we have a period of 20 ms
-	ICR1 = F_CPU/PRESCALER*PERIOD_MS/1000 - 1; 
+	ICR1 = F_CPU/TIMER1_PRESCALER*PWM_PERIOD_MS/1000 - 1; 
 	
 	//compare output mode (Normal mode)
 	set_bit(TCCR1A, COM1A1);
@@ -47,13 +47,7 @@ void PWM_init(void){
 	//compares TCTn and OCRnx - cleared when match -> TCTn = BOTTOM
 }
 
-void PWM_set_width(float on_time_ms){
-	OCR1A = F_CPU/PRESCALER*on_time_ms/1000-1; 
-}
 
-//"Accessing 16-bit Registers” on page 135
-//interrupt requests: TIFRn
-//“Output Compare Units” on page 141.
-//50 hz signal 
-//16-bit registers using two read/write read/write - high byte first -  NOT OCRnA/B/C
-//CLOCK: prescaling page 164
+void PWM_set_width(float on_time_ms){
+	OCR1A = F_CPU/TIMER1_PRESCALER*on_time_ms/1000-1; 
+}

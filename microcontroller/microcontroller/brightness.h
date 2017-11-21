@@ -9,8 +9,15 @@
 #ifndef BRIGHTNESS_H_
 #define BRIGHTNESS_H_
 
-
-void brightness_run(void);
+/*
+ * Initializes to max brightness and prints screen 
+ */
 void brightness_init(void);
+
+/*
+ * Takes input from left slider to change brightness, exit with left button
+ */
+void brightness_run(void);
+
 
 #endif /* BRIGHTNESS_H_ */

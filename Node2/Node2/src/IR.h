@@ -18,7 +18,7 @@ void IR_init(void);
 
 /**
  * Read strength of light hitting the IR-diode. 
- * max = ?, min = ?
+ * @return {bool} - 1/true if disrupted, 0/false if not
  */
 bool IR_disrupted(void);
 

@@ -6,8 +6,6 @@ src\ADC.c
 
 src\CAN.c
 
-src\control.c
-
 src\game.c
 
 src\IR.c

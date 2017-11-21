@@ -25,15 +25,12 @@
 volatile int flag_RX0 = 0;
 volatile int flag_RX1 = 0;
 
-
-//test functions
-void test_usart_communication(void);
-
+#define NORMAL_MODE 0x00
+#define LOOPBACK_MODE 0x40
 
 
 //interrupt service routine when message is received
 ISR(INT5_vect){
-	//interrupt when a message is received
 	CAN_int_vect();
 }
 
@@ -41,7 +38,6 @@ ISR(INT5_vect){
 void CAN_int_vect(void) {
 	cli();
 	uint8_t int_flags = MCP2515_read(MCP_CANINTF);
-	//printf("INTERRUPT VECTOR CALLED\Nflags: %x\n",int_flags);
 	if(int_flags & MCP_RX0IF){
 		MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
 		flag_RX0 = 1;
@@ -55,79 +51,54 @@ void CAN_int_vect(void) {
 
 //hex to binary is left as an exercise to the reader :)
 void CAN_init(void) {
-	//global interrupt enable
+	// Global interrupt enable
 	clear_bit(EIMSK, INT5);
 	
-	//interrupt when low (done by default
-	clear_bit(EICRB, ISC51);
-	clear_bit(EICRB, ISC50);
-	
-	//enable interrupt on ATmega2560
+	// Enable interrupt on ATmega2560
 	set_bit(EIMSK, INT5);
-	
-	
-	//interrupt when low (egentlig default satt)
-	//clear_bit(MCUCR,ISC01);
-	//clear_bit(MCUCR, ISC00);
-	
 	
 	MCP2515_init();
 
-	//enable rollover: message will rollover to RX1 if RX0 is full
-	//also sets filter for RXB0 to accept all transmission
-	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF);  //0b 0010 0100
+	// Enable rollover: message will rollover to RX1 if RX0 is full
+	// Also sets filter for RXB0 to accept all transmission
+	MCP2515_bit_modify(MCP_RXB0CTRL, 0x64, 0xFF); 
 
 	
-	//set filter for RXB1 to accept all transmission
+	// Set filter for RXB1 to accept all transmission
 	MCP2515_bit_modify(MCP_RXB1CTRL, 0x60, 0xFF);
 	
+	// Enable Received buffer register interrupts
+	MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
 
-	//CANINTE contains the interrupt enable bits for each individual interrupt
-	//CANINTF cointains the interrupt flags for each interrupt source. this should be cleared by a bit_modify
-	
-	//MCP2515_bit_modify(MCP_CANINTE,0x03, 0x03);
-	MCP2515_write(MCP_CANINTE, 0x03);
-	//printf("CANINTE: 0x%02x\n", MCP2515_read(MCP_CANINTE));
-	//interrupts for RX1, RX0 enabled
-	
-	//set loopback mode: 0x40
-	//later use normal mode 0x00
-	MCP2515_bit_modify(MCP_CANCTRL,0xE0, 0x00);
-
-	//printf("CANSTAT: 0x%02x\n", MCP2515_read(MCP_CANSTAT));
+	// Set Normal Mode
+	MCP2515_bit_modify(MCP_CANCTRL,0xE0, NORMAL_MODE);
 }
 
 void CAN_message_send(can_message* msg) {
-	
-	//transmit is done using the TX registers, have to check which transmit_buffer_register we are writing from 
-	uint8_t buffer_numb = 0; //Not sure how this logic is done yet
-	//if (!CAN_transmit_complete(buffer_numb)){
-		//printf("[NODE2][CAN_message_send] Noe har gått galt");
-		//return;
-	//}
+	// Use only Transmit buffer register 0
+	uint8_t buffer_numb = 0; 
+
 	if(!CAN_transmit_complete(0)){
 		return; //ERROR
 	}
 
-	//transmit the correct ID
+	// Set 11 bit ID
 	uint8_t id_high = msg->id / 8;
 	uint8_t id_low = msg->id % 8;
 
 	MCP2515_write(MCP_TXB0SIDH + BUFFER_LENGTH * buffer_numb, id_high);
 	MCP2515_write(MCP_TXB0SIDL + BUFFER_LENGTH * buffer_numb, (id_low << 5));
-	//resten av TXB0SIDL er 0 siden vi har standard identifier
 
-	//transmit the data length
+	// Transmit the number of data bytes
 	MCP2515_write(MCP_TXB0DLC + BUFFER_LENGTH * buffer_numb, msg->length);
 
-	//transmit the data
+	// Transmit the data
 	for (uint8_t byte = 0; byte < msg->length; byte++) {
 		MCP2515_write((MCP_TXB0D0 + byte) + BUFFER_LENGTH * buffer_numb, msg->data[byte]);
 	}
 	
 	uint8_t buffer_states = (uint8_t)(1 << buffer_numb);
 	MCP2515_request_to_send(buffer_states);
-	
 }
 
 void CAN_error(void) {
@@ -144,14 +115,13 @@ void CAN_error(void) {
 	if(MCP2515_read(MCP_REC)){
 		printf("RECEIVE ERROR");
 	}
-	
-	
 }
 
 
 int CAN_transmit_complete(transmit_buffer tb) {
-	//printf("CAN_TRANSMIT_COMPLETE\n");
 	const int address = MCP_TXB0CTRL + BUFFER_LENGTH * tb;
+	
+	// Check if the TXREQ bit is clear, indication the transmit buffer is not pending transmission
 	return !(MCP2515_read(address) & MCP_TXREQ);
 }
 
@@ -168,32 +138,26 @@ void CAN_message_receive(can_message* received_msg){
 		flag_RX1 = 0;
 	}
 	else{
-		//printf("ELSE: received_msg->id:  %d\n", received_msg->id);
+		// No message was received
 		received_msg->length = 0;
 		received_msg->id = 0;
 		sei();
 		return;
 	}
-	//prevents crashing
-	//_delay_ms(10);
 
+	// Set message ID
 	uint8_t id_high = MCP2515_read(MCP_RXB0SIDH + BUFFER_LENGTH * receive_buffer_index);
 	uint8_t id_low = MCP2515_read(MCP_RXB0SIDL + BUFFER_LENGTH * receive_buffer_index);
 	
-	//only want the last 3 bits
+	// Only want the last 3 bits
 	id_low = id_low >> 5;
 	
-	/*
-		id_low:	    X XXXX LLL
-		id_high: HHHH HHHH
-		id:		 HHHH HHHH LLL
-	*/
-	received_msg->id = (id_high << 3) + id_low; 
+	received_msg->id = (id_high << 3) + id_low;
 	
-	//read the data length contained in the last 3 bits of the RXBnDLC register
+	// Read the data length, given by last 3 bits of the RXBnDLC register
 	received_msg->length = (MCP2515_read(MCP_RXB0DLC + BUFFER_LENGTH * receive_buffer_index) % (1<<3));
 	
-	//read the data
+	// Read the received data
 	for (uint8_t byte = 0; byte < received_msg->length; byte++){
 		int address = (MCP_RXB0D0 + byte) + BUFFER_LENGTH * receive_buffer_index;
 		received_msg->data[byte] = MCP2515_read(address);
@@ -201,22 +165,6 @@ void CAN_message_receive(can_message* received_msg){
 	sei();
 }
 
-
-void test_usart_communication(void){
-	int received_data;
-	for (int data = 0x0; data <= 0x10; data++) {
-		MCP2515_write(MCP_CANCTRL, data);
-		received_data = MCP2515_read(MCP_CANCTRL);
-		if (received_data == data){
-			printf("great success!\n");
-		}
-		else{
-			printf("for fucks sake\n");
-		}
-		printf("data sent: 0x%02x\ndata received: 0x%02x\n\n", data, received_data);
-		
-	}
-}
 
 void CAN_test(void){
 	//test_usart_communication();
@@ -253,4 +201,14 @@ void CAN_test(void){
 	
 	printf("ERROR FLAGS: %x\n", MCP2515_read(MCP_EFLG));
 	
+}
+
+void CAN_print_message(can_message* msg) {
+	if(msg->length == 0) return;
+	printf("\n=== CAN MESSAGE BEGIN ===\n");
+	printf("id: %d\tlength: %d\t DATA:\n", msg->id, msg->length);
+	for(int i = 0; i < msg->length; i++) {
+		printf("%x\t", msg->data[i]);
+	}
+	printf("\n=== CAN MESSAGE END ===\n");
 }

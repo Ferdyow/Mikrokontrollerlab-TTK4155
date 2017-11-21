@@ -24,21 +24,21 @@ uint8_t max520_address = 0x00;
 
 
 void MAX520_init(uint8_t three_bit_address){
-	TWI_Master_Initialise(); //Initialize TWI for transferring
+	TWI_Master_Initialise(); // Initialize TWI for transferring
 	sei();
-	max520_address = MAX520_ADDRESS_BASE + (three_bit_address << 1); //Set the correct address for the TWI bus
+	max520_address = MAX520_ADDRESS_BASE + (three_bit_address << 1); // Set the correct address for the TWI bus
 }
 
 
 // Channel must be between 0 and 3 (DAC0 - DAC3)
 void MAX520_send(uint8_t channel, uint8_t data){
-	//Message has the following format {address, command, output}
+	// Message has the following format {address, command, output}
 	uint8_t message[MAX520_MESSAGE_SIZE] = {
 		max520_address, 
 		0x00 + (channel << 1), 
 		data
 	};
 	
-	//Send the data over TWI
+	// Send the data over TWI
 	TWI_Start_Transceiver_With_Data(message, MAX520_MESSAGE_SIZE);	
 }

@@ -27,21 +27,51 @@ typedef struct {
 	int8_t data[8];
 }can_message;
 
+/**
+ * Sets Normal mode, enables rollover in receive buffer registers
+ */
+void CAN_init(void);
+
+/**
+ * Prints all elements of CAN message
+ * @param {can_message} msg - Prints the msg that is pointed at
+ */
 void CAN_print_message(can_message* msg);
 
-void CAN_init();
-
+/**
+ * Transmits message over CAN using a standard data frame
+ * @param {can_message} msg - Message to be sent
+ */
 void CAN_message_send(can_message* msg);
 
-void CAN_error();
 
+/*
+ * DOES NOTHING!
+ */
+void CAN_error(void);
+
+
+/**
+ * Check if the transmit buffer is free to transmit
+ * @param {int} transmit_buffer_numb - Transmit buffer to be checked
+ * @return - 1/True when buffer free, 0/False otherwise
+ */
 bool CAN_transmit_complete(int transmit_buffer_numb);
 
+/**
+ * Receives message with standard data frame from CAN 
+ * @param {can_message} received_msg - received message saved to pointer value
+ */
 void CAN_message_receive(can_message* received_msg);
 
-// Interrupt vector
+/* 
+ * Sets buffer flag when buffer receives message
+ */
 void CAN_int_vect();
 
+/*
+ * Tests in loopback mode
+ */
 void CAN_test();
 
 #endif /* CAN_H_ */

@@ -22,7 +22,7 @@ volatile control control_type;
 
 volatile int timer_flag;
 volatile int score_charge;
-volatile int score_ms; //keeps the score
+volatile int score_ms; // Keeps the score
 volatile int score_flag;
 
 void GAME_timer_init(void);
@@ -32,18 +32,9 @@ void GAME_timer_init(void);
 #define SCORE_MAX_CHARGE (int)(INTERRUPT_FREQUENCY * SCORE_TIME)
 
 
-void print_can_message(can_message* msg) {
-	if(msg->length == 0) return;
-	printf("\n=== CAN MESSAGE BEGIN ===\n");
-	printf("id: %d\tlength: %d\t DATA:\n", msg->id, msg->length);
-	for(int i = 0; i < msg->length; i++) {
-		printf("%x\t", msg->data[i]);
-	}
-	printf("\n=== CAN MESSAGE END ===\n");
-}
 
 
-//Set the timer_flag 0.1s when the timer has counted to OCR4A
+
 ISR(TIMER4_COMPA_vect){
 	score_charge++;
 	

@@ -25,13 +25,12 @@
 uint8_t MCP2515_init() {
 	SPI_init();
 	MCP2515_reset();
-	//check bit 7-5 of MCP_CANSTAT which signify the operation mode
+	// Check bit 7-5 of MCP_CANSTAT which signify the operation mode
 	const uint8_t device_mode = MCP2515_read(MCP_CANSTAT) & MODE_MASK;
 	if (device_mode != MODE_CONFIG) {
-		printf("MCP2515 is NOT in configuration mode after reset!\n");
+		printf("ERROR: MCP2515 is NOT in configuration mode after reset!\n");
 		return 1;
-	}
-	
+	}	
 	return 0;
 }
 
@@ -42,8 +41,6 @@ char MCP2515_read(char address) {
 	char data = SPI_read();
 	SPI_deselect();
 	return data;
-	
-	
 }
 
 void MCP2515_write(char address, char data) {
@@ -54,14 +51,14 @@ void MCP2515_write(char address, char data) {
 	SPI_deselect();
 }
 
-//Buffer states: three bit, setting a 1 on the buffer initiates transmitting from it 
+
 void MCP2515_request_to_send(uint8_t buffer_states) {
 	SPI_select();
 	SPI_send(RTS_BASE+buffer_states);
 	SPI_deselect();
 }
 
-//puts new_data in the selected reg_adress. the function assumes that you are allowed to change every bit in the register
+
 void MCP2515_bit_modify(char reg_address, char masked_bits, char new_data) {
 	SPI_select();
 	SPI_send(BIT_MODIFY);

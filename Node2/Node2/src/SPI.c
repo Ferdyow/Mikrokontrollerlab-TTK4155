@@ -22,9 +22,6 @@
 
 void SPI_init(void){
 	//set mosi, sck, ss as output, others as input
-	//--MOSI - master out slave in
-	//--sck - serial clock
-	//--ss - slave select
 	set_bit(DDRB, MOSI);
 	set_bit(DDRB, SCK);
 	set_bit(DDRB, SS);
@@ -41,33 +38,29 @@ void SPI_init(void){
 		
 	//enable SPI
 	set_bit(SPCR, SPE);
-	//default satt til 0
-	//clear_bit(SPCR,SPR1);
-	//clear_bit(SPCR, SPI2X);
 	
-	//when DORD in SPCR is 0, MSB is transmitted first
+	// MSB is transmitted first (default)
 	
 }
 
 
 void SPI_send(uint8_t data){
-	//Start transmission
+	// Start transmission
 	SPDR = data;	
-	//wait for transmission complete SPSR: register with SPIF flag, SPIF: bit set to 1 when data is read
+	// Wait for flag to signal that transmission is complete
 	loop_til_bit_is_set(SPSR, SPIF);
 }
 
 
 uint8_t SPI_read(void){
-	//must send a dummy bit to receive data
+	// Must send a dummy bit to receive data
 	SPI_send(0);
 	
-	loop_til_bit_is_set(SPSR, SPIF);
-	//printf("SPDR: %x \t", SPDR);
-	uint8_t data = SPDR;
-	//printf("data: %x \n", data);
-	return data;
+	// Wait for flag to signal that transmission is complete
+	loop_until_bit_is_set(SPSR, SPIF);
 	
+	// Return received data
+	return SPDR;	
 }
 
 void SPI_test(void) {

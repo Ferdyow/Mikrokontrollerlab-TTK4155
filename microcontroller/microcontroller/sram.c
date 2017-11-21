@@ -14,15 +14,15 @@
 
 
 void SRAM_init(void){
-	//Enable external memory interface
+	// Enable external memory interface
 	set_bit(MCUCR, SRE);
 	
-	//use 4 pins of PORT C for external memory interface, PC7-PC4 used for JTAG instead
+	// Use 4 pins of PORT C for external memory interface, PC7-PC4 used for JTAG instead
 	set_bit(SFIOR, XMM2);
 }
 
 
-/* COMMENTED OUT TO SAVE MEMORY   */
+/* COMMENTED OUT TO SAVE MEMORY */
 
 /*void SRAM_test(void)
 {

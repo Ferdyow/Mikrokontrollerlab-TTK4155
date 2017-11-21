@@ -217,12 +217,6 @@
     <Compile Include="src\CAN.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\control.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\control.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\defines.h">
       <SubType>compile</SubType>
     </Compile>

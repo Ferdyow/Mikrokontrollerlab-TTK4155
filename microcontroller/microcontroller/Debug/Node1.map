@@ -1203,5 +1203,5 @@ END GROUP
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(microcontroller.elf elf32-avr)
+OUTPUT(Node1.elf elf32-avr)
 LOAD linker stubs
